@@ -1,0 +1,131 @@
+
+.banner-container {
+    padding: 30px;
+    background-color: #2d5e96;
+    color: white;
+    height: auto;
+  
+    .container-list {
+      display: flex;
+      height: 150px;
+      justify-content: space-between;
+  
+      .list-item {
+        width: 33%;
+        padding: 20px 20px 20px 0px;
+  
+        .item-heading {
+          display: flex;
+          align-items: flex-end;
+          margin-bottom: 10px;
+  
+          .step-number {
+            margin-right: 10px;
+            font-size: 1.8rem;
+            font-weight: bold;
+          }
+          h2{
+            font-size: 1.6rem;
+            font-weight: lighter;
+            
+          }
+        }
+  
+        .item-description {
+          display: flex;
+  
+          i {
+            font-size: 36px;
+            display: inline-block;
+            height: 36px;
+            // line-height: 24px;
+            margin-right: 10px;
+          }
+  
+          p {
+            margin: 0;
+            font-weight: lighter;
+            padding-bottom: auto;
+          }
+        }
+      }
+    }
+  
+    .button-list-container {
+      width: 500px;
+  
+      .button-list {
+        display: flex;
+        justify-content: space-between;
+  
+        button {
+          background-color: #ffffff;
+          color: #2d5e96;
+          border: none;
+          padding: 6px 10px;
+          border-radius: 5px;
+          cursor: pointer;
+  
+          &:hover {
+            background-color: #1b3f6d;
+            color: #ffffff;
+          }
+        }
+      }
+    }
+  
+    @media (max-width: 768px) {
+      .container-list {
+        flex-direction: column;
+        height: auto;
+  
+        .list-item {
+          width: 100%;
+          margin-bottom: 20px;
+        }
+      }
+  
+      .button-list-container {
+        width: 100%;
+        .button-list {
+          flex-direction: column;
+          align-items: center;
+  
+          button {
+            width: 100%;
+            margin-bottom: 10px;
+          }
+        }
+      }
+    }
+  
+    @media (max-width: 480px) {
+      padding: 10px;
+      height: auto;
+  
+      .container-list {
+        .list-item {
+          padding: 10px;
+  
+          .item-heading {
+            font-size: 1.2rem;
+          }
+  
+          .item-description {
+            i {
+              font-size: 20px;
+            }
+          }
+        }
+      }
+  
+      .button-list-container {
+        .button-list {
+          button {
+            padding: 8px 12px;
+          }
+        }
+      }
+    }
+  }
+  
