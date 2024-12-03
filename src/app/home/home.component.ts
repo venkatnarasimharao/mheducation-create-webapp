@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { CarouselComponent } from '../carousel/carousel.component';
+import { SidenavComponent } from "../sidenav/sidenav.component";
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [
-    CarouselComponent,
-  ],
+    SidenavComponent
+],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
