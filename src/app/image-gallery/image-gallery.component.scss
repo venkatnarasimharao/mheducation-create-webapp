@@ -1,0 +1,46 @@
+.Browse-container{
+    margin-top: 20px;
+    padding: 16px;
+}
+
+.Browse-Header{
+    display: flex;
+    justify-content: space-between;
+    padding: 16px ;
+}
+
+.Browse-Header button{
+    all: unset;
+}
+.image-gallery{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+    padding: 16px;
+  }
+
+  .collection-card {
+    border: 1px solid #ddd;
+    background-color: #ffffff;
+    text-align: center;
+    padding: 25px;
+  }
+  
+  .collection-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .collection-card img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 12px;
+  }
+  
+  .collection-card p {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+  }
+  

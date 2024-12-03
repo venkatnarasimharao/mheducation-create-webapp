@@ -1,0 +1,18 @@
+<div class="Browse-container">
+    <div class="Browse-Header">
+        <h4>Browse Collections</h4>
+        <button *ngIf="!showAll" (click)="showAllCollections()"><a>Show All Collections</a></button>
+
+        <button *ngIf="showAll" (click)="exitShowAll()">
+            <a>Exit Show All</a>
+          </button>
+    </div>
+
+   
+
+    <div class="image-gallery">
+        <div class="collection-card" *ngFor="let collection of visibleCollections">
+            <img [src]="collection.logo" [alt]="collection.name" />
+        </div>
+    </div>
+</div>

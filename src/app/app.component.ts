@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderWrapperComponent } from "./header-wrapper/header-wrapper.component";
-
+import {SearchProductComponent} from "./search-product/search-product.component";
+import {ImageGalleryComponent} from "./image-gallery/image-gallery.component";
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -10,6 +11,8 @@ import { HeaderWrapperComponent } from "./header-wrapper/header-wrapper.componen
     RouterOutlet,
     FooterComponent,
     HeaderWrapperComponent,
+    SearchProductComponent,
+    ImageGalleryComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
