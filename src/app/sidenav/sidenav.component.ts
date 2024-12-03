@@ -8,5 +8,9 @@ import { Component } from '@angular/core';
   styleUrl: './sidenav.component.scss'
 })
 export class SidenavComponent {
+  activeItem: string = 'find';
 
+  setActive(item: string) {
+    this.activeItem = item; 
+  }
 }

@@ -5,6 +5,7 @@
 @import 'variables.scss';
 
 
+
 :focus:not(body):not(div) {
     outline: 2px solid $teal-blue !important;
     outline-offset: 0px !important;
