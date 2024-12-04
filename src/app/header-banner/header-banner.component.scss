@@ -4,6 +4,15 @@
     background-color: #2d5e96;
     color: white;
     height: auto;
+    h1{
+      display: inline-block;
+      padding: 5px;
+      &:focus{
+        background-color: white;
+        color: #2d5e96;
+      }
+    }
+    
   
     .container-list {
       display: flex;
@@ -12,7 +21,14 @@
   
       .list-item {
         width: 33%;
-        padding: 20px 20px 20px 0px;
+        padding: 10px 20px 10px 10px;
+        margin-bottom: 10px;
+        
+        // &:focus {
+        //   border-color: black; 
+        //   border-width: 20px; 
+        //   background-color: red;// Add white border when focused
+        // }
   
         .item-heading {
           display: flex;
@@ -24,9 +40,10 @@
             font-size: 1.8rem;
             font-weight: bold;
           }
-          h2{
+          span{
             font-size: 1.6rem;
             font-weight: lighter;
+            margin-bottom: 3px;
             
           }
         }
@@ -65,11 +82,16 @@
           padding: 6px 10px;
           border-radius: 5px;
           cursor: pointer;
+          margin: 10px;
   
           &:hover {
             background-color: #1b3f6d;
             color: #ffffff;
           }
+         &:focus{
+          outline: 2px solid  red;
+         }
+          
         }
       }
     }

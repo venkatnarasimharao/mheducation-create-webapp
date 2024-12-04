@@ -1,4 +1,4 @@
-/* General Reset */
+
 body, html {
     margin: 0;
     padding: 0;
@@ -12,32 +12,38 @@ body, html {
     padding: 10px 40px 10px 20px;
     background-color: white;
     border-bottom: 1px solid #ccc;
-}
+   
 
-.header-left {
-    display: flex;
-    align-items: center;
-}
+    &-left {
+        display: flex;
+        align-items: center;
+        padding: 2px;
+        
 
-.logo {
-    width: 40px;
-    height: 40px;
-    margin-right: 10px;
-}
+        .logo {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
 
-.brand-name {
-    font-size: 1.1rem;
-    font-weight: bold;
-}
+        .brand-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        &:focus{
+            outline:  2px solid black;
+        }
+    }
 
-.header-right {
-    position: relative;
-}
+    &-right {
+        position: relative;
 
-.account-select {
-    padding: 5px 10px;
-    font-size: 1rem;
-    cursor: pointer;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+        .account-select {
+            padding: 5px 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    }
 }
