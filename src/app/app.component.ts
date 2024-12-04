@@ -4,6 +4,7 @@ import { FooterComponent } from './footer/footer.component';
 import { HeaderWrapperComponent } from "./header-wrapper/header-wrapper.component";
 import {SearchProductComponent} from "./search-product/search-product.component";
 import {ImageGalleryComponent} from "./image-gallery/image-gallery.component";
+import { A11yModule } from '@angular/cdk/a11y';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -13,6 +14,7 @@ import {ImageGalleryComponent} from "./image-gallery/image-gallery.component";
     HeaderWrapperComponent,
     SearchProductComponent,
     ImageGalleryComponent,
+    A11yModule,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

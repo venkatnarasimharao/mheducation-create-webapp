@@ -18,17 +18,21 @@ section {
   select{
     padding: 8px;
     width: 100%;
-    margin-bottom: 20px;
     border: 1px solid #ccc;
+    color: #7c7c7c;
   }
   
   button {
-    padding: 8.5px 16px;
-    background-color: #007bff;
+    display: flex;
+    width: 115%;
+    gap: 5px;
+    padding: 8.5px 12px;
+    background-color: rgb(37, 37, 109);
     color: white;
     border: none;
     cursor: pointer;
     border-radius: 0;
+
   }
   
   button:hover {
@@ -44,7 +48,7 @@ section {
   }
 
   .searchbar{
-    width: 86%;
+    width:84%;
     border-radius: 0px;
     padding: 0px;
   }

@@ -14,6 +14,8 @@
 }
 .image-gallery{
     display: grid;
+    border-top: #c9c6c6 1px solid ;
+    border-width: 20%;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
     margin-top: 20px;
@@ -43,4 +45,15 @@
     color: #333;
     margin: 0;
   }
+
+  ul {
+    list-style: none;
+    padding: 0;
+
+    li img {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+  
   

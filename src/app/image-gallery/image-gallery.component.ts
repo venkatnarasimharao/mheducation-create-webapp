@@ -10,107 +10,41 @@ import { CommonModule } from '@angular/common';
 export class ImageGalleryComponent {
 
   showAll: boolean = false;
-  collections = [
-    { name: 'Darden Business Publishing', logo: 'assets/darden-logo.png' },
-    { name: 'Harvard Business Publishing', logo: 'assets/harvard-logo.png' },
-    { name: 'INSEAD Business School', logo: 'assets/insead-logo.png' },
-    { name: 'NACRA Case Research', logo: 'assets/nacra-logo.png' },
-    { name: 'MIT Sloan Management', logo: 'assets/mit-sloan-logo.png' },
-    { name: 'Stanford Business Publishing', logo: 'assets/stanford-logo.png' },
-    { name: 'London Business School', logo: 'assets/lbs-logo.png' },
-    { name: 'Wharton School Publishing', logo: 'assets/wharton-logo.png' },
-    { name: 'IMD Business School', logo: 'assets/imd-logo.png' },
-    { name: 'Kellogg School of Management', logo: 'assets/kellogg-logo.png' },
-    { name: 'Yale School of Management', logo: 'assets/yale-logo.png' },
-    { name: 'IE Business School', logo: 'assets/ie-logo.png' },
-    { name: 'ESSEC Business School', logo: 'assets/essec-logo.png' },
-    { name: 'HEC Paris', logo: 'assets/hec-paris-logo.png' },
-    { name: 'Columbia Business School', logo: 'assets/columbia-logo.png' },
-    { name: 'Rotman School of Management', logo: 'assets/rotman-logo.png' },
-    { name: 'Tuck School of Business', logo: 'assets/tuck-logo.png' },
-    { name: 'Cambridge Judge Business School', logo: 'assets/cambridge-logo.png' },
-    { name: 'Saïd Business School', logo: 'assets/said-logo.png' },
-    { name: 'Esade Business School', logo: 'assets/esade-logo.png' },
-    { name: 'IESE Business School', logo: 'assets/iese-logo.png' },
-    { name: 'NYU Stern School of Business', logo: 'assets/nyu-stern-logo.png' },
-    { name: 'Carnegie Mellon Tepper School', logo: 'assets/tepper-logo.png' },
-    { name: 'UCLA Anderson', logo: 'assets/ucla-anderson-logo.png' },
-    { name: 'Cornell Johnson', logo: 'assets/cornell-johnson-logo.png' },
-    { name: 'Chicago Booth School of Business', logo: 'assets/booth-logo.png' },
-    { name: 'UC Berkeley Haas', logo: 'assets/haas-logo.png' },
-    { name: 'Indian School of Business', logo: 'assets/isb-logo.png' },
-    { name: 'Ivey Business School', logo: 'assets/ivey-logo.png' },
-    { name: 'Manchester Business School', logo: 'assets/manchester-logo.png' },
-    { name: 'IESE Business School', logo: 'assets/iese-logo.png' },
-    { name: 'NYU Stern School of Business', logo: 'assets/nyu-stern-logo.png' },
-    { name: 'Carnegie Mellon Tepper School', logo: 'assets/tepper-logo.png' },
-    { name: 'UCLA Anderson', logo: 'assets/ucla-anderson-logo.png' },
-    { name: 'Cornell Johnson', logo: 'assets/cornell-johnson-logo.png' },
-    { name: 'Chicago Booth School of Business', logo: 'assets/booth-logo.png' },
-    { name: 'UC Berkeley Haas', logo: 'assets/haas-logo.png' },
-    { name: 'Indian School of Business', logo: 'assets/isb-logo.png' },
-    { name: 'Ivey Business School', logo: 'assets/ivey-logo.png' },
-    { name: 'Manchester Business School', logo: 'assets/manchester-logo.png' },
-    { name: 'IESE Business School', logo: 'assets/iese-logo.png' },
-    { name: 'NYU Stern School of Business', logo: 'assets/nyu-stern-logo.png' },
-    { name: 'Carnegie Mellon Tepper School', logo: 'assets/tepper-logo.png' },
-    { name: 'UCLA Anderson', logo: 'assets/ucla-anderson-logo.png' },
-    { name: 'Cornell Johnson', logo: 'assets/cornell-johnson-logo.png' },
-    { name: 'Chicago Booth School of Business', logo: 'assets/booth-logo.png' },
-    { name: 'UC Berkeley Haas', logo: 'assets/haas-logo.png' },
-    { name: 'Indian School of Business', logo: 'assets/isb-logo.png' },
-    { name: 'Ivey Business School', logo: 'assets/ivey-logo.png' },
-    { name: 'Manchester Business School', logo: 'assets/manchester-logo.png' },
-    { name: 'INSEAD Business School', logo: 'assets/insead-logo.png' },
-    { name: 'NACRA Case Research', logo: 'assets/nacra-logo.png' },
-    { name: 'MIT Sloan Management', logo: 'assets/mit-sloan-logo.png' },
-    { name: 'Stanford Business Publishing', logo: 'assets/stanford-logo.png' },
-    { name: 'London Business School', logo: 'assets/lbs-logo.png' },
-    { name: 'Wharton School Publishing', logo: 'assets/wharton-logo.png' },
-    { name: 'IMD Business School', logo: 'assets/imd-logo.png' },
-    { name: 'Kellogg School of Management', logo: 'assets/kellogg-logo.png' },
-    { name: 'Yale School of Management', logo: 'assets/yale-logo.png' },
-    { name: 'IE Business School', logo: 'assets/ie-logo.png' },
-    { name: 'ESSEC Business School', logo: 'assets/essec-logo.png' },
-    { name: 'HEC Paris', logo: 'assets/hec-paris-logo.png' },
-    { name: 'Columbia Business School', logo: 'assets/columbia-logo.png' },
-    { name: 'Rotman School of Management', logo: 'assets/rotman-logo.png' },
-    { name: 'Tuck School of Business', logo: 'assets/tuck-logo.png' },
-    { name: 'Cambridge Judge Business School', logo: 'assets/cambridge-logo.png' },
-    { name: 'Saïd Business School', logo: 'assets/said-logo.png' },
-    { name: 'Esade Business School', logo: 'assets/esade-logo.png' },
-    { name: 'IESE Business School', logo: 'assets/iese-logo.png' },
-    { name: 'NYU Stern School of Business', logo: 'assets/nyu-stern-logo.png' },
-    { name: 'Carnegie Mellon Tepper School', logo: 'assets/tepper-logo.png' },
-    { name: 'UCLA Anderson', logo: 'assets/ucla-anderson-logo.png' },
-    { name: 'Cornell Johnson', logo: 'assets/cornell-johnson-logo.png' },
-    { name: 'Chicago Booth School of Business', logo: 'assets/booth-logo.png' },
-    { name: 'UC Berkeley Haas', logo: 'assets/haas-logo.png' },
-    { name: 'Indian School of Business', logo: 'assets/isb-logo.png' },
-    { name: 'Ivey Business School', logo: 'assets/ivey-logo.png' },
-    { name: 'Manchester Business School', logo: 'assets/manchester-logo.png' },
-    { name: 'IESE Business School', logo: 'assets/iese-logo.png' },
-    { name: 'NYU Stern School of Business', logo: 'assets/nyu-stern-logo.png' },
-    { name: 'Carnegie Mellon Tepper School', logo: 'assets/tepper-logo.png' },
-    { name: 'UCLA Anderson', logo: 'assets/ucla-anderson-logo.png' },
-    { name: 'Cornell Johnson', logo: 'assets/cornell-johnson-logo.png' },
-    { name: 'Chicago Booth School of Business', logo: 'assets/booth-logo.png' },
-    { name: 'UC Berkeley Haas', logo: 'assets/haas-logo.png' },
-    { name: 'Indian School of Business', logo: 'assets/isb-logo.png' },
-    { name: 'Ivey Business School', logo: 'assets/ivey-logo.png' },
-    { name: 'Manchester Business School', logo: 'assets/manchester-logo.png' },
-    { name: 'IESE Business School', logo: 'assets/iese-logo.png' },
-    { name: 'NYU Stern School of Business', logo: 'assets/nyu-stern-logo.png' },
-    { name: 'Carnegie Mellon Tepper School', logo: 'assets/tepper-logo.png' },
-    { name: 'UCLA Anderson', logo: 'assets/ucla-anderson-logo.png' },
-    { name: 'Cornell Johnson', logo: 'assets/cornell-johnson-logo.png' },
-    { name: 'Chicago Booth School of Business', logo: 'assets/booth-logo.png' },
-    { name: 'UC Berkeley Haas', logo: 'assets/haas-logo.png' },
-    { name: 'Indian School of Business', logo: 'assets/isb-logo.png' },
-    { name: 'Ivey Business School', logo: 'assets/ivey-logo.png' },
-    { name: 'Manchester Business School', logo: 'assets/manchester-logo.png' },
-  ];
- 
+ collections = [
+    { name: 'Darden Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
+    { name: 'Harvard Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/lewicki_logo.png' },
+    { name: 'INSEAD Business School', logo: 'https://create.mheducation.com/createonline/images/sites/MEPS_logo.png' },
+    { name: 'NACRA Case Research', logo: 'https://create.mheducation.com/createonline/images/sites/literature.png' },
+    { name: 'MIT Sloan Management', logo: 'https://create.mheducation.com/createonline/images/sites/nacra_logo.png' },
+    { name: 'Darden Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/lewicki_logo.png' },
+    { name: 'Harvard Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
+    { name: 'INSEAD Business School', logo: 'https://create.mheducation.com/createonline/images/sites/nacra_logo.png' },
+    { name: 'NACRA Case Research', logo: 'https://create.mheducation.com/createonline/images/sites/MEPS_logo.png' },
+    { name: 'MIT Sloan Management', logo: 'https://create.mheducation.com/createonline/images/sites/literature.png' },
+    { name: 'Darden Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
+    { name: 'Harvard Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/lewicki_logo.png' },
+    { name: 'INSEAD Business School', logo: 'https://create.mheducation.com/createonline/images/sites/MEPS_logo.png' },
+    { name: 'NACRA Case Research', logo: 'https://create.mheducation.com/createonline/images/sites/literature.png' },
+    { name: 'MIT Sloan Management', logo: 'https://create.mheducation.com/createonline/images/sites/nacra_logo.png' },
+    { name: 'Darden Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/lewicki_logo.png' },
+    { name: 'Harvard Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
+    { name: 'INSEAD Business School', logo: 'https://create.mheducation.com/createonline/images/sites/nacra_logo.png' },
+    { name: 'NACRA Case Research', logo: 'https://create.mheducation.com/createonline/images/sites/MEPS_logo.png' },
+    { name: 'MIT Sloan Management', logo: 'https://create.mheducation.com/createonline/images/sites/literature.png' },
+    { name: 'Darden Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
+    { name: 'Harvard Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/lewicki_logo.png' },
+    { name: 'INSEAD Business School', logo: 'https://create.mheducation.com/createonline/images/sites/MEPS_logo.png' },
+    { name: 'NACRA Case Research', logo: 'https://create.mheducation.com/createonline/images/sites/literature.png' },
+    { name: 'MIT Sloan Management', logo: 'https://create.mheducation.com/createonline/images/sites/nacra_logo.png' },
+    { name: 'Darden Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/lewicki_logo.png' },
+    { name: 'Harvard Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
+    { name: 'INSEAD Business School', logo: 'https://create.mheducation.com/createonline/images/sites/nacra_logo.png' },
+    { name: 'NACRA Case Research', logo: 'https://create.mheducation.com/createonline/images/sites/MEPS_logo.png' },
+    { name: 'MIT Sloan Management', logo: 'https://create.mheducation.com/createonline/images/sites/literature.png' },
+    { name: 'Darden Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
+    { name: 'Harvard Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/lewicki_logo.png' }
+];
+
   visibleCollections = this.collections.slice(0, 16);
 
   showAllCollections() {
@@ -121,5 +55,20 @@ export class ImageGalleryComponent {
   exitShowAll() {
     this.showAll = false;
     this.visibleCollections = this.collections.slice(0, 16);
+  }
+
+  toggleShowAll(): void {
+    this.showAll = !this.showAll;
+    this.visibleCollections = this.showAll ? this.collections : this.collections.slice(0, 16);
+  }
+
+  // onKeydown(event: KeyboardEvent, collection: any): void {
+  //   if (event.key === 'Enter' || event.key === ' ') {
+  //     console.log(`You selected ${collection.name}`);
+  //     event.preventDefault();
+  //   }
+  // }
+  trackCollection(index: number, collection: any) {
+    return collection.name;
   }
 }
