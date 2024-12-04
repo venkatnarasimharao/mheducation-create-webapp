@@ -1,15 +1,21 @@
+@import '../../variables.scss';
 .sidebar {
     background-color: #f9f9f9;
     height: 100vh;
-    width: 8rem;
+    max-width: 5%;
+    min-width: 8rem;
     border-right: 1px solid #e5e7eb;
+    overflow-y: auto;
+    overflow-x: hidden;
   
-    nav {
+    .nav-sidebar {
       margin-top: 1.5rem;
   
-      ul {
-        color: #4b5563;  
+      .ul-sidebar {
+        color: #4b5563;
         padding: 0;
+      
+  
         .menu-item {
             padding: 0.5rem 1.5rem;
             cursor: pointer;
@@ -17,7 +23,22 @@
             flex-direction: column;
             align-items: center;
             position: relative;
-          
+            transition: box-shadow 0.3s ease; /* Add transition for smooth focus effect */
+            &:focus {
+                outline: 2px solid $teal-blue !important;
+                outline-offset: -9px !important;
+                border-radius: 0 !important;
+                -webkit-outline: 2px solid $teal-blue !important;
+                -webkit-outline-offset: -9px !important;
+                -webkit-border-radius: 0 !important;
+                -ms-outline: 2px solid $teal-blue !important;
+                -ms-outline-offset: -9px !important;
+                -ms-border-radius: 0 !important;
+                -moz-outline: 2px solid $teal-blue !important;
+                -moz-outline-offset: -9px !important;
+                -moz-border-radius: 0 !important;
+              }
+
             &:hover {
               background-color: #e5e7eb;
             }
@@ -46,8 +67,32 @@
                 background-color: #007bff;
               }
             }
+            &:focus {
+                outline-offset: -4px;
+              }
           }
+          
       }
+    
     }
+  
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+  
+    &::-webkit-scrollbar-thumb {
+      background-color: #d1d5db;
+      border-radius: 4px;
+    }
+  
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: #9ca3af;
+    }
+  
+    &::-webkit-scrollbar-track {
+      background-color: #f9f9f9;
+    }
+
+   
   }
   

@@ -1,9 +1,11 @@
 <div class="sidebar">
-    <nav>
-      <ul>
+    <nav class="nav-sidebar">
+      <ul class="ul-sidebar">
         <li 
           class="{{ activeItem === 'find' ? 'menu-item active' : 'menu-item' }}"
-          (click)="setActive('find')" tabindex="0">
+          (click)="setActive('find')"
+          (keydown)="handleKeydown($event, 'find')"
+          tabindex="0">
           <i class="bi bi-search"></i>
           <span>Find</span>
           <span>Content</span>
@@ -11,52 +13,57 @@
   
         <li 
           class="{{ activeItem === 'projects' ? 'menu-item active' : 'menu-item' }}"
-          (click)="setActive('projects')" tabindex="0"
-        >
+          (click)="setActive('projects')"
+          (keydown)="handleKeydown($event, 'projects')"
+          tabindex="0">
           <i class="bi bi-folder-symlink-fill"></i>
           <span>Projects</span>
         </li>
   
         <li 
           class="{{ activeItem === 'arrange' ? 'menu-item active' : 'menu-item' }}"
-          (click)="setActive('arrange')" tabindex="0"
-        >
+          (click)="setActive('arrange')"
+          (keydown)="handleKeydown($event, 'arrange')"
+          tabindex="0">
           <i class="bi bi-view-list"></i>
           <span>Arrange</span>
         </li>
   
         <li 
           class="{{ activeItem === 'personalize' ? 'menu-item active' : 'menu-item' }}"
-          (click)="setActive('personalize')" tabindex="0"
-        >
+          (click)="setActive('personalize')"
+          (keydown)="handleKeydown($event, 'personalize')"
+          tabindex="0">
           <i class="bi bi-boxes"></i>
           <span>Personalize</span>
         </li>
   
         <li 
           class="{{ activeItem === 'uploads' ? 'menu-item active' : 'menu-item' }}"
-          (click)="setActive('uploads')" tabindex="0"
-        >
+          (click)="setActive('uploads')"
+          (keydown)="handleKeydown($event, 'uploads')"
+          tabindex="0">
           <i class="bi bi-upload"></i>
           <span>Uploads</span>
         </li>
   
         <li 
           class="{{ activeItem === 'favorites' ? 'menu-item active' : 'menu-item' }}"
-          (click)="setActive('favorites')" tabindex="0"
-        >
+          (click)="setActive('favorites')"
+          (keydown)="handleKeydown($event, 'favorites')"
+          tabindex="0">
           <i class="bi bi-heart"></i>
           <span>Favorites</span>
         </li>
   
         <li 
           class="{{ activeItem === 'help' ? 'menu-item active' : 'menu-item' }}"
-          (click)="setActive('help')" tabindex="0"
-        >
+          (click)="setActive('help')"
+          (keydown)="handleKeydown($event, 'help')"
+          tabindex="0">
           <i class="bi bi-question-circle"></i>
           <span>Help</span>
         </li>
-    
       </ul>
     </nav>
   </div>

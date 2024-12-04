@@ -13,4 +13,10 @@ export class SidenavComponent {
   setActive(item: string) {
     this.activeItem = item; 
   }
+  handleKeydown(event: KeyboardEvent, item: string) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.setActive(item); 
+    }
+  }
 }
