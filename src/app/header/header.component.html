@@ -1,1 +1,13 @@
-<p>header works!</p>
+<header class="header">
+    <div class="header-left" tabindex="0" cdkFocusInitial>
+        <img src={{imageurl}} alt="MHE logo" class="logo" />
+        <span class="brand-name">{{brandName}}</span>
+    </div>
+    <div class="header-right">
+        <select class="account-select" cdkTrapFocus cdkListbox tabindex="0">
+            <option value="" disabled selected>My Account</option>
+            <option value="register">Register</option>
+            <option value="login">Login</option>
+        </select>
+    </div>
+</header>

@@ -20,6 +20,20 @@
     -moz-outline-offset: 0px !important;
     -moz-border-radius: 0 !important;
 }
+:focus:not(body){
+    outline: 2px solid white ;
+    outline-offset: 0px !important;
+    border-radius: 0 !important;
+    -webkit-outline: 2px solid white ;
+    -webkit-outline-offset: 0px !important;
+    -webkit-border-radius: 0 !important;
+    -ms-outline: 2px solid white ;
+    -ms-outline-offset: 0px !important;
+    -ms-border-radius: 0 !important;
+    -moz-outline: 2px solid white ;
+    -moz-outline-offset: 0px !important;
+    -moz-border-radius: 0 !important;
+}
 
 // 767px
 @media (max-width: $screen-xs-max) {
