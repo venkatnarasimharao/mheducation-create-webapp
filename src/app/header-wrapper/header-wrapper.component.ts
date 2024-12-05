@@ -7,7 +7,8 @@ import { SidenavComponent } from "../sidenav/sidenav.component";
   standalone: true,
   imports: [
     HeaderComponent,
-    SidenavComponent
+    SidenavComponent,
+    HeaderWrapperComponent
 ],
   templateUrl: './header-wrapper.component.html',
   styleUrl: './header-wrapper.component.scss'

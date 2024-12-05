@@ -44,6 +44,37 @@ body, html {
             cursor: pointer;
             border: 1px solid #ccc;
             border-radius: 5px;
+            // display: none;  // temporary
+        }
+        .hammer-menu {
+            display: none;
+        }
+        
+        
+
+    }
+}
+
+
+@media (max-width: 768px) {
+    .account-select {
+        display: none;
+    }
+
+    .header-right .hammer-menu {
+        cursor: pointer;
+        width: 40px;
+        height: 30px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center; 
+        padding: 5px;
+        span {
+            width: 30px; 
+            height: 3px;
+            background-color: black;
+            border-radius: 2px; 
         }
     }
 }

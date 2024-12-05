@@ -23,5 +23,9 @@ export class HeaderComponent {
       event.target.focus();
     }
   }
+  handleHammerClick(){
+    console.log('hammer menu');
+    alert("Hammer Menu Clicked");
+  }
 
 }

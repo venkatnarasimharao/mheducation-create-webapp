@@ -9,7 +9,6 @@ import { HeaderBannerComponent } from '../header-banner/header-banner.component'
   imports: [
     SidenavComponent,
     HeaderWrapperComponent,
-    HeaderBannerComponent
 ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
