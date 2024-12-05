@@ -1,0 +1,32 @@
+<nav aria-label="Breadcrumb navigation" class="mt-2 ms-3" tabindex="0">
+  <ul class="breadcrumb" role="navigation" aria-label="Breadcrumb trail">
+    <li
+      class="breadcrumb-item"
+      *ngFor="let breadcrumb of breadCrumbs; let last = last"
+      [class.active]="last"
+      role="listitem"
+    >
+      <a
+        *ngIf="!last"
+        class="breadcrumb-link"
+        tabindex="0"
+        role="link"
+        (click)="navigate(breadcrumb)"
+        [attr.aria-current]="last ? 'page' : null"
+      >
+        {{ breadcrumb.label }}
+      </a>
+      <span
+        *ngIf="last"
+        tabindex="0"
+        role="text"
+      >
+        {{ breadcrumb.label }}
+      </span>
+    </li>
+  </ul>
+</nav>
+
+<div class="child-content ms-3" role="main" tabindex="0">
+  <router-outlet></router-outlet>
+</div>
