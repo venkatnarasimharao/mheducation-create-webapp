@@ -16,11 +16,7 @@
       >
         {{ breadcrumb.label }}
       </a>
-      <span
-        *ngIf="last"
-        tabindex="0"
-        role="text"
-      >
+      <span *ngIf="last" tabindex="-1" role="text">
         {{ breadcrumb.label }}
       </span>
     </li>
