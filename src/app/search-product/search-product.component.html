@@ -1,0 +1,34 @@
+<!-- <div cdkTrapFocus>
+  <button>Button1</button> <br>
+  <button>Button2</button> <br>
+  <button>Button3</button> <br>
+  <button>Button4</button> <br>
+</div> -->
+
+<section>
+    <h2>Begin Creating Now!</h2>
+    <h6>Search Product</h6>
+    <div class="search-container" > 
+        <div class="searchAll"  >
+            <select title="dropdown" cdkTrapFocus>
+                <option value="" disabled selected > Select All  </option>
+                <option>KeyWord</option>
+                <option>Title</option>
+                <option>Author</option>
+                <option >ISBN</option>
+            </select>
+        </div>
+        <div class="searchbar">
+            <input type="search" placeholder="Find content by Keywords, Title, Author, ISBN"
+                aria-label="Search Products">
+        </div>
+        <div>
+            <button type="button" (click)="onSearch()">
+                <span class="search-icon">🔍</span><span>Search</span> 
+            </button>
+        </div>
+    </div>
+
+
+
+</section>

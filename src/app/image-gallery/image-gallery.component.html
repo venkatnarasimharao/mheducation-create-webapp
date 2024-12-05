@@ -1,0 +1,26 @@
+<div class="Browse-container">
+    <div class="Browse-Header">
+        <h4>Browse Collections</h4>
+        <!-- <button *ngIf="!showAll" (click)="showAllCollections()"><a>Show All Collections</a></button>
+        <button *ngIf="showAll" (click)="exitShowAll()"><a>Exit Show All</a></button> -->
+
+        <button (click)="toggleShowAll()">
+            <a>{{ showAll ? 'Exit Show All' : 'Show All Collections' }}</a>
+          </button>
+    </div>
+
+
+
+    <div class="image-gallery">
+        <!-- @for (item of visibleCollections; track item;) {} -->
+        <!-- <div class="collection-card" *ngFor="let collection of visibleCollections" tabindex="0"> -->
+            @for (collection of visibleCollections; track collection;) {
+            <!-- <ul class="collection-card" tabindex="0" role="list" aria-label="@collection.name" (keydown)="onKeydown($event, collections)"> -->
+                <ul class="collection-card" tabindex="0" role="list" aria-label="@collection.name">
+                <li><img [src]="collection.logo" [alt]="collection.name" /> 
+                    <h6>{{collection.name}}</h6>
+                </li>
+            </ul>
+            }
+    </div>
+</div>
