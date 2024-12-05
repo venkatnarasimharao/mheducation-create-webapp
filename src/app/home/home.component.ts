@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { SidenavComponent } from "../sidenav/sidenav.component";
-import { HeaderWrapperComponent } from '../header-wrapper/header-wrapper.component';
 import { HeaderBannerComponent } from '../header-banner/header-banner.component';
 
 @Component({
@@ -8,7 +7,7 @@ import { HeaderBannerComponent } from '../header-banner/header-banner.component'
   standalone: true,
   imports: [
     SidenavComponent,
-    HeaderWrapperComponent,
+    HeaderBannerComponent,
 ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
