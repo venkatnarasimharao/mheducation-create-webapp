@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-header',
@@ -12,7 +13,8 @@ export class HeaderComponent {
   brandName: string = "Create";
 
   selectedOption: string = '';
-
+  
+  translate: TranslateService =inject(TranslateService);
   onSelect(event: any) {
     this.selectedOption = event.target.value;
 
@@ -22,6 +24,10 @@ export class HeaderComponent {
       // Focus back to the select element
       event.target.focus();
     }
+  }
+  changeLanguage(event: Event): void {
+    const selectedLanguage = (event.target as HTMLSelectElement).value;
+    this.translate.use(selectedLanguage);
   }
 
 }
