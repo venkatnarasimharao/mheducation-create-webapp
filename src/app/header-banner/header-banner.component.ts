@@ -10,23 +10,4 @@ import { Component } from '@angular/core';
 export class HeaderBannerComponent {
   brandName: string = 'Create';
 
-  BrandList: any [] = [
-    {
-      SubHeading: 'Search Content',
-      Description: 'Search and select content from Mc Graw-Hill and 3rd party providers',
-      logoClass : 'fa-solid fa-magnifying-glass'
-    },
-    {
-      SubHeading: 'Arrange',
-      Description: "Customize your project's table of Content",
-      logoClass : 'fa-solid fa-layer-group'
-    },
-    {
-      SubHeading: 'Personalize',
-      Description: 'Select a cover, format and delivery method for your project',
-      logoClass : 'fa-solid fa-book-open-reader'
-    }
-  ]
-
-
 }

@@ -11,6 +11,7 @@ import { HeaderWrapperComponent } from "./header-wrapper/header-wrapper.componen
     HeaderWrapperComponent,
     FooterComponent
   ],
+  
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
