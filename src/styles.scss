@@ -1,3 +1,19 @@
+// html, body {
+//     margin: 0;
+//     padding: 0;
+//     overflow-x: auto;
+//     box-sizing: border-box;
+// }
+
+// * {
+//     box-sizing: inherit;
+// }
+
+body {
+    font-size: calc(16px + 0.5vw); /* Dynamic font scaling */
+  }
+
+
 /* You can add global styles to this file, and also import other style files */
 
 /* Importing Bootstrap SCSS file. */
@@ -60,4 +76,6 @@
         display: none !important;
     }
 }
+
+
 

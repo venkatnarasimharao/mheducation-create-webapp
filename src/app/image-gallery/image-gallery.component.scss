@@ -1,59 +1,60 @@
-.Browse-container{
-    margin-top: 20px;
-    padding: 16px;
+body {
+  font-size: calc(16px + 0.5vw);
 }
 
-.Browse-Header{
-    display: flex;
-    justify-content: space-between;
-    padding: 16px ;
+.Browse-container {
+  margin: 0 auto;
+  padding: 1rem;
+  width: 100%;
+  height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
-.Browse-Header button{
-    all: unset;
+.Browse-Header h4 {
+  font-size: 1.2rem;
 }
-.image-gallery{
-    display: grid;
-    border-top: #c9c6c6 1px solid ;
-    border-width: 20%;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    margin-top: 20px;
-    padding: 16px;
-  }
 
-  .collection-card {
-    border: 1px solid #ddd;
-    background-color: #ffffff;
-    text-align: center;
-    padding: 25px;
-  }
-  
-  .collection-card:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-  
-  .collection-card img {
-    max-width: 100%;
-    height: auto;
-    margin-bottom: 12px;
-  }
-  
-  .collection-card p {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #333;
-    margin: 0;
-  }
+.Browse-Header button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  background-color: #ddd;
+  border: none;
+  cursor: pointer;
+}
 
-  ul {
-    list-style: none;
-    padding: 0;
+.Browse-Header button:hover {
+  background-color: #ccc;
+}
 
-    li img {
-      max-width: 100%;
-      height: auto;
-    }
-  }
-  
-  
+.collection-card {
+  border: 1px solid #ddd;
+  background-color: #ffffff;
+  text-align: center;
+  padding: 1rem;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.collection-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.collection-card img {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 0.5rem;
+}
+
+.collection-card h6 {
+  font-size: 1rem;
+  margin: 0.5rem 0;
+  color: #333;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}

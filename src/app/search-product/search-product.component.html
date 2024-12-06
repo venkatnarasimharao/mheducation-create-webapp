@@ -1,34 +1,30 @@
-<!-- <div cdkTrapFocus>
-  <button>Button1</button> <br>
-  <button>Button2</button> <br>
-  <button>Button3</button> <br>
-  <button>Button4</button> <br>
-</div> -->
-
-<section>
-    <h2>Begin Creating Now!</h2>
+<section class="py-4">
+    <h2 class="mb-3">Begin Creating Now!</h2>
     <h6>Search Product</h6>
-    <div class="search-container" > 
-        <div class="searchAll"  >
-            <select title="dropdown" cdkTrapFocus>
-                <option value="" disabled selected > Select All  </option>
-                <option>KeyWord</option>
-                <option>Title</option>
-                <option>Author</option>
-                <option >ISBN</option>
-            </select>
-        </div>
-        <div class="searchbar">
-            <input type="search" placeholder="Find content by Keywords, Title, Author, ISBN"
-                aria-label="Search Products">
-        </div>
-        <div>
-            <button type="button" (click)="onSearch()">
-                <span class="search-icon">🔍</span><span>Search</span> 
-            </button>
-        </div>
+    <div class="search-container d-flex justify-content-between">
+      <div class="searchAll col-md-1">
+        <select 
+          class="form-select rounded-0" 
+          title="dropdown" 
+          (keydown)="handleKeydown($event)">
+          <option value="" disabled selected>Select All</option>
+          <option>KeyWord</option>
+          <option>Title</option>
+          <option>Author</option>
+          <option>ISBN</option>
+        </select>
+      </div>
+      <div class="searchbar col-md-8">
+        <input type="search" 
+          class="form-control rounded-0" 
+          placeholder="Find content by Keywords, Title, Author, ISBN" 
+          aria-label="Search Products">
+      </div>
+      <div class="col-md-1 d-flex align-items-center">
+        <button type="button" class="btn btn-primary w-100 rounded-0" (click)="onSearch()">
+          <span class="search-icon">🔍</span><span>Search</span>
+        </button>
+      </div>
     </div>
-
-
-
-</section>
+  </section>
+  
