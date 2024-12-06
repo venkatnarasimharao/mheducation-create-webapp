@@ -12,13 +12,12 @@
         <span class="text-start">Test123</span>
         <span class="dropdown-arrow ms-auto"></span>
       </button>
-      <div ngbDropdownMenu aria-labelledby="dropdownBasic1" #dropdownMenu1>
+      <div ngbDropdownMenu aria-labelledby="dropdownBasic1" >
         <button
           ngbDropdownItem
           *ngFor="let item of dropdownList"
           #dropdownItem
           (click)="onItemSelect(item)"
-          [appTrapFocus]="dropdownMenu1"
         >
           {{ item }}
         </button>
@@ -44,12 +43,11 @@
             <span class="text-start">Please select</span>
             <span class="dropdown-arrow ms-auto"></span>
           </button>
-          <div ngbDropdownMenu aria-labelledby="dropdownBasic2" #dropdownMenu2>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic2" >
             <button
               ngbDropdownItem
               *ngFor="let item of dropdownList"
               (click)="onItemSelect(item)"
-              [appTrapFocus]="dropdownMenu2"
             >
               {{ item }}
             </button>
@@ -70,12 +68,11 @@
             <span class="text-start">Arrange</span>
             <span class="dropdown-arrow ms-auto"></span>
           </button>
-          <div ngbDropdownMenu aria-labelledby="dropdownBasic3" #dropdownMenu3>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic3" >
             <button
               ngbDropdownItem
               *ngFor="let item of dropdownList"
               (click)="onItemSelect(item)"
-              [appTrapFocus]="dropdownMenu3"
             >
               {{ item }}
             </button>

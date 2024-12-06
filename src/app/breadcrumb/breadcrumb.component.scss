@@ -10,9 +10,4 @@
       }
     }
   }
-  .breadcrumb-item + .breadcrumb-item::before {
-    content: ">";
-    margin: 0 0.1rem;
-    color: #6c757d;
-  }
 }
