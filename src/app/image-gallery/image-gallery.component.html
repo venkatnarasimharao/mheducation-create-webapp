@@ -1,24 +1,24 @@
 <div class="container-fluid browse-container">
     <div class="row browse-header">
         <div class="col d-flex justify-content-between align-items-center">
-            <h4>Browse Collections</h4>
+            <h4>{{"BrowseCollections" | translate}}</h4>
             <!-- <button *ngIf="!showAll" (click)="showAllCollections()"><a>Show All Collections</a></button>
             <button *ngIf="showAll" (click)="exitShowAll()"><a>Exit Show All</a></button> -->
 
             <button class="btn btn-light ms-3" (click)="toggleShowAll()">
-                <a>{{ showAll ? 'Exit Show All' : 'Show All Collections' }}</a>
+                <a>{{ showAll ? 'Exit Show All' : 'ShowAllCollections'| translate }}</a>
             </button>
         </div>
     </div>
 
     <div class="row g-3 mt-3">
-        @for (collection of visibleCollections; track collection;) {
+        @for (collection of visibleCollections; track collections;) {
             <!-- <ul class="collection-card" tabindex="0" role="list" aria-label="@collection.name" (keydown)="onKeydown($event, collections)"> -->
                 <div class="col-lg-3 col-md-4 col-sm-6 col-12">
                 <ul class="collection-card list-unstyled" tabindex="0" role="list" aria-label="@collection.name">
                     <li>
                         <img [src]="collection.logo" [alt]="collection.name" class="img-fluid" />
-                        <h6>{{collection.name}}</h6>
+                        <h6>{{collection.name | translate}}</h6>
                     </li>
                 </ul>
             </div>

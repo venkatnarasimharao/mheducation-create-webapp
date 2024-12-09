@@ -14,12 +14,12 @@ export class SidenavComponent {
   translate: TranslateService = inject(TranslateService);
 
   menuItems = [
-    { id: 'find', icon: 'bi bi-search', title: 'Find Content'},
+    { id: 'find', icon: 'bi bi-search', title: 'FindContent'},
     { id: 'projects', icon: 'bi bi-folder-symlink-fill', title: 'Projects' },
     { id: 'arrange', icon: 'bi bi-view-list', title: 'Banner2ndHeading' },
     { id: 'personalize', icon: 'bi bi-boxes', title: 'Banner3rdHeading' },
     { id: 'uploads', icon: 'bi bi-upload', title: 'Uploads' },
-    { id: 'favorites', icon: 'bi bi-heart', title: 'Favorites' },
+    { id: 'favorites', icon: 'bi bi-heart', title: 'Favourites' },
     { id: 'help', icon: 'bi bi-question-circle', title: 'Help' }
   ];
 
