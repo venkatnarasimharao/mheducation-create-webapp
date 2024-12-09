@@ -1,16 +1,16 @@
-<div class="row align-items-center">
+<div class="row border border-black mt-2   py-2 w-100">
   <!-- First Dropdown -->
   <div class="col-auto text-start">
     <p class="mb-1 fw-bold">Select Project</p>
     <div ngbDropdown class="d-inline-block">
       <button
         type="button"
-        class="btns d-flex justify-content-between align-items-center"
+        class="btn bg-white border border-dark text-black"
         id="dropdownBasic1"
         ngbDropdownToggle
       >
         <span class="text-start">Test123</span>
-        <span class="dropdown-arrow ms-auto"></span>
+        <span class="dropdown-arrow custom-margin"></span>
       </button>
       <div ngbDropdownMenu aria-labelledby="dropdownBasic1" >
         <button
@@ -18,6 +18,7 @@
           *ngFor="let item of dropdownList"
           #dropdownItem
           (click)="onItemSelect(item)"
+          class="btn btn-light"
         >
           {{ item }}
         </button>
@@ -36,18 +37,19 @@
         <div ngbDropdown class="d-inline-block">
           <button
             type="button"
-            class="btns d-flex justify-content-between align-items-center"
+            class="btn bg-white border border-dark text-black"
             id="dropdownBasic2"
             ngbDropdownToggle
           >
             <span class="text-start">Please select</span>
-            <span class="dropdown-arrow ms-auto"></span>
+            <span class="dropdown-arrow custom-margin1"></span>
           </button>
           <div ngbDropdownMenu aria-labelledby="dropdownBasic2" >
             <button
               ngbDropdownItem
               *ngFor="let item of dropdownList"
               (click)="onItemSelect(item)"
+              class="btn btn-light"
             >
               {{ item }}
             </button>
@@ -61,18 +63,19 @@
         <div ngbDropdown class="d-inline-block">
           <button
             type="button"
-            class="btns d-flex justify-content-between align-items-center"
+            class="btn bg-white border border-dark text-black"
             id="dropdownBasic3"
             ngbDropdownToggle
           >
             <span class="text-start">Arrange</span>
-            <span class="dropdown-arrow ms-auto"></span>
+            <span class="dropdown-arrow custom-margin1"></span>
           </button>
           <div ngbDropdownMenu aria-labelledby="dropdownBasic3" >
             <button
               ngbDropdownItem
               *ngFor="let item of dropdownList"
               (click)="onItemSelect(item)"
+              class="btn btn-light"
             >
               {{ item }}
             </button>

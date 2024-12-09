@@ -1,23 +1,9 @@
-.row {
-    border: 1px solid gray;
-    padding: 10px;
-    width: 100%;
-  }
-  .btns {
-    padding: 8px 25px;
-    border-radius: 10px;
-    background-color: white;
-    width: 200px;
-    box-sizing: border-box;
-  }
-  @media (max-width: 768px) {
-    .row {
-      flex-wrap: wrap;
-    }
-  
-    .btns {
-      width: 100%;
-      max-width: none;
-    }
-  }
-  
+.custom-margin {
+  margin-left: 8rem;
+}
+.custom-margin1{
+  margin-left: 5rem;
+}
+.custom-margin2{
+  margin-left: 4rem;
+}

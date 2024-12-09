@@ -25,16 +25,16 @@ export const routes: Routes = [
     redirectTo: 'home',
     pathMatch: 'full',
   },
-  {
-    path: 'breadcrumb',
-    component: BreadcrumbComponent,
-    children: [
-      { path: 'fcontent', component: FcontentComponent },
-      { path: 'browseCollection', component: BrowsecollectionsComponent },
-      {
-        path: 'negotiationCollection',
-        component: NegotiationCollectionComponent,
-      },
-    ],
-  },
+  // {
+  //   path: 'breadcrumb',
+  //   component: BreadcrumbComponent,
+  //   children: [
+  //     { path: 'fcontent', component: FcontentComponent },
+  //     { path: 'browseCollection', component: BrowsecollectionsComponent },
+  //     {
+  //       path: 'negotiationCollection',
+  //       component: NegotiationCollectionComponent,
+  //     },
+  //   ],
+  // },
 ];
