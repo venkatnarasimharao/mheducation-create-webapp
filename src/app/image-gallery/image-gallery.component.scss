@@ -1,8 +1,4 @@
-body {
-  font-size: calc(16px + 0.5vw);
-}
-
-.Browse-container {
+.browse-container {
   margin: 0 auto;
   padding: 1rem;
   width: 100%;
@@ -12,11 +8,11 @@ body {
   flex-direction: column;
 }
 
-.Browse-Header h4 {
+.browse-header h4 {
   font-size: 1.2rem;
 }
 
-.Browse-Header button {
+.browse-header button {
   padding: 0.5rem 1rem;
   font-size: 1rem;
   background-color: #ddd;
@@ -24,7 +20,7 @@ body {
   cursor: pointer;
 }
 
-.Browse-Header button:hover {
+.browse-header button:hover {
   background-color: #ccc;
 }
 
@@ -53,8 +49,3 @@ body {
   color: #333;
 }
 
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}

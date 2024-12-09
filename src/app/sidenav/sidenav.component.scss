@@ -6,9 +6,13 @@
       margin: 0;
       padding: 0;
   
-      li {
+      .sidenav-li {
         position: relative; 
-  
+
+        .nav-title{
+            font-size: 17px;
+        }
+
         &.active {
           background-color: #e5e7eb;
           &::before {

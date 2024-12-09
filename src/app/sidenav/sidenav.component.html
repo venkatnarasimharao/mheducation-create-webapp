@@ -3,16 +3,15 @@
       <ul class="list-unstyled">
         <li
           *ngFor="let item of menuItems"
-          class="position-relative"
+          class="position-relative sidenav-li"
           [class.active]="activeItem === item.id"
           (click)="setActive(item.id)"
           (keydown)="handleKeydown($event, item.id)">
           <a
             href="/accordion"
             class="nav-link p-3 d-flex flex-column align-items-center text-center text-decoration-none">
-            <i [class]="item.icon" class="mb-2 fs-4"></i>
-            <span class="fw-medium">{{ item.title }}</span>
-            <span *ngIf="item.subtitle" class="small">{{ item.subtitle }}</span>
+            <i [class]="item.icon" class="mb-2 fs-2"></i>
+            <span class="fw-medium nav-title">{{ item.title | translate }}</span>
           </a>
         </li>
       </ul>

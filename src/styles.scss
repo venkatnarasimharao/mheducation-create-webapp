@@ -1,13 +1,13 @@
-// html, body {
-//     margin: 0;
-//     padding: 0;
-//     overflow-x: auto;
-//     box-sizing: border-box;
-// }
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+    box-sizing: border-box;
+}
 
-// * {
-//     box-sizing: inherit;
-// }
+* {
+    box-sizing: inherit;
+}
 
 body {
     font-size: calc(16px + 0.5vw); /* Dynamic font scaling */
@@ -46,11 +46,11 @@ body {
 }
 
 // 768px
-// @media (min-width: $screen-sm-min) and (max-width: 1023px) {
-//     .hidden-sm {
-//         display: none !important;
-//     }
-// }
+@media (min-width: $screen-sm-min) and (max-width: 1023px) {
+    .hidden-sm {
+        display: none !important;
+    }
+}
 
 @media (min-width: 1024px) and (max-width: 1279px) {
     .hidden-md {
@@ -64,5 +64,10 @@ body {
     }
 }
 
+
+
+body {
+    font-size: calc(16px + 0.5vw);
+  }
 
 

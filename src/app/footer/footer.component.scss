@@ -1,3 +1,5 @@
+@import '../../variables.scss';
+
 .footer {
     background-color: #f1f1f1;
     padding: 20px 32px;
@@ -10,14 +12,14 @@
     align-items: center;
     justify-content: space-between;
   
-    @media (min-width: 768px) {
+    @media (min-width: $screen-sm) {
       flex-direction: row;
     }
   
     .footer-links {
       margin-bottom: 10px;
   
-      @media (min-width: 768px) {
+      @media (min-width: $screen-sm) {
         margin-bottom: 0;
       }
   
@@ -39,7 +41,7 @@
         margin: 5px 10px;
       }
   
-      @media (min-width: 768px) {
+      @media (min-width: $screen-sm) {
         text-align: right;
       }
     }

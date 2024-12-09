@@ -16,14 +16,6 @@ import { TranslateModule } from '@ngx-translate/core';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent implements OnInit {
-  
-  ngOnInit(): void {
+export class AppComponent{
 
-  }
-  translate: TranslateService =inject(TranslateService);
- 
-  changeLanguage(lang: string): void {
-    this.translate.use(lang);
-  }
 }
