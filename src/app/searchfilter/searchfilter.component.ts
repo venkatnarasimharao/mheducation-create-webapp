@@ -18,36 +18,36 @@ export class SearchfilterComponent {
   ];
 
   type: any[] = [
-    { label: 'Part', value: 'option1', checked: false },
-    { label: 'PartOpener', value: 'option2', checked: false },
-    { label: 'Books', value: 'option3', checked: false },
-    { label: 'Videos', value: 'option1', checked: false },
-    { label: 'Upload', value: 'option2', checked: false },
-    { label: 'Article', value: 'option3', checked: false },
-    { label: 'Case', value: 'option3', checked: false },
+    { label: 'Part', value: '', checked: false },
+    { label: 'PartOpener', value: '', checked: false },
+    { label: 'Books', value: '', checked: false },
+    { label: 'Videos', value: '', checked: false },
+    { label: 'Upload', value: '', checked: false },
+    { label: 'Article', value: '', checked: false },
+    { label: 'Case', value: '', checked: false },
   ];
 
   instructorMaterial: any[] = [
-    { label: 'Available as eBook', value: 'option3', checked: false },
+    { label: 'Available as eBook', value: '', checked: false },
   ];
 
   publicationYear: any[] = [
-    { label: '2022', value: 'option1', checked: false },
-    { label: '2021', value: 'option2', checked: false },
-    { label: '2020', value: 'option3', checked: false },
-    { label: '2019', value: 'option1', checked: false },
-    { label: '2018', value: 'option2', checked: false },
-    { label: '2017', value: 'option3', checked: false },
-    { label: '2016', value: 'option3', checked: false },
-    { label: '2015', value: 'option3', checked: false },
-    { label: '2014', value: 'option3', checked: false },
-    { label: 'before 2014', value: 'option3', checked: false },
+    { label: '2022', value: '', checked: false },
+    { label: '2021', value: '', checked: false },
+    { label: '2020', value: '', checked: false },
+    { label: '2019', value: '', checked: false },
+    { label: '2018', value: '', checked: false },
+    { label: '2017', value: '', checked: false },
+    { label: '2016', value: '', checked: false },
+    { label: '2015', value: '', checked: false },
+    { label: '2014', value: '', checked: false },
+    { label: 'before 2014', value: '', checked: false },
   ];
 
   pageLength: any[] = [
-    { label: 'Brief(1-4 pages)', value: 'option1', checked: false },
-    { label: 'Medium(5-9-4 pages)', value: 'option1', checked: false },
-    { label: 'Long(10+ pages)', value: 'option1', checked: false },
+    { label: 'Brief(1-4 pages)', value: '', checked: false },
+    { label: 'Medium(5-9-4 pages)', value: '', checked: false },
+    { label: 'Long(10+ pages)', value: '', checked: false },
   ];
     // Return the checkbox list based on the current item
     getCheckboxList(item: string): any[] {
