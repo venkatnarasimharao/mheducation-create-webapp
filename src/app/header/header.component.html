@@ -1,16 +1,3 @@
-<!-- <header class="header">
-    <div class="header-left" tabindex="0" cdkFocusInitial>
-        <img src={{imageurl}} alt="MHE logo" class="logo" />
-        <span class="brand-name">{{brandName}}</span>
-    </div>
-    <div class="header-right">
-        <select class="account-select" cdkTrapFocus cdkListbox tabindex="0">
-            <option value="" disabled selected>My Account</option>
-            <option value="register">Register</option>
-            <option value="login">Login</option>
-        </select>
-    </div>
-</header> -->
 <header class="header d-flex justify-content-between align-items-center p-2 border-bottom">
     <a class="header-left d-flex align-items-center text-decoration-none" style="color: black;" href="" cdkFocusInitial>
         <img src="{{imageurl}}" alt="MHE logo" class="logo me-2" style="width: 40px; height: 40px;" />
@@ -28,6 +15,9 @@
         </select>
         <select class="account-select form-select"
         style="min-width: 150px;">
+    <div class="header-right position-relative">
+        <select class="account-select form-select" cdkTrapFocus cdkListbox tabindex="0">
+
             <option value="" disabled selected>My Account</option>
             <option value="register">Register</option>
             <option value="login">Login</option>
