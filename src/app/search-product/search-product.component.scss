@@ -1,0 +1,31 @@
+.search-product-container {
+  padding: 30px;
+}
+
+.heading{
+  font-size: 1.8rem;
+  margin-bottom: 16px;
+}
+
+.search-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0px;
+  border-radius: 0; 
+}
+
+.searchbar {
+  width: 84%;
+  border-radius: 0;
+  padding: 0px;
+}
+
+button {
+  gap: 5px;
+  border-radius: 0;
+}
+
+button:hover {
+  background-color: #0056b3;
+}

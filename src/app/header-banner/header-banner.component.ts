@@ -1,15 +1,16 @@
 import { Component, inject } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
+
 @Component({
-  selector: 'app-footer',
+  selector: 'app-header-banner',
   standalone: true,
   imports: [TranslateModule],
-  templateUrl: './footer.component.html',
-  styleUrl: './footer.component.scss'
+  templateUrl: './header-banner.component.html',
+  styleUrl: './header-banner.component.scss'
 })
-export class FooterComponent {
-
+export class HeaderBannerComponent {
+  brandName: string = 'Create';
   translate: TranslateService = inject(TranslateService);
 
 }

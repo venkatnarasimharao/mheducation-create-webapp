@@ -1,0 +1,43 @@
+@import '../../variables.scss';
+
+.sidebar {  
+  
+    .list-unstyled {
+      margin: 0;
+      padding: 0;
+  
+      .sidenav-li {
+        position: relative; 
+
+        .nav-title{
+            font-size: 17px;
+        }
+
+        &.active {
+          background-color: #e5e7eb;
+          &::before {
+            content: ''; 
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: $teal-blue;
+          }
+        }
+      }
+    }
+}
+
+.nav-link {
+    &:focus {   
+        outline-offset: -9px !important; 
+        box-shadow: none; 
+    }
+  
+    &:hover {
+      background-color: #e5e7eb; 
+    }
+}
+
+
