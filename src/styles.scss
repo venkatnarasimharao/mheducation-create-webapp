@@ -7,7 +7,7 @@
 
 :focus:not(body):not(div) {
     outline: 2px solid $teal-blue !important;
-    outline-offset: 0px !important;
+    outline-offset: 3px !important;
     border-radius: 0 !important;
     -webkit-outline: 2px solid $teal-blue !important;
     -webkit-outline-offset: 0px !important;
@@ -45,3 +45,17 @@
         display: none !important;
     }
 }
+
+.breadcrumb-link {
+    color: $primary !important; // Use Bootstrap's primary color
+    text-decoration: none;
+  
+    &:hover {
+      color: darken($primary, 10%) !important; // Slightly darker color on hover
+    }
+  }
+  
+  .breadcrumb-last {
+    color: inherit; // Inherit color for the last breadcrumb to avoid primary styling
+  }
+  
