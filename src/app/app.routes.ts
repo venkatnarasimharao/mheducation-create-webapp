@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { NgbAccordionComponent } from './ngb-accordion/ngb-accordion.component';
 import { DragDropComponent } from './drag-drop/drag-drop.component';
+import { FindcontentComponent } from './findcontent/findcontent.component';
 
 export const routes: Routes = [
   {
@@ -22,5 +23,8 @@ export const routes: Routes = [
     redirectTo: 'home',
     pathMatch: 'full'
   },
-
+  {
+    path:'findcontent',
+    component:FindcontentComponent
+  }
 ];
