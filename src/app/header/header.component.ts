@@ -28,6 +28,12 @@ export class HeaderComponent {
   changeLanguage(event: Event): void {
     const selectedLanguage = (event.target as HTMLSelectElement).value;
     this.translate.use(selectedLanguage);
+    if(selectedLanguage =="arabic"){
+      document.documentElement.dir = 'rtl';
+    }
+    else{
+      document.documentElement.dir = 'ltr';
+    }
   }
 
 }
