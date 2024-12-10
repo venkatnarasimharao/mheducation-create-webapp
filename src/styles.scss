@@ -1,17 +1,35 @@
-// html, body {
-//     margin: 0;
-//     padding: 0;
-//     overflow-x: auto;
-//     box-sizing: border-box;
-// }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-// * {
-//     box-sizing: inherit;
-// }
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
 
-body {
-    font-size: calc(16px + 0.5vw); /* Dynamic font scaling */
-  }
+.container-fluid {
+  max-width: 100%;
+  padding: 0;
+}
+
+.hidden-sm {
+  overflow-x: hidden;
+}
+
+.nav-link,
+.header,
+.footer,
+.search-container {
+  max-width: 100%;
+}
+
+
 
 
 /* You can add global styles to this file, and also import other style files */
