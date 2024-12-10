@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-sidenav',
   standalone: true,
-  imports:[CommonModule, TranslateModule],
+  imports:[CommonModule, TranslateModule, RouterLink],
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.scss']
 })
