@@ -1,4 +1,4 @@
-export const USER_SEARCH_CONFIG = `{
+export const USER_SEARCH_CONFIG = {
     "search": {
         "start": "1",
         "query": "",
@@ -331,4 +331,4 @@ export const USER_SEARCH_CONFIG = `{
             ]
         }
     }
-}`
+}

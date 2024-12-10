@@ -4,6 +4,7 @@ import { FooterComponent } from './footer/footer.component';
 import { HeaderWrapperComponent } from "./header-wrapper/header-wrapper.component";
 import { TranslateModule } from '@ngx-translate/core';
 import { ApiService } from './services/api.service';
+import { SharedstateService } from './services/sharedstate.service';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -13,21 +14,31 @@ import { ApiService } from './services/api.service';
     FooterComponent,
     TranslateModule
   ],
-  
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent{
-  constructor(private apiService: ApiService) { }
+export class AppComponent {
+
+  constructor(
+    private apiService: ApiService,
+    private sharedStateService: SharedstateService,
+  ) { }
   ngOnInit(): void {
-    // this.getSearchListing();
-    this.apiService.getSearchListing().subscribe((data:any) => {
-      console.log(data, 'getSearchListing')
+    this.sharedStateService.getLanguages();
+    this.getCollectionsList();
+  }
+
+
+  getCollectionsList() {
+    this.apiService.getCollectionsList().subscribe((data: any) => {
+      console.log(data, 'getCollectionsList')
     });
+
+    this.getSearchListing();
   }
 
   getSearchListing() {
-    this.apiService.userLogin().subscribe((data:any) => {
+    this.apiService.getSearchListing().subscribe((data: any) => {
       console.log(data, 'cccccccccccc')
     });
   }

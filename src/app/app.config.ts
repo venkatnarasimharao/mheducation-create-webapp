@@ -8,6 +8,8 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { ApiService } from './services/api.service';
 import { httpInterceptor } from './services/http.interceptor';
+import { CommonService } from './services/common.service';
+import { SharedstateService } from './services/sharedstate.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -31,7 +33,9 @@ export const appConfig: ApplicationConfig = {
     ]),
     provideRouter(routes),
     TrapFocusDirective,
-    ApiService
+    ApiService,
+    CommonService,
+    SharedstateService,
   ]
 };
 

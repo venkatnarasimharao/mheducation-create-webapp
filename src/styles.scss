@@ -13,11 +13,8 @@ body {
 }
 
 * {
+    font-size: 14px;
     box-sizing: inherit;
-}
-
-body {
-    font-size: calc(16px + 0.5vw);
 }
 
 
@@ -34,10 +31,6 @@ body {
     -moz-outline: 2px solid $teal-blue !important;
     -moz-outline-offset: 0px !important;
     -moz-border-radius: 0 !important;
-}
-
-* {
-    font-size: 14px;
 }
 
 // 767px
@@ -70,4 +63,13 @@ body {
 
 body {
     font-size: calc(16px + 0.5vw);
+    direction: ltr;
+    text-align: left;
+}
+
+html[dir='rtl'] {
+    body {
+        direction: rtl;
+        text-align: right;
+    }
 }
