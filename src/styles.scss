@@ -1,4 +1,11 @@
-html, body {
+/* You can add global styles to this file, and also import other style files */
+
+/* Importing Bootstrap SCSS file. */
+@import 'bootstrap/scss/bootstrap';
+@import 'variables.scss';
+
+html,
+body {
     margin: 0;
     padding: 0;
     overflow-x: auto;
@@ -10,16 +17,8 @@ html, body {
 }
 
 body {
-    font-size: calc(16px + 0.5vw); /* Dynamic font scaling */
-  }
-
-
-/* You can add global styles to this file, and also import other style files */
-
-/* Importing Bootstrap SCSS file. */
-@import 'bootstrap/scss/bootstrap';
-@import 'variables.scss';
-
+    font-size: calc(16px + 0.5vw);
+}
 
 
 :focus:not(body):not(div) {
@@ -37,6 +36,9 @@ body {
     -moz-border-radius: 0 !important;
 }
 
+* {
+    font-size: 14px;
+}
 
 // 767px
 @media (max-width: $screen-xs-max) {
@@ -68,6 +70,4 @@ body {
 
 body {
     font-size: calc(16px + 0.5vw);
-  }
-
-
+}
