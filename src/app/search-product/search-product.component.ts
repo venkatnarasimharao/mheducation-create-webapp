@@ -1,15 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { A11yModule } from '@angular/cdk/a11y';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-search-product',
   standalone: true,
-  imports: [CommonModule,A11yModule],
+  imports: [CommonModule,A11yModule,TranslateModule],
   templateUrl: './search-product.component.html',
   styleUrl: './search-product.component.scss'
 })
 export class SearchProductComponent {
-  
+  translate:TranslateService =inject(TranslateService);
 
   onSearch() {
     console.log('Search button clicked!');

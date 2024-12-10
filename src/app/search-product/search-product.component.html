@@ -1,28 +1,28 @@
 <section class="py-4 search-product-container">
-    <h2 class="mb-3 heading">Begin Creating Now!</h2>
-    <h6>Search Product</h6>
+    <h2 class="mb-3 heading">{{"BeginCreatingNow" | translate}}</h2>
+    <h6>{{"SearchProduct" | translate}}</h6>
     <div class="search-container d-flex justify-content-between">
       <div class="searchAll col-md-1">
         <select 
           class="form-select rounded-0" 
           title="dropdown" 
           (keydown)="handleKeydown($event)">
-          <option value="" disabled selected>Select All</option>
-          <option>KeyWord</option>
-          <option>Title</option>
-          <option>Author</option>
-          <option>ISBN</option>
+          <option value="" disabled selected>{{"SelectAll" | translate}}</option>
+          <option>{{"KeyWord" | translate}}</option>
+          <option>{{"Title" | translate}}</option>
+          <option>{{"Author" | translate}}</option>
+          <option>{{"ISBN" | translate}}</option>
         </select>
       </div>
       <div class="searchbar col-md-8">
         <input type="search" 
           class="form-control rounded-0" 
-          placeholder="Find content by Keywords, Title, Author, ISBN" 
+          [placeholder]=" 'FindContentByKeywordsTitleAuthorISBN' | translate"
           aria-label="Search Products">
       </div>
       <div class="col-md-1 d-flex align-items-center">
         <button type="button" class="btn btn-primary w-100 rounded-0" (click)="onSearch()">
-          <span class="search-icon">🔍</span><span>Search</span>
+          <span class="search-icon">🔍</span><span>{{"Search" | translate }}</span>
         </button>
       </div>
     </div>
