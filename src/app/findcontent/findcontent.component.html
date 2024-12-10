@@ -1,94 +1,93 @@
-
-  <div class="ms-5">
-    <div class="row  mt-1 ms-2 py-2">
-      <!-- First Dropdown -->
-      <div class="col-auto text-start">
-        <p class="mb-1 fw-bold">Select Project</p>
-        <div ngbDropdown class="d-inline-block">
+<div class="container-fluid">
+  <div class="row mt-1 ms-2 py-2">
+    <!-- First Dropdown -->
+    <div class="col-auto text-start">
+      <p class="mb-1 fw-bold fs-6">Select Project</p>
+      <div ngbDropdown class="d-inline-block">
+        <button
+          type="button"
+          class="btn bg-white border border-dark text-black"
+          id="dropdownBasic1"
+          ngbDropdownToggle
+        >
+          <span class="text-start">Test123</span>
+          <span class="dropdown-arrow custom-margin"></span>
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
           <button
-            type="button"
-            class="btn bg-white border border-dark text-black"
-            id="dropdownBasic1"
-            ngbDropdownToggle
+            ngbDropdownItem
+            *ngFor="let item of dropdownList"
+            #dropdownItem
+            (click)="onItemSelect(item)"
+            class="btn btn-light"
           >
-            <span class="text-start">Test123</span>
-            <span class="dropdown-arrow custom-margin"></span>
+            {{ item }}
           </button>
-          <div ngbDropdownMenu aria-labelledby="dropdownBasic1" >
-            <button
-              ngbDropdownItem
-              *ngFor="let item of dropdownList"
-              #dropdownItem
-              (click)="onItemSelect(item)"
-              class="btn btn-light"
-            >
-              {{ item }}
-            </button>
-          </div>
         </div>
       </div>
-    
-      <!-- Spacer Column -->
-      <div class="col"></div>
-    
-      <!-- Second Dropdown -->
-      <div class="col-auto text-center">
-        <div class="d-flex align-items-center">
-          <div class="me-3 text-start">
-            <p class="mb-1 fw-bold">Select Format</p>
-            <div ngbDropdown class="d-inline-block">
+    </div>
+
+    <!-- Spacer Column -->
+    <div class="col"></div>
+
+    <!-- Second Dropdown -->
+    <div class="col-auto text-center">
+      <div class="d-flex align-items-center">
+        <div class="me-3 text-start">
+          <p class="mb-1 fw-bold fs-6">Select Format</p>
+          <div ngbDropdown class="d-inline-block">
+            <button
+              type="button"
+              class="btn bg-white border border-dark text-black"
+              id="dropdownBasic2"
+              ngbDropdownToggle
+            >
+              <span class="text-start">Please select</span>
+              <span class="dropdown-arrow custom-margin1"></span>
+            </button>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
               <button
-                type="button"
-                class="btn bg-white border border-dark text-black"
-                id="dropdownBasic2"
-                ngbDropdownToggle
+                ngbDropdownItem
+                *ngFor="let item of dropdownList"
+                (click)="onItemSelect(item)"
+                class="btn btn-light"
               >
-                <span class="text-start">Please select</span>
-                <span class="dropdown-arrow custom-margin1"></span>
+                {{ item }}
               </button>
-              <div ngbDropdownMenu aria-labelledby="dropdownBasic2" >
-                <button
-                  ngbDropdownItem
-                  *ngFor="let item of dropdownList"
-                  (click)="onItemSelect(item)"
-                  class="btn btn-light"
-                >
-                  {{ item }}
-                </button>
-              </div>
             </div>
           </div>
-    
-          <!-- Third Dropdown -->
-          <div class="text-center">
-            <p class="mb-1 fw-bold">{{ value }}</p>
-            <div ngbDropdown class="d-inline-block">
+        </div>
+
+        <!-- Third Dropdown -->
+        <div class="text-center">
+          <p class="mb-1 fw-bold fs-6">{{ value }}</p>
+          <div ngbDropdown class="d-inline-block">
+            <button
+              type="button"
+              class="btn bg-white border border-dark text-black"
+              id="dropdownBasic3"
+              ngbDropdownToggle
+            >
+              <span class="text-start">Arrange</span>
+              <span class="dropdown-arrow custom-margin1"></span>
+            </button>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic3">
               <button
-                type="button"
-                class="btn bg-white border border-dark text-black"
-                id="dropdownBasic3"
-                ngbDropdownToggle
+                ngbDropdownItem
+                *ngFor="let item of dropdownList"
+                (click)="onItemSelect(item)"
+                class="btn btn-light"
               >
-                <span class="text-start">Arrange</span>
-                <span class="dropdown-arrow custom-margin1"></span>
+                {{ item }}
               </button>
-              <div ngbDropdownMenu aria-labelledby="dropdownBasic3" >
-                <button
-                  ngbDropdownItem
-                  *ngFor="let item of dropdownList"
-                  (click)="onItemSelect(item)"
-                  class="btn btn-light"
-                >
-                  {{ item }}
-                </button>
-              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <hr class="my-2" />
-    <!-- breadcrumb component  -->
-    <app-breadcrumb/>
-    <app-searchfilter/>
   </div>
+  <hr class="my-2" />
+  <!-- breadcrumb component -->
+  <app-breadcrumb class="fs-6"/>
+  <app-searchfilter />
+</div>
