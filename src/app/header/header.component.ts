@@ -28,6 +28,7 @@ export class HeaderComponent {
   changeLanguage(event: Event): void {
     const selectedLanguage = (event.target as HTMLSelectElement).value;
     this.translate.use(selectedLanguage);
+    
   }
 
 }

@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 })
 export class ImageGalleryComponent {
 
-  showAll: boolean = false;
+ showAll: boolean = false;
  collections = [
     { name: 'Darden Business Publishing logo', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
     { name: 'Harvard Business Publishing logo ', logo: 'https://create.mheducation.com/createonline/images/sites/lewicki_logo.png' },

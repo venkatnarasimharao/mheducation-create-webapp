@@ -6,7 +6,7 @@
     </a>
  
     <div class="header-right position-relative d-flex justify-content-between align-items-center">
-        <select class="account-select form-select me-3" aria-label="Select a language">
+        <select class="account-select form-select me-3" aria-label="Select a language" (change)="changeLanguage($event)">
             <option value="" disabled selected>Select Languages</option>
             <option value="english">English</option>
             <option value="catala">Català</option>
