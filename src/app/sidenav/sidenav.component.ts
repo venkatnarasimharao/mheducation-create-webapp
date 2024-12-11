@@ -6,9 +6,15 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-sidenav',
   standalone: true,
-  imports:[CommonModule, TranslateModule, RouterLink,RouterModule],
+  imports: [
+    CommonModule,
+    TranslateModule,
+    RouterLink,
+    CommonModule,
+    TranslateModule,
+  ],
   templateUrl: './sidenav.component.html',
-  styleUrls: ['./sidenav.component.scss'],
+  styleUrl: './sidenav.component.scss'
 })
 export class SidenavComponent {
   activeItem: string = 'find';

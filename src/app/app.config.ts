@@ -3,15 +3,23 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { TrapFocusDirective } from './trap-focus.directive';
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { ApiService } from './services/api.service';
+import { httpInterceptor } from './services/http.interceptor';
+import { CommonService } from './services/common.service';
+import { SharedstateService } from './services/sharedstate.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 export const appConfig: ApplicationConfig = {
-  providers: [provideHttpClient(withInterceptorsFromDi()),provideZoneChangeDetection({ eventCoalescing: true }),
+  providers: [
+    provideHttpClient(withInterceptors([httpInterceptor])),
+    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(),
+    provideZoneChangeDetection({ eventCoalescing: true }),
     importProvidersFrom([
       TranslateModule.forRoot({
         loader:{
@@ -23,7 +31,12 @@ export const appConfig: ApplicationConfig = {
         defaultLanguage:'english',
       })
     ]),
-    provideRouter(routes),TrapFocusDirective]
+    provideRouter(routes),
+    TrapFocusDirective,
+    ApiService,
+    CommonService,
+    SharedstateService,
+  ]
 };
 
 
