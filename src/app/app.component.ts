@@ -5,6 +5,7 @@ import { HeaderWrapperComponent } from "./header-wrapper/header-wrapper.componen
 import { ApiService } from './services/api.service';
 import { SharedstateService } from './services/sharedstate.service';
 import { SidenavComponent } from './sidenav/sidenav.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +14,8 @@ import { SidenavComponent } from './sidenav/sidenav.component';
     RouterOutlet,
     HeaderWrapperComponent,
     FooterComponent,
+    FooterComponent,
+    TranslateModule,
     SidenavComponent
   ],
   templateUrl: './app.component.html',

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -9,7 +9,9 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
   imports: [
     CommonModule,
     TranslateModule,
-    RouterLink
+    RouterLink,
+    CommonModule,
+    TranslateModule,
   ],
   templateUrl: './sidenav.component.html',
   styleUrl: './sidenav.component.scss'
