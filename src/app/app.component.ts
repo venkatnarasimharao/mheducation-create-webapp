@@ -4,14 +4,16 @@ import { FooterComponent } from './footer/footer.component';
 import { HeaderWrapperComponent } from "./header-wrapper/header-wrapper.component";
 import { TranslateService } from '@ngx-translate/core';
 import { TranslateModule } from '@ngx-translate/core';
+import { HomeComponent } from "./home/home.component";
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
     RouterOutlet,
     HeaderWrapperComponent,
-    FooterComponent,TranslateModule
-  ],
+    FooterComponent, TranslateModule,
+    HomeComponent
+],
   
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

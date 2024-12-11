@@ -1,69 +1,41 @@
-body {
-  font-size: calc(16px + 0.5vw);
-}
-
-.Browse-container {
-  margin: 0 auto;
+.container-fluid {
   padding: 1rem;
-  width: 100%;
-  height: 100vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-  display: flex;
-  flex-direction: column;
 }
 
-.Browse-Header h4 {
-  font-size: 1.2rem;
-}
-
-.Browse-Header button {
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  background-color: #ddd;
-  border: none;
-  cursor: pointer;
-}
-
-.Browse-Header button:hover {
-  background-color: #ccc;
-}
-
-.collection-card {
-  border: 1px solid #ddd;
-  background-color: #ffffff;
-  text-align: center;
-  padding: 1rem;
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.collection-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.collection-card img {
-  max-width: 100%;
-  height: auto;
-  margin-bottom: 0.5rem;
-}
-
-.collection-card h6 {
-  font-size: 1rem;
-  margin: 0.5rem 0;
-  color: #333;
+h4 {
+  font-size: 1.5rem;
 }
 
 ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-@media (max-width: 400px) {
-  .example {
-    font-size: 0.8rem;
-    padding: 0.5rem;
+ul:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+  h4 {
+    text-align: center;
+  }
+
+  .btn {
+    width: 100%;
+    margin-top: 0.5rem;
   }
 }
 
+@media (max-width: 576px) {
+  ul {
+    padding: 1rem;
+  }
+
+  img {
+    max-height: 80px;
+  }
+
+  h6 {
+    font-size: 0.9rem;
+  }
+}

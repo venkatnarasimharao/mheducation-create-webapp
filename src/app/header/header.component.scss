@@ -1,49 +1,30 @@
+@media (max-width: 768px) {
+  .header {
+    flex-wrap: wrap;
+  }
 
-// body, html {
-//     margin: 0;
-//     padding: 0;
-//     font-family: Arial, sans-serif;
-// }
+  .header a {
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
 
-// .header {
-//     display: flex;
-//     justify-content: space-between;
-//     align-items: center;
-//     padding: 10px 40px 10px 20px;
-//     background-color: white;
-//     border-bottom: 1px solid #ccc;
-   
+  .header .d-flex {
+    justify-content: center;
+    width: 100%;
+  }
 
-//     &-left {
-//         display: flex;
-//         align-items: center;
-//         padding: 2px;
-        
+  .form-select {
+    width: 100%;
+  }
+}
 
-//         .logo {
-//             width: 40px;
-//             height: 40px;
-//             margin-right: 10px;
-//         }
+@media (max-width: 576px) {
+  .header {
+    padding: 1rem;
+  }
 
-//         .brand-name {
-//             font-size: 1.1rem;
-//             font-weight: bold;
-//         }
-//         &:focus{
-//             outline:  2px solid black;
-//         }
-//     }
-
-//     &-right {
-//         position: relative;
-
-//         .account-select {
-//             padding: 5px 10px;
-//             font-size: 1rem;
-//             cursor: pointer;
-//             border: 1px solid #ccc;
-//             border-radius: 5px;
-//         }
-//     }
-// }
+  .header a span {
+    font-size: 1.25rem;
+  }
+}

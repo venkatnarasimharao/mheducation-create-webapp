@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -13,7 +13,11 @@ export class HeaderComponent {
   brandName: string = "Create";
 
   selectedOption: string = '';
-  
+  @Output() sidebarToggle = new EventEmitter<void>();
+
+  toggleSidebar() {
+    this.sidebarToggle.emit();
+  }
   translate: TranslateService =inject(TranslateService);
   onSelect(event: any) {
     this.selectedOption = event.target.value;
@@ -31,3 +35,4 @@ export class HeaderComponent {
   }
 
 }
+

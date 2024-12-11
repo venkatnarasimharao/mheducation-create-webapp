@@ -1,14 +1,16 @@
-import { Component } from '@angular/core';
+import { Component,inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-image-gallery',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,TranslateModule,RouterModule],
   templateUrl: './image-gallery.component.html',
   styleUrl: './image-gallery.component.scss'
 })
 export class ImageGalleryComponent {
-
+  translate: TranslateService = inject(TranslateService);
   showAll: boolean = false;
  collections = [
     { name: 'Darden Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
@@ -44,31 +46,15 @@ export class ImageGalleryComponent {
     { name: 'Darden Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
     { name: 'Harvard Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/lewicki_logo.png' }
 ];
-
-  visibleCollections = this.collections.slice(0, 16);
-
-  showAllCollections() {
-    this.showAll = true;
-    this.visibleCollections = this.collections;
-  }
-   
-  exitShowAll() {
-    this.showAll = false;
-    this.visibleCollections = this.collections.slice(0, 16);
+constructor(private router: Router) {
+    this.showAll = this.isAllCollectionsPage();
   }
 
-  toggleShowAll(): void {
-    this.showAll = !this.showAll;
-    this.visibleCollections = this.showAll ? this.collections : this.collections.slice(0, 16);
+  isHomePage(): boolean {
+    return this.router.url === '/home';
   }
 
-  // onKeydown(event: KeyboardEvent, collection: any): void {
-  //   if (event.key === 'Enter' || event.key === ' ') {
-  //     console.log(`You selected ${collection.name}`);
-  //     event.preventDefault();
-  //   }
-  // }
-  trackCollection(index: number, collection: any) {
-    return collection.name;
+  isAllCollectionsPage(): boolean {
+    return this.router.url === '/all-collections';
   }
-}
+} 
