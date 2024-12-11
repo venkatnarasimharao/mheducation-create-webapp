@@ -1,49 +1,50 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-image-gallery',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './image-gallery.component.html',
   styleUrl: './image-gallery.component.scss'
 })
 export class ImageGalleryComponent {
-
+  translate: TranslateService = inject(TranslateService);
   showAll: boolean = false;
- collections = [
-    { name: 'Darden Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
-    { name: 'Harvard Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/lewicki_logo.png' },
-    { name: 'INSEAD Business School', logo: 'https://create.mheducation.com/createonline/images/sites/MEPS_logo.png' },
-    { name: 'NACRA Case Research', logo: 'https://create.mheducation.com/createonline/images/sites/literature.png' },
-    { name: 'MIT Sloan Management', logo: 'https://create.mheducation.com/createonline/images/sites/nacra_logo.png' },
-    { name: 'Darden Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/lewicki_logo.png' },
-    { name: 'Harvard Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
-    { name: 'INSEAD Business School', logo: 'https://create.mheducation.com/createonline/images/sites/nacra_logo.png' },
-    { name: 'NACRA Case Research', logo: 'https://create.mheducation.com/createonline/images/sites/MEPS_logo.png' },
-    { name: 'MIT Sloan Management', logo: 'https://create.mheducation.com/createonline/images/sites/literature.png' },
-    { name: 'Darden Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
-    { name: 'Harvard Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/lewicki_logo.png' },
-    { name: 'INSEAD Business School', logo: 'https://create.mheducation.com/createonline/images/sites/MEPS_logo.png' },
-    { name: 'NACRA Case Research', logo: 'https://create.mheducation.com/createonline/images/sites/literature.png' },
-    { name: 'MIT Sloan Management', logo: 'https://create.mheducation.com/createonline/images/sites/nacra_logo.png' },
-    { name: 'Darden Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/lewicki_logo.png' },
-    { name: 'Harvard Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
-    { name: 'INSEAD Business School', logo: 'https://create.mheducation.com/createonline/images/sites/nacra_logo.png' },
-    { name: 'NACRA Case Research', logo: 'https://create.mheducation.com/createonline/images/sites/MEPS_logo.png' },
-    { name: 'MIT Sloan Management', logo: 'https://create.mheducation.com/createonline/images/sites/literature.png' },
-    { name: 'Darden Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
-    { name: 'Harvard Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/lewicki_logo.png' },
-    { name: 'INSEAD Business School', logo: 'https://create.mheducation.com/createonline/images/sites/MEPS_logo.png' },
-    { name: 'NACRA Case Research', logo: 'https://create.mheducation.com/createonline/images/sites/literature.png' },
-    { name: 'MIT Sloan Management', logo: 'https://create.mheducation.com/createonline/images/sites/nacra_logo.png' },
-    { name: 'Darden Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/lewicki_logo.png' },
-    { name: 'Harvard Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
-    { name: 'INSEAD Business School', logo: 'https://create.mheducation.com/createonline/images/sites/nacra_logo.png' },
-    { name: 'NACRA Case Research', logo: 'https://create.mheducation.com/createonline/images/sites/MEPS_logo.png' },
-    { name: 'MIT Sloan Management', logo: 'https://create.mheducation.com/createonline/images/sites/literature.png' },
-    { name: 'Darden Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
-    { name: 'Harvard Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/lewicki_logo.png' }
-];
+  collections = [
+    { name: 'Darden Business Publishing logo', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
+    { name: 'Harvard Business Publishing logo ', logo: 'https://create.mheducation.com/createonline/images/sites/lewicki_logo.png' },
+    { name: 'INSEAD Business School logo', logo: 'https://create.mheducation.com/createonline/images/sites/MEPS_logo.png' },
+    { name: 'NACRA Case Research logo', logo: 'https://create.mheducation.com/createonline/images/sites/literature.png' },
+    { name: 'MIT Sloan Management logo', logo: 'https://create.mheducation.com/createonline/images/sites/nacra_logo.png' },
+    { name: 'Darden Business Publishing logo', logo: 'https://create.mheducation.com/createonline/images/sites/lewicki_logo.png' },
+    { name: 'Harvard Business Publishing logo', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
+    { name: 'INSEAD Business School logo', logo: 'https://create.mheducation.com/createonline/images/sites/nacra_logo.png' },
+    { name: 'NACRA Case Research logo', logo: 'https://create.mheducation.com/createonline/images/sites/MEPS_logo.png' },
+    { name: 'MIT Sloan Management logo', logo: 'https://create.mheducation.com/createonline/images/sites/literature.png' },
+    { name: 'Darden Business Publishing logo', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
+    { name: 'Harvard Business Publishing logo', logo: 'https://create.mheducation.com/createonline/images/sites/lewicki_logo.png' },
+    { name: 'INSEAD Business School logo', logo: 'https://create.mheducation.com/createonline/images/sites/MEPS_logo.png' },
+    { name: 'NACRA Case Research logo', logo: 'https://create.mheducation.com/createonline/images/sites/literature.png' },
+    { name: 'MIT Sloan Management logo', logo: 'https://create.mheducation.com/createonline/images/sites/nacra_logo.png' },
+    { name: 'Darden Business Publishing logo', logo: 'https://create.mheducation.com/createonline/images/sites/lewicki_logo.png' },
+    { name: 'Harvard Business Publishing logo', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
+    { name: 'INSEAD Business School logo', logo: 'https://create.mheducation.com/createonline/images/sites/nacra_logo.png' },
+    { name: 'NACRA Case Research logo', logo: 'https://create.mheducation.com/createonline/images/sites/MEPS_logo.png' },
+    { name: 'MIT Sloan Management logo', logo: 'https://create.mheducation.com/createonline/images/sites/literature.png' },
+    { name: 'Darden Business Publishing logo', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
+    { name: 'Harvard Business Publishing logo', logo: 'https://create.mheducation.com/createonline/images/sites/lewicki_logo.png' },
+    { name: 'INSEAD Business School logo', logo: 'https://create.mheducation.com/createonline/images/sites/MEPS_logo.png' },
+    { name: 'NACRA Case Research logo', logo: 'https://create.mheducation.com/createonline/images/sites/literature.png' },
+    { name: 'MIT Sloan Management logo', logo: 'https://create.mheducation.com/createonline/images/sites/nacra_logo.png' },
+    { name: 'Darden Business Publishing logo', logo: 'https://create.mheducation.com/createonline/images/sites/lewicki_logo.png' },
+    { name: 'Harvard Business Publishing logo', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
+    { name: 'INSEAD Business School logo', logo: 'https://create.mheducation.com/createonline/images/sites/nacra_logo.png' },
+    { name: 'NACRA Case Research logo', logo: 'https://create.mheducation.com/createonline/images/sites/MEPS_logo.png' },
+    { name: 'MIT Sloan Management logo', logo: 'https://create.mheducation.com/createonline/images/sites/literature.png' },
+    { name: 'Darden Business Publishing logo', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
+    { name: 'Harvard Business Publishing logo', logo: 'https://create.mheducation.com/createonline/images/sites/lewicki_logo.png' }
+  ];
 
   visibleCollections = this.collections.slice(0, 16);
 
@@ -51,7 +52,7 @@ export class ImageGalleryComponent {
     this.showAll = true;
     this.visibleCollections = this.collections;
   }
-   
+
   exitShowAll() {
     this.showAll = false;
     this.visibleCollections = this.collections.slice(0, 16);
