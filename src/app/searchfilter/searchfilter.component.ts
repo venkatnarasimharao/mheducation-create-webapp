@@ -2,11 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
+import { AlertComponentComponent } from '../alert-component/alert-component.component';
+import { IAlert } from '../interface/alert';
 
 @Component({
   selector: 'app-searchfilter',
   standalone: true,
-  imports: [NgbAccordionModule,CommonModule,FormsModule],
+  imports: [NgbAccordionModule,CommonModule,FormsModule,AlertComponentComponent],
   templateUrl: './searchfilter.component.html',
   styleUrl: './searchfilter.component.scss',
 })
@@ -16,6 +18,10 @@ export class SearchfilterComponent {
     event.preventDefault(); // Prevent default link behavior
     console.log('Filters cleared');
   }
+  alert: IAlert = {
+    type: 'success',
+    message: '"Coffee Inventory Management..." added to project "Test123;" New Price: $13.84, Page Count: 123 pages'
+  };
   
   lists = [
     {
