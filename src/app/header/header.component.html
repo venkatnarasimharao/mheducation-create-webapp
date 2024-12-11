@@ -1,23 +1,25 @@
-
 <header class="header d-flex justify-content-between align-items-center p-2 border-bottom">
     <a class="header-left d-flex align-items-center text-decoration-none" style="color: black;" href="" cdkFocusInitial>
         <img src="{{imageurl}}" alt="McGraw-Hill Education logo" class="logo me-2" style="width: 40px; height: 40px;" />
         <span class="brand-name fw-bold fs-5">{{brandName}}</span>
     </a>
- 
+
     <div class="header-right position-relative d-flex justify-content-between align-items-center">
-        <select class="account-select form-select me-3" aria-label="Select a language" (change)="changeLanguage($event)">
+        <select class="account-select form-select me-3" (change)="changeLanguage($event)"
+            style="min-width: 180px; padding-right: 2rem;">
             <option value="" disabled selected>Select Languages</option>
-            <option value="english">English</option>
-            <option value="catala">Català</option>
-            <option value="italiano">Italiano</option>
-            <option value="castellano">Español (Castellano)</option>
-          </select>          
-        <select class="account-select form-select" aria-label="select-options"
-        style="min-width: 150px;">
+            <option value="english">English </option>
+            <option value="catala">Català </option>
+            <option value="italiano">Italiano </option>
+            <option value="castellano">Español (Castellano) </option>
+            <option value="arabic">عربي </option>
+
+        </select>
+        <select class="account-select form-select" style="min-width: 150px;">
             <option value="" disabled selected>My Account</option>
             <option value="register">Register</option>
             <option value="login">Login</option>
         </select>
+
     </div>
 </header>

@@ -70,4 +70,16 @@ body {
     font-size: calc(16px + 0.5vw);
   }
 
+body {
+    direction: ltr;
+    text-align: left;
+
+}
+html[dir='rtl'] {
+    body {
+      direction: rtl;
+      text-align: right;
+    }
+  }
+
 
