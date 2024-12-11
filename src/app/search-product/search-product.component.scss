@@ -1,3 +1,5 @@
+@import '../../variables.scss';
+
 .search-product-container {
   padding: 30px;
 }
@@ -24,8 +26,9 @@
 button {
   gap: 5px;
   border-radius: 0;
+  background-color: $teal-blue;
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: cadetblue;
 }

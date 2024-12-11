@@ -8,7 +8,7 @@
           (click)="setActive(item.id)"
           (keydown)="handleKeydown($event, item.id)">
           <a
-            href="/accordion"
+            href="" [routerLink]="['/accordion']"
             class="nav-link p-3 d-flex flex-column align-items-center text-center text-decoration-none">
             <i [class]="item.icon" class="mb-2 fs-5"></i>
             <span class="fw-medium nav-title">{{ item.title | translate }}</span>
