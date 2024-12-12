@@ -38,6 +38,18 @@ html, body {
 @import 'bootstrap/scss/bootstrap';
 @import 'variables.scss';
 
+html,
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+    box-sizing: border-box;
+}
+
+* {
+    font-size: 14px;
+    box-sizing: inherit;
+}
 
 
 :focus:not(body):not(div) {
@@ -55,7 +67,6 @@ html, body {
     -moz-border-radius: 0 !important;
 }
 
-
 // 767px
 @media (max-width: $screen-xs-max) {
     .hidden-xs {
@@ -64,11 +75,11 @@ html, body {
 }
 
 // 768px
-// @media (min-width: $screen-sm-min) and (max-width: 1023px) {
-//     .hidden-sm {
-//         display: none !important;
-//     }
-// }
+@media (min-width: $screen-sm-min) and (max-width: 1023px) {
+    .hidden-sm {
+        display: none !important;
+    }
+}
 
 @media (min-width: 1024px) and (max-width: 1279px) {
     .hidden-md {
@@ -84,3 +95,15 @@ html, body {
 
 
 
+body {
+    font-size: calc(16px + 0.5vw);
+    direction: ltr;
+    text-align: left;
+}
+
+html[dir='rtl'] {
+    body {
+        direction: rtl;
+        text-align: right;
+    }
+}

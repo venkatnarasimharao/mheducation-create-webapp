@@ -14,9 +14,6 @@ import { TranslateService } from '@ngx-translate/core';
   selector: 'app-home',
   standalone: true,
   imports: [
-    SidenavComponent,
-    FooterComponent,
-    HeaderWrapperComponent,
     SearchProductComponent,
     ImageGalleryComponent,
     A11yModule,

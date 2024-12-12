@@ -1,10 +1,14 @@
 import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [],
+  imports: [
+    RouterLink
+  ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
@@ -32,6 +36,12 @@ export class HeaderComponent {
   changeLanguage(event: Event): void {
     const selectedLanguage = (event.target as HTMLSelectElement).value;
     this.translate.use(selectedLanguage);
+    if(selectedLanguage =="arabic"){
+      document.documentElement.dir = 'rtl';
+    }
+    else{
+      document.documentElement.dir = 'ltr';
+    }
   }
 
 }

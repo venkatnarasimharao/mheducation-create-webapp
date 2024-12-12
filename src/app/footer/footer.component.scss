@@ -24,9 +24,58 @@
   .footer {
     flex-direction: column;
     text-align: center;
+@import '../../variables.scss';
+
+.footer {
+    background-color: #f1f1f1;
+    padding: 20px 32px;
+    font-size: 0.9rem;
+    color: #4d4d4d;
+    border-top: 1px solid #ddd;
+  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+  
+    @media (min-width: $screen-sm) {
+      flex-direction: row;
+    }
+  
+    .footer-links {
+      margin-bottom: 10px;
+  
+      @media (min-width: $screen-sm) {
+        margin-bottom: 0;
+      }
+  
+      a {
+        color: #0056b3;
+        font-size: 1rem;
+        text-decoration: none;
+        margin-right: 15px;
+  
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  
+    .footer-region {
+      text-align: center;
+      display: flex ;
+      a {
+        margin: 5px 10px;
+      }
+  
+      @media (min-width: $screen-sm) {
+        text-align: right;
+      }
+    }
   }
 
   .footer-links, .footer-region {
     justify-content: center;
   }
+}
 }

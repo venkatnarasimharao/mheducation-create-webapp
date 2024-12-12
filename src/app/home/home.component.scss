@@ -11,3 +11,10 @@
      flex-direction: column;
    }
  }
+.home-page {
+   display: flex;
+
+   .image-gallery-container {
+      width: 100%;
+   }
+}

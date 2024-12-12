@@ -5,7 +5,7 @@
       <h4 class="m-0">Browse Collections</h4>
       <button class="btn btn-light ms-3" 
         [routerLink]="isHomePage() ? ['/all-collections'] : ['/home']">
-        {{ isHomePage() ? 'Show All Collections' : 'Exit All Collections' }}
+        {{ isHomePage() ? 'Show All Collections' : 'Exit All Collections' | translate }}
       </button>
     </div>
   </div>
@@ -29,7 +29,7 @@
             [alt]="collection.name" 
             class="img-fluid mb-1" 
             style="max-height: 100px; object-fit: contain;" />
-          <h6 class="m-0">{{ collection.name }}</h6>
+          <h6 class="m-0">{{ collection.name | translate}}</h6>
           </a>
         </li>
       </ul>
