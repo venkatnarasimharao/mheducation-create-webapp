@@ -14,4 +14,5 @@ export class SearchResultsComponent {
   @Input() formats: string = '';
   @Input() type: string = '';
   @Input() year: string = '';
+
 }
