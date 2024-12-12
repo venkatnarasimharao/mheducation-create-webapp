@@ -2,22 +2,47 @@ import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderWrapperComponent } from "./header-wrapper/header-wrapper.component";
-import { TranslateService } from '@ngx-translate/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { ApiService } from './services/api.service';
+import { SharedstateService } from './services/sharedstate.service';
 import { SidenavComponent } from './sidenav/sidenav.component';
+import { TranslateModule } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
     RouterOutlet,
     HeaderWrapperComponent,
-    FooterComponent,TranslateModule,
+    FooterComponent,
+    FooterComponent,
+    TranslateModule,
     SidenavComponent
   ],
-  
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
 })
-export class AppComponent{
+export class AppComponent {
 
+  constructor(
+    private apiService: ApiService,
+    private sharedStateService: SharedstateService,
+  ) { }
+  ngOnInit(): void {
+    this.sharedStateService.getLanguages();
+    this.getCollectionsList();
+  }
+
+
+  getCollectionsList() {
+    this.apiService.getCollectionsList().subscribe((data: any) => {
+      console.log(data, 'getCollectionsList')
+    });
+
+    this.getSearchListing();
+  }
+
+  getSearchListing() {
+    this.apiService.getSearchListing().subscribe((data: any) => {
+      console.log(data, 'cccccccccccc')
+    });
+  }
 }

@@ -1,12 +1,11 @@
-
-
 /* You can add global styles to this file, and also import other style files */
 
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
 @import 'variables.scss';
 
-html, body {
+html,
+body {
     margin: 0;
     padding: 0;
     overflow-x: auto;
@@ -14,12 +13,9 @@ html, body {
 }
 
 * {
+    font-size: 14px;
     box-sizing: inherit;
 }
-
-body {
-    font-size: calc(16px + 0.5vw); /* Dynamic font scaling */
-  }
 
 
 :focus:not(body):not(div) {
@@ -36,7 +32,6 @@ body {
     -moz-outline-offset: 0px !important;
     -moz-border-radius: 0 !important;
 }
-
 
 // 767px
 @media (max-width: $screen-xs-max) {
@@ -68,18 +63,13 @@ body {
 
 body {
     font-size: calc(16px + 0.5vw);
-  }
-
-body {
     direction: ltr;
     text-align: left;
-
 }
+
 html[dir='rtl'] {
     body {
-      direction: rtl;
-      text-align: right;
+        direction: rtl;
+        text-align: right;
     }
-  }
-
-
+}
