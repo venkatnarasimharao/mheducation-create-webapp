@@ -1,35 +1,33 @@
 <section class="py-4 container-fluid">
-  <h2 class="mb-3">Begin Creating Now!</h2>
-  <h6 class="">Search Product</h6>
+  <h2 class="mb-3">{{ 'BeginCreatingNow' | translate }}</h2>
+  <h6>{{ 'SearchProduct' | translate }}</h6>
   <div class="row g-0 justify-content-center align-items-center">
     <!-- Dropdown -->
     <div class="col-lg-2 col-md-3 col-sm-4 col-12">
       <select class="form-select" title="dropdown" (keydown)="handleKeydown($event)">
-        <option value="" disabled selected>Select All</option>
-        <option>KeyWord</option>
-        <option>Title</option>
-        <option>Author</option>
-        <option>ISBN</option>
+        <option value="" disabled selected>{{ 'SelectAll' | translate }}</option>
+        <option>{{ 'KeyWord' | translate }}</option>
+        <option>{{ 'Title' | translate }}</option>
+        <option>{{ 'Author' | translate }}</option>
+        <option>{{ 'ISBN' | translate }}</option>
       </select>
     </div>
     <!-- Search Bar -->
     <div class="col-lg-8 col-md-6 col-sm-8 col-12 d-flex">
       <input
-        type="search"
-        class="form-control"
-        placeholder="Find content by Keywords, Title, Author, ISBN"
-        aria-label="Search Products" />
+  type="search"
+  class="form-control"
+  [attr.aria-label]="'SearchProduct' | translate"
+  placeholder="{{ 'FindContentByKeywordsTitleAuthorISBN' | translate }}" />
         <div class="col-lg-1 col-md-3 col-sm-4 col-12">
           <button
             type="button"
             class="btn btn-primary w-100 d-flex align-items-center justify-content-center"
             (click)="onSearch()">
             <span class="search-icon">🔍</span>
-            <span class="search-text">Search</span>
+            <span class="search-text">{{ 'Search' | translate }}</span>
           </button>
         </div>
     </div>
-    <!-- Search Button -->
-  
   </div>
 </section>

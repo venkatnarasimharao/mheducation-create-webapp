@@ -9,15 +9,6 @@
 }
 .search-icon {
   display: inline-block;
-@import '../../variables.scss';
-
-.search-product-container {
-  padding: 30px;
-}
-
-.heading{
-  font-size: 1.8rem;
-  margin-bottom: 16px;
 }
 
 .search-text {
@@ -65,14 +56,4 @@
     min-width: 80%
     
   }
-}
-button {
-  gap: 5px;
-  border-radius: 0;
-  background-color: $teal-blue;
-}
-
-button:hover {
-  background-color: cadetblue;
-}
 }

@@ -1,13 +1,7 @@
-<<<<<<< HEAD
 .container-fluid {
-=======
-.browse-container {
-  margin: 0 auto;
->>>>>>> 9a8243599c6d412a54ae5c921985991f9dbb8d88
   padding: 1rem;
 }
 
-<<<<<<< HEAD
 h4 {
   font-size: 1.5rem;
 }
@@ -45,46 +39,3 @@ ul:hover {
     font-size: 0.9rem;
   }
 }
-=======
-.browse-header h4 {
-  font-size: 1.2rem;
-}
-
-.browse-header button {
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  background-color: #ddd;
-  border: none;
-  cursor: pointer;
-}
-
-.browse-header button:hover {
-  background-color: #ccc;
-}
-
-.collection-card {
-  border: 1px solid #ddd;
-  background-color: #ffffff;
-  text-align: center;
-  padding: 1rem;
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.collection-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.collection-card img {
-  max-width: 100%;
-  height: auto;
-  margin-bottom: 0.5rem;
-}
-
-.collection-card h6 {
-  font-size: 1rem;
-  margin: 0.5rem 0;
-  color: #333;
-}
-
->>>>>>> 9a8243599c6d412a54ae5c921985991f9dbb8d88
