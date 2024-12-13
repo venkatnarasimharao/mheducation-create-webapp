@@ -8,7 +8,7 @@ import { ArrangeComponent } from './arrange/arrange.component';
 
 export const routes: Routes = [
   {
-    
+
     path: 'home',
     component: HomeComponent
   },
@@ -30,11 +30,11 @@ export const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path:'search',
-    component:FindcontentComponent
+    path: 'search',
+    component: FindcontentComponent
   },
   {
-    path:'arrange',
-    component:ArrangeComponent
+    path: 'arrange',
+    component: ArrangeComponent
   }
 ];
