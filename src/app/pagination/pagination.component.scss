@@ -1,0 +1,28 @@
+.pagination-container {
+  margin-bottom: 4rem; /* Add space below the pagination */
+
+  ngb-pagination {
+    .page-link {
+      background-color: inherit;
+      color: inherit;
+      border-radius: 0 !important;
+      padding: 0.5rem 1rem;
+
+      &:hover {
+        background-color: darkblue;
+        color: white;
+      }
+    }
+
+    .page-item.active .page-link {
+      background-color: darkblue !important;
+      color: white !important;
+      border-color: darkblue !important;
+    }
+
+    .page-item.disabled .page-link {
+      background-color: #f8f9fa !important;
+      cursor: not-allowed;
+    }
+  }
+}

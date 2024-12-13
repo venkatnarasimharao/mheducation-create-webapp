@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
+import { PaginationComponent } from "../pagination/pagination.component";
 
 @Component({
   selector: 'app-searchfilter',
   standalone: true,
-  imports: [NgbAccordionModule,CommonModule,FormsModule],
+  imports: [NgbAccordionModule, CommonModule, FormsModule, PaginationComponent],
   templateUrl: './searchfilter.component.html',
   styleUrl: './searchfilter.component.scss',
 })
