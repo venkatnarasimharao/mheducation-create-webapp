@@ -24,7 +24,7 @@ export const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path:'findcontent',
+    path:'search',
     component:FindcontentComponent
   }
 ];

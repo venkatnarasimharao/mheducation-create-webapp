@@ -1,0 +1,25 @@
+<form class="search-container d-flex mb-3">
+    <div class="search-all">
+      <select 
+        class="form-select rounded-0" 
+        title="dropdown" 
+        (keydown)="handleKeydown($event)">
+        <option value="" disabled selected>{{"Topic" | translate}}</option>
+        <option>{{"KeyWord" | translate}}</option>
+        <option>{{"Title" | translate}}</option>
+        <option>{{"Author" | translate}}</option>
+        <option>{{"ISBN" | translate}}</option>
+      </select>
+    </div>
+    <div class="searchbar">
+      <input type="search" 
+        class="form-control rounded-0" 
+        [placeholder]=" 'Search' | translate"
+        aria-label="Search Products">
+    </div>
+    <div class="search-btn">
+      <button type="button" class="btn bg-secondary rounded-0 d-flex justify-content-center gap-2 text-white" (click)="onSearch()">
+        <span class="search-icon"><i class="bi bi-search"></i></span><span>{{"Search" | translate }}</span>
+      </button>
+    </div>
+</form>
