@@ -3,6 +3,7 @@ import { HomeComponent } from './home/home.component';
 import { NgbAccordionComponent } from './ngb-accordion/ngb-accordion.component';
 import { DragDropComponent } from './drag-drop/drag-drop.component';
 import { FindcontentComponent } from './findcontent/findcontent.component';
+import { ArrangeComponent } from './arrange/arrange.component';
 
 export const routes: Routes = [
   {
@@ -26,5 +27,9 @@ export const routes: Routes = [
   {
     path:'search',
     component:FindcontentComponent
+  },
+  {
+    path:'arrange',
+    component:ArrangeComponent
   }
 ];
