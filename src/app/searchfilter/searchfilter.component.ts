@@ -2,11 +2,17 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
+import { PaginationComponent } from "../pagination/pagination.component";
+import { SearchResultsComponent } from '../search-results/search-results.component';
+import { NegotiationCollectionComponent } from '../negotiation-collection/negotiation-collection.component';
+import { FindcontentSearchComponent } from '../findcontent-search/findcontent-search.component';
+import { AlertComponentComponent } from '../alert-component/alert-component.component';
+import { IAlert } from '../interface/alert';
 
 @Component({
   selector: 'app-searchfilter',
   standalone: true,
-  imports: [NgbAccordionModule,CommonModule,FormsModule],
+  imports: [NgbAccordionModule,CommonModule,FormsModule,AlertComponentComponent,PaginationComponent, SearchResultsComponent, NegotiationCollectionComponent, FindcontentSearchComponent],
   templateUrl: './searchfilter.component.html',
   styleUrl: './searchfilter.component.scss',
 })
@@ -16,7 +22,42 @@ export class SearchfilterComponent {
     event.preventDefault(); // Prevent default link behavior
     console.log('Filters cleared');
   }
+  alert: IAlert = {
+    type: 'success',
+    message: '"Coffee Inventory Management..." added to project "Test123;" New Price: $13.84, Page Count: 123 pages'
+  };
   
+  resultItems = [
+    {
+      type: 'Case',
+      title: 'Coffee Inventory Management under LIFO at Farmer Brothers Coffee Company',
+      author: 'Sylvia Mader and Michael Windelspecht',
+      year: '2022',
+      formats: 'BW Print, Digital'  
+    },
+    {
+      type: 'Case',
+      title: 'Coffee Inventory Management under LIFO at Farmer Brothers Coffee Company',
+      author: 'Sylvia Mader and Michael Windelspecht',
+      year: '2022',
+      formats: 'BW Print, Digital'  
+    },
+    {
+      type: 'Article',
+      title: 'Volcom — Building an Authentic Brand',
+      author: 'Sylvia Mader and Michael Windelspecht',
+      year: '2022',
+      formats: 'BW Print, Digital'
+    },
+    {
+      type: 'PartOpener',
+      title: 'IDIEM — Catálogo Verde',
+      author: 'Sylvia Mader and Michael Windelspecht',
+      year: '2022',
+      formats: 'BW Print, Digital'
+    }
+  ];
+
   lists = [
     {
       title: 'Type',

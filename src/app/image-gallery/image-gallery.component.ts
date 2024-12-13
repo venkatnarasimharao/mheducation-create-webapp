@@ -10,6 +10,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
   styleUrl: './image-gallery.component.scss'
 })
 export class ImageGalleryComponent {
+
   translate: TranslateService = inject(TranslateService);
   showAll: boolean = false;
   collections = [

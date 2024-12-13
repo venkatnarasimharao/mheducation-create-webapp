@@ -1,19 +1,9 @@
 <div class="container-fluid mt-3">
-  <div class="row">
-    <!-- 4 out of 12 column -->
-    <div class="col-md-4">
-      <div class="mb-3">
-        <p class="fw-bold mb-2 fs-4">Result for Negotiation Collection</p>
-        <div>
-          <img
-            src="https://createqa.mheducation.com/createonline/images/sites/lewicki_logo.png"
-            alt="Lewicki Logo"
-            class="img-fluid w-auto"
-            style="max-width: 170px; max-height: 90px"
-          />
-        </div>
-      </div>
-
+  <div class="row d-flex">
+   <app-negotiation-collection></app-negotiation-collection>
+   
+    <!-- 3 out of 12 column -->
+    <div class="col-md-3">      
       <div class="mb-2">
         <p class="fw-bold fs-6" aria-label="Applied Filters Section">
           Applied Filters
@@ -53,7 +43,7 @@
         </div>
 
         <!-- filter accordion -->
-        <div ngbAccordion [closeOthers]="true" aria-labelledby="accordionTitle">
+        <div ngbAccordion [closeOthers]="false" aria-labelledby="accordionTitle">
           <div *ngFor="let list of lists" ngbAccordionItem class="border-0">
             <h2 ngbAccordionHeader id="accordionTitle">
               <button class="fw-bold" ngbAccordionButton aria-controls="accordionBody" aria-expanded="false">{{ list.title }}</button>
@@ -87,9 +77,38 @@
       </div>
     </div>
 
+    <!-- 7 out of 12 columns -->
+    <div class="col-md-7">
+      <div class="d-flex flex-column">
+        <p class="fw-bold fs-6">Search</p>
+        <app-findcontent-search></app-findcontent-search>
+      </div>
+      <div class="d-flex justify-content-between mb-3">
+        <p class="fs-6">Showing <span class="fw-bold">1-6</span> of <span class="fw-bold">100</span> Results</p>
+        <select class="form-select w-auto" aria-label="Sort Results">
+          <option value="">Please Select</option>
+          <option value="relevance">Relevance</option>
+          <option value="newest">Newest</option>
+        </select>
+      </div>
+
+      <div>
+        <app-search-results
+          *ngFor="let item of resultItems"
+          [title]="item.title"
+          [author]="item.author"
+          [formats]="item.formats"
+          [type]="item.type"
+          [year]="item.year"
+        ></app-search-results>
+
+      </div>
+      <div class="mt-auto d-flex justify-content-end">
+        <app-pagination/>
     <!-- Placeholder for other 8 columns -->
     <div class="col-md-8">
       <!-- Add your content for the remaining 8 columns here -->
+       <app-alert-component [alert]="alert"/>
       <div class="bg-white p-3">
         <p></p>
       </div>

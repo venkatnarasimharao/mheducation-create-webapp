@@ -4,6 +4,7 @@ import { NgbAccordionComponent } from './ngb-accordion/ngb-accordion.component';
 import { DragDropComponent } from './drag-drop/drag-drop.component';
 import { ImageGalleryComponent } from './image-gallery/image-gallery.component';
 import { FindcontentComponent } from './findcontent/findcontent.component';
+import { ArrangeComponent } from './arrange/arrange.component';
 
 export const routes: Routes = [
   {
@@ -29,7 +30,11 @@ export const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path:'findcontent',
+    path:'search',
     component:FindcontentComponent
+  },
+  {
+    path:'arrange',
+    component:ArrangeComponent
   }
 ];

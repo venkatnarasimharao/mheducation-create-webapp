@@ -7,13 +7,7 @@ import { SidebarService } from '../services/sidebar.service';
 @Component({
   selector: 'app-sidenav',
   standalone: true,
-  imports: [
-    CommonModule,
-    TranslateModule,
-    RouterLink,
-    CommonModule,
-    TranslateModule,
-  ],
+  imports:[CommonModule, TranslateModule, RouterLink,RouterModule],
   templateUrl: './sidenav.component.html',
   styleUrl: './sidenav.component.scss'
 })
@@ -22,11 +16,13 @@ export class SidenavComponent {
   isZoomedIn: boolean = false; // Zoom state
   isSidebarVisible: boolean = false; // Sidebar visibility toggled via button
   menuItems = [
-    { id: 'find', icon: 'bi bi-search', title: 'FindContent' },
-    { id: 'projects', icon: 'bi bi-folder-symlink-fill', title: 'Projects' },
-    { id: 'uploads', icon: 'bi bi-upload', title: 'Uploads' },
-    { id: 'favorites', icon: 'bi bi-heart', title: 'Favourites' },
-    { id: 'help', icon: 'bi bi-question-circle', title: 'Help' },
+    { id: 'find', icon: 'bi bi-search', title: 'FindContent', routerLink: '/search'},
+    { id: 'projects', icon: 'bi bi-folder-symlink-fill', title: 'Projects',routerLink: '/search' },
+    { id: 'arrange', icon: 'bi bi-view-list', title: 'Banner2ndHeading' , routerLink: '/arrange' },
+    { id: 'personalize', icon: 'bi bi-boxes', title: 'Banner3rdHeading',routerLink: '/search' },
+    { id: 'uploads', icon: 'bi bi-upload', title: 'Uploads',routerLink: '/findcontent' },
+    { id: 'favorites', icon: 'bi bi-heart', title: 'Favourites',routerLink: '/findcontent' },
+    { id: 'help', icon: 'bi bi-question-circle', title: 'Help',routerLink: '/findcontent' }
   ];
  
   
