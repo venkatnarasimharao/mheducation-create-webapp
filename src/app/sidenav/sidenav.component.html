@@ -7,14 +7,10 @@
           [class.active]="activeItem === item.id"
           (click)="setActive(item.id)"
           (keydown)="handleKeydown($event, item.id)">
-          <a [routerLink]="['/search']" routerLinkActive="router-link-active" 
-            class="nav-link p-3 d-flex flex-column align-items-center text-decoration-none">
+          <a [routerLink]="[item.route]" routerLinkActive="router-link-active" 
+            class="nav-link p-3 d-flex flex-column align-items-center text-center text-decoration-none">
             <i [class]="item.icon" class="mb-2 fs-5"></i>
-            <span class="fw-medium nav-title">{{ item.title | translate }}</span>
-            <span
-            *ngIf="item.subtitle"
-            class="fw-medium nav-subtitle">{{ item.subtitle | translate }}</span>
-            </a>
+            <span class="fw-medium nav-title">{{ item.title | translate }}</span> </a>
         </li>
       </ul>
     </nav>

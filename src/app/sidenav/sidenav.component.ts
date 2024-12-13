@@ -15,13 +15,13 @@ export class SidenavComponent {
   translate: TranslateService = inject(TranslateService);
 
   menuItems = [
-    { id: 'find', icon: 'bi bi-search', title: 'Find', subtitle: 'Content' },
-    { id: 'projects', icon: 'bi bi-folder-symlink-fill', title: 'Projects' },
-    { id: 'arrange', icon: 'bi bi-view-list', title: 'Banner2ndHeading' },
-    { id: 'personalize', icon: 'bi bi-grid-1x2', title: 'Banner3rdHeading' },
-    { id: 'uploads', icon: 'bi bi-upload', title: 'Uploads' },
-    { id: 'favorites', icon: 'bi bi-heart', title: 'Favourites' },
-    { id: 'help', icon: 'bi bi-question-circle', title: 'Help' }
+    { id: 'find', icon: 'bi bi-search', title: 'FindContent', route: '/search' },
+    { id: 'projects', icon: 'bi bi-folder-symlink-fill', title: 'Projects', route: '/projects'},
+    { id: 'arrange', icon: 'bi bi-view-list', title: 'Banner2ndHeading', route: '/arrange' },
+    { id: 'personalize', icon: 'bi bi-grid-1x2', title: 'Banner3rdHeading', route: '/personalize' },
+    { id: 'uploads', icon: 'bi bi-upload', title: 'Uploads', route: '/uploads' },
+    { id: 'favorites', icon: 'bi bi-heart', title: 'Favourites', route: '/favorites' },
+    { id: 'help', icon: 'bi bi-question-circle', title: 'Help', route: '/help' }
   ];
 
   setActive(itemId: string) {
