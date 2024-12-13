@@ -1,50 +1,13 @@
-<!-- <nav  aria-label="Breadcrumb navigation" class="mt-2 ms-3">
-    <ol class="breadcrumb" role="navigation" aria-label="Breadcrumb trail">
-      <li
-        class="breadcrumb-item"
-        *ngFor="let breadcrumb of breadCrumbs; let last = last"
-        [class.active]="last"
-        role="listitem"
-      >
-        <a
-          *ngIf="!last"
-          class="breadcrumb-link text-primary"
-          (click)="navigate(breadcrumb)"
-          [attr.aria-current]="last ? 'page' : null"
-        >
-          {{ breadcrumb.label }}
-        </a>
-        <span *ngIf="last" tabindex="-1" role="text">
-          {{ breadcrumb.label }}
-        </span>
-      </li>
-    </ol>
-  </nav> -->
-
-  <nav aria-label="Breadcrumb navigation" class="mt-2 ms-3">
-    <ol class="breadcrumb" role="list">
-      <li
-        class="breadcrumb-item"
-        *ngFor="let breadcrumb of breadCrumbs; let last = last"
-        [class.active]="last"
-      >
-        <a
-          [routerLink]="['breadcrumb.route']" routerLinkActive="router-link-active" 
-          *ngIf="!last"
-          class="breadcrumb-link text-primary"
-          (click)="navigate(breadcrumb)"
-          [attr.aria-current]="last ? 'page' : null"
-        >
-          {{ breadcrumb.label }}
-        </a>
-        <span *ngIf="last" aria-current="page">
-          {{ breadcrumb.label }}
-        </span> 
-      </li>
-    </ol>
-  </nav>
-  
-  
-  <!-- <div class="child-content ms-3" role="main">
-    <router-outlet></router-outlet>
-  </div> -->
+<nav aria-label="Breadcrumb navigation" class="mt-2 ms-3">
+  <ol class="breadcrumb" role="list">
+    <li class="breadcrumb-item" *ngFor="let breadcrumb of breadCrumbs; let last = last" [class.active]="last">
+      <a [routerLink]="['breadcrumb.route']" routerLinkActive="router-link-active" *ngIf="!last"
+        class="breadcrumb-link text-primary" (click)="navigate(breadcrumb)" [attr.aria-current]="last ? 'page' : null">
+        {{ breadcrumb.label }}
+      </a>
+      <span *ngIf="last" aria-current="page">
+        {{ breadcrumb.label }}
+      </span>
+    </li>
+  </ol>
+</nav>
