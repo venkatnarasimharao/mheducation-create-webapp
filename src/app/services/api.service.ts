@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, from, map, Observable, switchMap, tap, throwError } from 'rxjs';
-import { USER_SEARCH_CONFIG } from '../config/search-payload.config';
+import { BOOK_COVER_IMAGES, USER_SEARCH_CONFIG } from '../config/search-payload.config';
 import { CommonService } from './common.service';
 
 @Injectable({
@@ -13,7 +13,16 @@ export class ApiService {
 
   getSearchListing() {
     const finalPay = USER_SEARCH_CONFIG
-    finalPay.search.textTypes.textType = 'all' // title | all | ["title","authors", "isbn", ""];
+    let languages: any = sessionStorage.getItem('languages');
+    if (languages) {
+      languages = JSON.parse(languages);
+      finalPay['search']['facets']['facet'][4]['item'] = languages.map((item: any) => ({
+        _label: item.displayValue._text,
+        _value: item.name._text,
+        _selected: "false" // item.enabled._text === "true" ? "true" : 
+      }))
+    }
+    finalPay.search.textTypes.textType = 'title' // title | all | ["title","authors", "isbn", ""];
     return this.commonService.apiMethodService({
       url: `/p/users/anonymous/search`,
       method: 'POST',
@@ -22,7 +31,7 @@ export class ApiService {
       switchMap((response: string) => {
         console.error('processing response:', response);
         if (response.startsWith('<?xml')) {
-          return from(this.commonService.xmlToJson(response));
+          return from(this.commonService.convertXmlToJson(response));
         } else {
           throw new Error('Unexpected response format');
         }
@@ -49,7 +58,7 @@ export class ApiService {
     return this.commonService.apiMethodService({ url: '/p/collectionsfilter', method: 'GET' }).pipe(
       switchMap((response: string) => {
         if (response.startsWith('<?xml')) {
-          return from(this.commonService.xmlToJson(response));
+          return from(this.commonService.convertXmlToJson(response));
         } else {
           throw new Error('Unexpected response format');
         }
@@ -58,5 +67,36 @@ export class ApiService {
         return throwError(() => error);
       })
     );
+  }
+
+  getTaxonomyfacetsList() {
+    return this.commonService.apiMethodService({ url: '/p/taxonomyfacets/create.mheducation.com/80/createonline', method: 'GET' }).pipe(
+      switchMap((response: string) => {
+        return from(this.commonService.convertXmlToJson(response));
+      }),
+      catchError((error: any) => {
+        return throwError(() => error);
+      })
+    );
+  }
+
+  getCoverPhotosList() {
+    const body = this.commonService.JsonToXml(BOOK_COVER_IMAGES)
+    this.commonService.JsonToXml(BOOK_COVER_IMAGES).then((xml:any) => console.log('Generated XML:', xml))
+      .catch((error:any) => console.error('Error:', error));
+    // console.log(body, 'check this out')
+    return this.commonService.apiMethodService({ url: '/p/searchcovers', method: 'POST', body }).pipe(
+      switchMap((response: string) => {
+        return from(this.commonService.convertXmlToJson(response));
+      }),
+      catchError((error: any) => {
+        return throwError(() => error);
+      })
+    );
+  }
+
+  getLanguagePropsList() {
+    const languageCode = 'en_US'
+    return this.commonService.apiMethodService({ url: `/locale/${languageCode}/props.json`, method: 'GET' });
   }
 }

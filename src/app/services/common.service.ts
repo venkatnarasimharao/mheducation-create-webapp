@@ -11,9 +11,20 @@ export class CommonService {
 
   constructor(private http: HttpClient) { }
 
-  async xmlToJson(xml: string) {
+  async convertXmlToJson(xml: string) {
     try {
       return JSON.parse(xml2json(xml, { compact: true, spaces: 2 }));
+    } catch (error) {
+      console.error('Error parsing XML:', error);
+      throw new Error('Failed to parse XML');
+    }
+  }
+
+  JsonToXml(json: any): any {
+    try {
+      const res = json2xml(json, { compact: true, spaces: 2 });
+      console.log(res, 'check this out json')
+      return res;
     } catch (error) {
       console.error('Error parsing XML:', error);
       throw new Error('Failed to parse XML');

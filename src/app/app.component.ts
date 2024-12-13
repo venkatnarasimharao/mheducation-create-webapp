@@ -37,6 +37,30 @@ export class AppComponent {
       console.log(data, 'getCollectionsList')
     });
 
+    this.getLanguagePropsList();
+  }
+
+  getLanguagePropsList() {
+    this.apiService.getLanguagePropsList().subscribe((data: any) => {
+      if (data && JSON.parse(data)) {
+        const languageProps = JSON.parse(data);
+        console.log(languageProps, 'getLanguagePropsList')
+      }
+    });
+    this.getTaxonomyfacetsList();
+  }
+
+  getTaxonomyfacetsList() {
+    this.apiService.getTaxonomyfacetsList().subscribe((data: any) => {
+      console.log(data, 'getTaxonomyfacetsList')
+    });
+    this.getCoverPhotosList();
+  }
+
+  getCoverPhotosList() {
+    this.apiService.getCoverPhotosList().subscribe((data: any) => {
+      console.log(data, 'getCoverPhotosList')
+    });
     this.getSearchListing();
   }
 
@@ -44,5 +68,6 @@ export class AppComponent {
     this.apiService.getSearchListing().subscribe((data: any) => {
       console.log(data, 'cccccccccccc')
     });
+
   }
 }

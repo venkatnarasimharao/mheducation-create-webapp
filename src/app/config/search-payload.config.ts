@@ -332,3 +332,22 @@ export const USER_SEARCH_CONFIG = {
         }
     }
 }
+
+export const BOOK_COVER_IMAGES = {
+    "request": {
+        "usertype": "external",
+        "audience": "HE",
+        "cover-guids": {
+            "cover-guid": [
+                "238A2DCF-90A5-BC17-6E53-CFC1E99AFFBF",
+                "B7A8BF07-6D08-0ADA-7AFC-58E103FB5913"
+            ]
+        },
+        "disciplines": {
+            "disciplineId": "0e5448a9-798d-4253-8f28-396a266231f0"
+        },
+        "trimsize": "8by11",
+        "locale": "en_US",
+        "display": "true"
+    }
+}
