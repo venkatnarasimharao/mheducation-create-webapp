@@ -26,5 +26,10 @@ export const routes: Routes = [
   {
     path:'search',
     component:FindcontentComponent
+  },
+  {
+    path:'projects',
+    component:FindcontentComponent
   }
+
 ];
