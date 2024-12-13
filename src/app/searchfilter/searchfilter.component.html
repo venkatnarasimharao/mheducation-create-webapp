@@ -1,9 +1,9 @@
 <div class="container-fluid mt-3">
   <div class="row d-flex">
-   <app-negotiation-collection></app-negotiation-collection>
-   
+    <app-negotiation-collection></app-negotiation-collection>
+
     <!-- 3 out of 12 column -->
-    <div class="col-md-3">      
+    <div class="col-md-3">
       <div class="mb-2">
         <p class="fw-bold fs-6">
           Applied Filters
@@ -13,26 +13,13 @@
         <label>Type</label>
       </div>
       <div class="position-relative">
-        <input
-          type="text"
-          class="form-control pe-5"
-          aria-label="Filter"
-          value="Article"
-          disabled
-        />
-        <i
-          class="bi bi-x text-secondary position-absolute top-50 end-0 translate-middle-y me-2 fs-4"
-          aria-hidden="true"
-        ></i>
+        <input type="text" class="form-control pe-5" aria-label="Filter" value="Article" disabled />
+        <i class="bi bi-x text-secondary position-absolute top-50 end-0 translate-middle-y me-2 fs-4"
+          aria-hidden="true"></i>
       </div>
       <div class="mt-2">
-        <a
-          href="#"
-          class="text-decoration-none text-primary fw-bold fs-6"
-          aria-label="Clear all applied filters"
-          (click)="clearFilters($event)"
-          >Clear Filters</a
-        >
+        <a href="#" class="text-decoration-none text-primary fw-bold fs-6" aria-label="Clear all applied filters"
+          (click)="clearFilters($event)">Clear Filters</a>
       </div>
 
       <!-- Filter By  -->
@@ -46,7 +33,8 @@
         <div ngbAccordion [closeOthers]="false">
           <div *ngFor="let list of lists" ngbAccordionItem class="border-0">
             <h2 ngbAccordionHeader id="accordionTitle" aria-level="2">
-              <button class="fw-bold" ngbAccordionButton aria-controls="accordionBody" aria-expanded="false">{{ list.title }}</button>
+              <button class="fw-bold" ngbAccordionButton aria-controls="accordionBody" aria-expanded="false">{{
+                list.title }}</button>
             </h2>
             <div ngbAccordionCollapse id="accordionBody" aria-labelledby="accordionTitle">
               <div ngbAccordionBody>
@@ -54,12 +42,8 @@
                   <div *ngFor="let item of list.items" class="form-check">
                     <div class="d-flex justify-content-between align-items-center fs-6">
                       <div>
-                        <input 
-                          type="checkbox" 
-                          class="form-check-input me-2" 
-                          [checked]="item.checked" 
-                          id="{{ item.label }}" 
-                        />
+                        <input type="checkbox" class="form-check-input me-2" [checked]="item.checked"
+                          id="{{ item.label }}" />
                         <label class="form-check-label" for="{{ item.label }}">
                           {{ item.label }}
                         </label>
@@ -73,7 +57,7 @@
             <hr class="my-2">
           </div>
         </div>
-      
+
       </div>
     </div>
 
@@ -93,22 +77,12 @@
       </div>
 
       <div>
+        <app-alert-component [alert]="alert" />
         <div>
-          <app-search-results
-            *ngFor="let item of resultItems"
-            [result]="item"
-          ></app-search-results>
-        </div>        
+          <app-search-results *ngFor="let item of resultItems" [result]="item"></app-search-results>
+        </div>
       </div>
       <div class="mt-auto d-flex justify-content-end">
-        <app-pagination/>
-    <!-- Placeholder for other 8 columns -->
-    <div class="col-md-8">
-      <!-- Add your content for the remaining 8 columns here -->
-       <app-alert-component [alert]="alert"/>
-      <div class="bg-white p-3">
-        <p></p>
+        <app-pagination />
       </div>
     </div>
-  </div>
-</div>
