@@ -1,0 +1,4 @@
+<select class="account-select form-select w-auto" aria-label="Select an option" (change)="onChange($event)">
+    <option *ngFor="let item of items" [value]="item.value">{{ item.label }}</option>
+</select>
+  

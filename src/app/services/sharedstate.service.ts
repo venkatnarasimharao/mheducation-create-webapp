@@ -23,9 +23,10 @@ export class SharedstateService {
     this.commonService.apiMethodService({ url: '/p/languages', method: 'GET' }).pipe(
       switchMap((response: string) => {
         if (response.startsWith('<?xml')) {
+          
           return from(this.commonService.xmlToJson(response))
         } else {
-          throw new Error('Unexpected response format');
+          throw new Error('Unexpected response format:');
         }
       }),
       catchError((error: any) => {
