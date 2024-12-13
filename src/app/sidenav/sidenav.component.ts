@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component ,  HostListener, inject, Input} from '@angular/core';
+import { Component ,  HostListener, Inject, inject,  Renderer2,Input, ElementRef} from '@angular/core';
 import { RouterLink, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { SidebarService } from '../services/sidebar.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -18,23 +19,46 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 })
 export class SidenavComponent {
   activeItem: string = 'find';
-  isSidebarCollapsed: boolean = false; // Track sidebar state
-  isZoomedIn: boolean = false; // Track zoom state
-  @Input() isSidebarVisible: boolean = false; 
-  translate: TranslateService = inject(TranslateService);
-
+  isZoomedIn: boolean = false; // Zoom state
+  isSidebarVisible: boolean = false; // Sidebar visibility toggled via button
   menuItems = [
     { id: 'find', icon: 'bi bi-search', title: 'FindContent' },
     { id: 'projects', icon: 'bi bi-folder-symlink-fill', title: 'Projects' },
-    { id: 'arrange', icon: 'bi bi-view-list', title: 'Banner2ndHeading' },
-    { id: 'personalize', icon: 'bi bi-boxes', title: 'Banner3rdHeading' },
     { id: 'uploads', icon: 'bi bi-upload', title: 'Uploads' },
     { id: 'favorites', icon: 'bi bi-heart', title: 'Favourites' },
-    { id: 'help', icon: 'bi bi-question-circle', title: 'Help' }
+    { id: 'help', icon: 'bi bi-question-circle', title: 'Help' },
   ];
+ 
+  
+  constructor(
+    @Inject(SidebarService) private sidebarService: SidebarService,
+    private renderer: Renderer2,
+    private el: ElementRef
+  ) {
+    // Subscribe to the visibility state
+    this.sidebarService.visibility$.subscribe(
+      (isVisible) => {
+        this.isSidebarVisible = isVisible;
+        this.toggleBodyScroll();
+      }
+    );
+  }
 
-  @HostListener('window:resize', ['$event'])
-  onResize(event: Event) {
+  toggleBodyScroll() {
+    if (this.isSidebarVisible) {
+      this.renderer.addClass(document.body, 'overlay-visible');
+      console.log('if rendered');
+    } else {
+      this.renderer.removeClass(document.body, 'overlay-visible');
+      console.log('if rendered');
+    }
+  }
+  toggleSidebar(): void {
+    this.sidebarService.toggleSidebar();
+  }
+  @HostListener('window:resize')
+  @HostListener('window:load')
+  onWindowChange() {
     this.updateZoomState();
   }
 
@@ -43,10 +67,16 @@ export class SidenavComponent {
   }
 
   updateZoomState() {
-    const zoomLevel = window.innerWidth / document.documentElement.clientWidth;
-    this.isZoomedIn = zoomLevel > 1.1;
+    const zoomLevel = window.devicePixelRatio;
+    this.isZoomedIn = zoomLevel >= 2.00; // Show toggle for zoom >= 175%
+    
+    if (this.isZoomedIn) {
+      this.isSidebarVisible = false; // Hide sidebar when toggle button is shown
+    } else {
+      this.isSidebarVisible = true; // Always show sidebar for zoom levels below 175%
+    }
   }
-
+  
   setActive(itemId: string) {
     this.activeItem = itemId;
   }
@@ -56,11 +86,5 @@ export class SidenavComponent {
       this.setActive(itemId);
     }
   }
-
-  isSidebarOpen: boolean = false;
-
-  toggleSidebar(): void {
-    this.isSidebarOpen = !this.isSidebarOpen;
-  }
-
+  
 }

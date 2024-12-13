@@ -1,3 +1,4 @@
+<!-- Header Section -->
 <header class="header container-fluid d-flex justify-content-between align-items-center p-2 border-bottom bg-light">
   <!-- Brand Logo and Name -->
   <a href="#" class="align-items-center text-decoration-none text-dark">
@@ -9,21 +10,20 @@
     <span class="fw-bold fs-5">{{ brandName }}</span>
   </a>
 
- <!-- Language and Account Selectors -->
- <div class="d-flex align-items-center gap-2">
-  <select class="form-select" (change)="changeLanguage($event)" style="min-width: 150px;">
-    <option value="" disabled selected>Select Language</option>
-    <option value="english">English</option>
-    <option value="catala">Català</option>
-    <option value="italiano">Italiano</option>
-    <option value="castellano">Español</option>
-    <option value="arabic">عربي </option>
-  </select>
-  <select class="form-select" style="min-width: 150px;">
-    <option value="" disabled selected>My Account</option>
-    <option value="register">Register</option>
-    <option value="login">Login</option>
-  </select>
-</div>
-</header>
+  <!-- Language and Account Selectors -->
+  <div class="d-flex align-items-center gap-2">
+    <select class="form-select" (change)="changeLanguage($event)">
+      <option value="" disabled selected>Select Language</option>
+      <option value="english">English</option>
+      <option value="catala">Català</option>
+      <option value="italiano">Italiano</option>
+      <option value="castellano">Español</option>
+      <option value="arabic">عربي </option>
+    </select>
+    <select class="form-select">
+      <option value="" disabled selected>My Account</option>
+      <option value="register">Register</option>
+      <option value="login">Login</option>
+    </select>
+  </div>
 

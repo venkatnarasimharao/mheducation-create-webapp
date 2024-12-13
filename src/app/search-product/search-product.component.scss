@@ -2,10 +2,11 @@
 .form-control,
 .btn {
   border-radius: 0 !important;
+  min-width: 50%;
 }
 
 .btn {
-  min-width: 100%;
+  max-width: 10%;
 }
 .search-icon {
   display: inline-block;
@@ -16,44 +17,12 @@
   margin-left: 5px;
 }
 
-@media (max-width: 1250px) {
-  .search-text {
+@media (min-width: 732px) {
+  .btn {
+    max-width: 100%;
+    padding: auto;
+  }
+  .btn .search-text {
     display: none;
-  }
-  .btn {
-    min-width: 100%;
-  }
-}
-
-@media (max-width: 768px) {
-  h2, h6 {
-    text-align: center;
-  }
-
-  .row.g-3 {
-    gap: 1rem;
-  }
-  .btn {
-    min-width: 100%;
-  }
-
-  .form-select, .form-control {
-    margin-bottom: 0.5rem;
-    
-  }
-}
-
-@media (min-width: 320px) {
-  .search-text {
-    display: none;
-  }
-  .btn {
-    min-width: 20%;
-  }
-
-  .form-select, .form-control {
-    margin-bottom: 0.5rem;
-    min-width: 80%
-    
   }
 }

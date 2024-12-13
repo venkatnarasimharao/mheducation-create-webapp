@@ -1,3 +1,35 @@
+/* Default Sidebar Style */
+.sidebar {
+  width: 250px;
+  transition: width 0.3s ease;
+  display: block;
+}
+
+/* Hide Sidebar on Mobile and Add Hamburger Menu */
+.sidebar.collapsed {
+  display: none;
+}
+
+/* Hamburger Button Style (Visible only on Mobile) */
+.btn-hamburger {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+@media (max-width: 992px) {
+  /* Ensure the hamburger button is visible only on small screens */
+  .btn-hamburger {
+    display: inline-block;
+  }
+
+  /* For mobile screens, hide the sidebar by default */
+  .sidebar {
+    display: none;
+  }
+}
+
 @media (max-width: 768px) {
   .header {
     flex-wrap: wrap;
@@ -5,13 +37,13 @@
 
   .header a {
     justify-content: center;
-    width: 100%;
+    // width: 100%;
     margin-bottom: 0.5rem;
   }
 
   .header .d-flex {
     justify-content: center;
-    width: 100%;
+    // width: 100%;
   }
 
   .form-select {
