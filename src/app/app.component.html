@@ -1,11 +1,12 @@
-<app-header-wrapper />
-<div class="d-flex">
- <app-sidenav />
-    <main class="body-container flex-grow-1" id="main-content">
-        <router-outlet/>
-    </main>
+<app-header-wrapper></app-header-wrapper>
+
+<div class="sidenavFlex">
+  <app-sidenav></app-sidenav>
+
+  <!-- Main content, shifted when sidebar is visible -->
+  <main class="body-container flex-grow-1" [class.shifted]="isSidebarVisible" id="main-content">
+    <router-outlet></router-outlet>
+  </main>
 </div>
-<app-footer/>
 
-
-
+<app-footer></app-footer>

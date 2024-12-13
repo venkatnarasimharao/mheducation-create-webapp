@@ -1,41 +1,73 @@
 @import '../../variables.scss';
 
 .sidebar {
-  .list-unstyled {
-    margin: 0;
-    padding: 0;
+  transition: all 0.1s ease-in-out;
+  width: 100%; /* Full width when visible */
+  height: 100vh;
+  overflow: hidden;
+}
 
-    .sidenav-li {
-      position: relative;
+.sidebar:not(.visible) {
+  width: 0; /* Collapsed state */
+  padding: 0; /* Remove padding if any */
+}
 
-      .nav-title {
-        font-size: 12px;
-      }
+/* Toggle Button */
+.sidebar-toggle-btn {
+  background-color: transparent;
+  border: none;
+  font-size: 2rem;
+  padding: 10px;
+  position: absolute;
+  top: 0px;
+  left: 130px;
+  z-index: 1000;
+  display: none; /* Hidden by default for <175% zoom */
+}
 
-      &.active {
-        background-color: #e5e7eb;
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%); /* Hidden initially */
+    visibility: hidden;
+  }
 
-        &::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 4px;
-          height: 100%;
-          background-color: $teal-blue;
-        }
-      }
-    }
+  .sidebar.visible {
+    transform: translateX(0); /* Visible on toggle */
+    visibility: visible;
+    position: fixed;
+  }
+
+  .sidebar-toggle-btn {
+    display: block; /* Always show toggle button on mobile */
   }
 }
 
-.nav-link {
-  &:focus {
-    outline-offset: -9px !important;
-    box-shadow: none;
+@media (max-width: 768px) {
+  .overlay {
+    position: fixed;
+    height: 100%;
+    background-color: whitesmoke;
+    z-index: 1001; /* Higher than other content */
+    transform: translateX(-100%); /* Hidden by default */
+    visibility: hidden;
+    overflow: hidden;
   }
 
-  &:hover {
-    background-color: #e5e7eb;
+  .overlay.visible {
+    transform: translateX(0); /* Visible when toggled */
+    visibility: visible;
   }
+
+  body.overlay-visible {
+    overflow: hidden; /* Prevent scroll on the body */
+    height: 100%; /* Ensure body height is fixed */
+  }
+
+  // header {
+  //   position: fixed;
+  //   top: 0;
+  //   left: 0;
+  //   width: 100%;
+  //   z-index: 1000; /* Ensure header stays above content but below overlay */
+  // }
 }

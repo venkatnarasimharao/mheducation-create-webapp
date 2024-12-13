@@ -1,15 +1,22 @@
-@import '../../variables.scss';
-
-
-
-.button-list-container{
-  width: 40%;
+.footer-links a {
+  flex-shrink: 0;
 }
 
-.banner-container{
-  background-color: $teal-blue;
+.footer-region a {
+  flex-shrink: 0;
 }
 
-.btn{
-  color: $teal-blue;
+.banner-container {
+  background-color: #35516e;
+}
+
+@media (max-width: 768px) {
+  .footer {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footer-links, .footer-region {
+    justify-content: center;
+  }
 }

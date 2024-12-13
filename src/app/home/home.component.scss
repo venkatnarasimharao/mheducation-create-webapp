@@ -1,3 +1,16 @@
+
+// .home-page{
+//     display: flex;
+//  .image-gallery-container{
+//     width: 100%;
+//  }
+// }
+
+@media (max-width: 400px) {
+   .home-page {
+     flex-direction: column;
+   }
+ }
 .home-page {
    display: flex;
 

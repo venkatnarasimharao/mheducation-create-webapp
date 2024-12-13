@@ -1,0 +1,13 @@
+/* Apply display: flex when the screen width is more than 732px */
+@media (min-width: 732px) {
+  .sidenavFlex {
+    display: flex;
+  }
+}
+
+/* For smaller screens, you can customize it (optional) */
+@media (max-width: 731px) {
+  .sidenavFlex {
+    display: block; /* Or any other desired behavior */
+  }
+}

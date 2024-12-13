@@ -1,34 +1,28 @@
-@import '../../variables.scss';
-
-.search-product-container {
-  padding: 30px;
+.form-select,
+.form-control,
+.btn {
+  border-radius: 0 !important;
+  min-width: 50%;
 }
 
-.heading{
-  font-size: 1.8rem;
-  margin-bottom: 16px;
+.btn {
+  max-width: 10%;
+}
+.search-icon {
+  display: inline-block;
 }
 
-.search-container {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  padding: 0px;
-  border-radius: 0; 
+.search-text {
+  display: inline-block;
+  margin-left: 5px;
 }
 
-.searchbar {
-  width: 84%;
-  border-radius: 0;
-  padding: 0px;
-}
-
-button {
-  gap: 5px;
-  border-radius: 0;
-  background-color: $teal-blue;
-}
-
-button:hover {
-  background-color: cadetblue;
+@media (min-width: 732px) {
+  .btn {
+    max-width: 100%;
+    padding: auto;
+  }
+  .btn .search-text {
+    display: none;
+  }
 }

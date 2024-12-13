@@ -11,5 +11,6 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 export class FooterComponent {
 
   translate: TranslateService = inject(TranslateService);
+currentYear: any;
 
 }

@@ -1,30 +1,33 @@
-<section class="py-4 search-product-container">
-    <h2 class="mb-3 heading">{{"BeginCreatingNow" | translate}}</h2>
-    <h6>{{"SearchProduct" | translate}}</h6>
-    <div class="search-container d-flex justify-content-between">
-      <div class="searchAll col-md-1">
-        <select 
-          class="form-select rounded-0" 
-          title="dropdown" 
-          (keydown)="handleKeydown($event)">
-          <option value="" disabled selected>{{"SelectAll" | translate}}</option>
-          <option>{{"KeyWord" | translate}}</option>
-          <option>{{"Title" | translate}}</option>
-          <option>{{"Author" | translate}}</option>
-          <option>{{"ISBN" | translate}}</option>
-        </select>
-      </div>
-      <div class="searchbar col-md-8">
-        <input type="search" 
-          class="form-control rounded-0" 
-          [placeholder]=" 'FindContentByKeywordsTitleAuthorISBN' | translate"
-          aria-label="Search Products">
-      </div>
-      <div class="col-md-1 d-flex align-items-center">
-        <button type="button" class="btn btn-primary w-100 rounded-0" (click)="onSearch()">
-          <span class="search-icon">🔍</span><span>{{"Search" | translate }}</span>
-        </button>
-      </div>
+<section class="py-4 container-fluid">
+  <h2 class="mb-3">{{ 'BeginCreatingNow' | translate }}</h2>
+  <h6>{{ 'SearchProduct' | translate }}</h6>
+  <div class="row g-0 justify-content-center align-items-center">
+    <!-- Dropdown -->
+    <div class="col-lg-2 col-md-3 col-sm-4 col-12">
+      <select class="form-select" title="dropdown" (keydown)="handleKeydown($event)">
+        <option value="" disabled selected>{{ 'SelectAll' | translate }}</option>
+        <option>{{ 'KeyWord' | translate }}</option>
+        <option>{{ 'Title' | translate }}</option>
+        <option>{{ 'Author' | translate }}</option>
+        <option>{{ 'ISBN' | translate }}</option>
+      </select>
     </div>
-  </section>
-  
+    <!-- Search Bar -->
+    <div class="col-lg-8 col-md-6 col-sm-8 col-12 d-flex">
+      <input
+  type="search"
+  class="form-control"
+  [attr.aria-label]="'SearchProduct' | translate"
+  placeholder="{{ 'FindContentByKeywordsTitleAuthorISBN' | translate }}" />
+        <div class="col-lg-1 col-md-3 col-sm-4 col-12">
+          <button
+            type="button"
+            class="btn btn-primary w-100 d-flex align-items-center justify-content-center"
+            (click)="onSearch()">
+            <span class="search-icon">🔍</span>
+            <span class="search-text" >{{ 'Search ' | translate }}</span>
+          </button>
+        </div>
+    </div>
+  </div>
+</section>

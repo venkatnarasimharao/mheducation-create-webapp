@@ -1,27 +1,38 @@
-<div class="container-fluid browse-container">
-    <div class="row browse-header">
-        <div class="col d-flex justify-content-between align-items-center">
-            <h4>{{"BrowseCollections" | translate}}</h4>
-            <!-- <button *ngIf="!showAll" (click)="showAllCollections()"><a>Show All Collections</a></button>
-            <button *ngIf="showAll" (click)="exitShowAll()"><a>Exit Show All</a></button> -->
-
-            <button class="btn btn-light ms-3" (click)="toggleShowAll()">
-                <a>{{ showAll ? 'Exit Show All' : 'ShowAllCollections'| translate }}</a>
-            </button>
-        </div>
+<div class="container-fluid d-flex flex-column" style="min-height: 100vh;">
+  <!-- Header Row -->
+  <div class="row align-items-center mb-2 flex-shrink-0">
+    <div class="col d-flex justify-content-between align-items-center">
+      <h4 class="m-0">{{ 'BrowseCollections' | translate }}</h4>
+      <button 
+        class="btn btn-light ms-3" 
+        [routerLink]="isHomePage() ? ['/all-collections'] : ['/home']">
+        {{ isHomePage() ? ('ShowAllCollections' | translate) : ('ExitAllCollections' | translate) }}
+      </button>
     </div>
-
-    <div class="row g-3 mt-3">
-        @for (collection of visibleCollections; track $index) {
-            <!-- <ul class="collection-card" tabindex="0" role="list" aria-label="@collection.name" (keydown)="onKeydown($event, collections)"> -->
-                <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-                <ul class="collection-card list-unstyled" tabindex="0" role="list" aria-label="@collection.name">
-                    <li>
-                        <img [src]="collection.logo" [alt]="collection.name" class="img-fluid" />
-                        <h6 class="collection-images">{{collection.name | translate}}</h6>
-                    </li>
-                </ul>
-            </div>
-        }
+  </div>
+  <!-- Collections Row -->
+  <div 
+    class="row flex-grow-1" 
+    [ngClass]="{ 'overflow-hidden': !showAll }" 
+    style="row-gap: 0.5rem; flex-wrap: wrap;">
+    <div 
+      class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2" 
+      *ngFor="let collection of (showAll ? collections : collections | slice:0:16)">
+      <ul 
+        class="list-unstyled p-3 border text-center bg-white shadow-sm rounded d-flex flex-column align-items-center justify-content-center" 
+        tabindex="0" role="list" 
+        [attr.aria-label]="collection.name | translate">
+        <li class="p-1">
+          <a>
+            <img 
+              [src]="collection.logo" 
+              [alt]="collection.name | translate" 
+              class="img-fluid mb-1" 
+              style="max-height: 100px; object-fit: contain;" />
+            <h6 class="m-0">{{ collection.name | translate }}</h6>
+          </a>
+        </li>
+      </ul>
     </div>
+  </div>
 </div>
