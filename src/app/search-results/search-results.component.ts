@@ -10,11 +10,7 @@ import { Component, Input } from '@angular/core';
 })
 export class SearchResultsComponent {
 
-  @Input() title: string = '';
-  @Input() author: string = '';
-  @Input() formats: string = '';
-  @Input() type: string = '';
-  @Input() year: string = '';
+  @Input() result: any;
 
   isFavorite: boolean = false;
 

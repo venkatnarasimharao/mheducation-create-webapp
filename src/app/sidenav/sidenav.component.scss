@@ -1,6 +1,7 @@
 @import '../../variables.scss';
 
 .sidebar {
+  
   .list-unstyled {
     margin: 0;
     padding: 0;
@@ -9,7 +10,7 @@
       position: relative;
 
       .nav-title {
-        font-size: 12px;
+        
       }
 
       &.active {

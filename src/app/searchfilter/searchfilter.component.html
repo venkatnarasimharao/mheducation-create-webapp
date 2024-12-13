@@ -93,15 +93,12 @@
       </div>
 
       <div>
-        <app-search-results
-          *ngFor="let item of resultItems"
-          [title]="item.title"
-          [author]="item.author"
-          [formats]="item.formats"
-          [type]="item.type"
-          [year]="item.year"
-        ></app-search-results>
-
+        <div>
+          <app-search-results
+            *ngFor="let item of resultItems"
+            [result]="item"
+          ></app-search-results>
+        </div>        
       </div>
     </div>
   </div>
