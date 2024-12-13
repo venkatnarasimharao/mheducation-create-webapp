@@ -8,6 +8,7 @@
 .btn {
   max-width: 10%;
 }
+
 .search-icon {
   display: inline-block;
 }
@@ -22,7 +23,25 @@
     max-width: 100%;
     padding: auto;
   }
+
   .btn .search-text {
     display: none;
   }
+}
+
+.searchbar {
+  width: 84%;
+  border-radius: 0;
+  padding: 0px;
+}
+
+button {
+  gap: 5px;
+  border-radius: 0;
+  background-color: $teal-blue;
+  border: 1px solid $teal-blue;
+}
+
+button:hover {
+  background-color: cadetblue;
 }

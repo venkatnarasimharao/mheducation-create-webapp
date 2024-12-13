@@ -5,7 +5,7 @@
     <!-- 3 out of 12 column -->
     <div class="col-md-3">      
       <div class="mb-2">
-        <p class="fw-bold fs-6" aria-label="Applied Filters Section">
+        <p class="fw-bold fs-6">
           Applied Filters
         </p>
       </div>
@@ -37,15 +37,15 @@
 
       <!-- Filter By  -->
       <div class="mt-2">
-        <div class="mb-3" aria-labelledby="filter-by-heading">
+        <div class="mb-3">
           <p id="filter-by-heading" class="fw-bold fs-6">Filter By</p>
           <hr class="my-2" aria-hidden="true" />
         </div>
 
         <!-- filter accordion -->
-        <div ngbAccordion [closeOthers]="false" aria-labelledby="accordionTitle">
+        <div ngbAccordion [closeOthers]="false">
           <div *ngFor="let list of lists" ngbAccordionItem class="border-0">
-            <h2 ngbAccordionHeader id="accordionTitle">
+            <h2 ngbAccordionHeader id="accordionTitle" aria-level="2">
               <button class="fw-bold" ngbAccordionButton aria-controls="accordionBody" aria-expanded="false">{{ list.title }}</button>
             </h2>
             <div ngbAccordionCollapse id="accordionBody" aria-labelledby="accordionTitle">
@@ -93,15 +93,12 @@
       </div>
 
       <div>
-        <app-search-results
-          *ngFor="let item of resultItems"
-          [title]="item.title"
-          [author]="item.author"
-          [formats]="item.formats"
-          [type]="item.type"
-          [year]="item.year"
-        ></app-search-results>
-
+        <div>
+          <app-search-results
+            *ngFor="let item of resultItems"
+            [result]="item"
+          ></app-search-results>
+        </div>        
       </div>
       <div class="mt-auto d-flex justify-content-end">
         <app-pagination/>

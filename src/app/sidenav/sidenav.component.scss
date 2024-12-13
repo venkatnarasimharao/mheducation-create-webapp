@@ -2,14 +2,22 @@
 
 .sidebar {
   transition: all 0.1s ease-in-out;
-  width: 100%; /* Full width when visible */
+  width: 100%;
+  /* Full width when visible */
   height: 100vh;
   overflow: hidden;
 }
 
+.list-unstyled {
+  margin: 0;
+  padding: 0;
+}
+
 .sidebar:not(.visible) {
-  width: 0; /* Collapsed state */
-  padding: 0; /* Remove padding if any */
+  width: 0;
+  /* Collapsed state */
+  padding: 0;
+  /* Remove padding if any */
 }
 
 /* Toggle Button */
@@ -22,23 +30,32 @@
   top: 0px;
   left: 130px;
   z-index: 1000;
-  display: none; /* Hidden by default for <175% zoom */
+  display: none;
+
+}
+
+.nav-title {
+  font-size: 12px;
+  width: 5rem;
 }
 
 @media (max-width: 768px) {
   .sidebar {
-    transform: translateX(-100%); /* Hidden initially */
+    transform: translateX(-100%);
+    /* Hidden initially */
     visibility: hidden;
   }
 
   .sidebar.visible {
-    transform: translateX(0); /* Visible on toggle */
+    transform: translateX(0);
+    /* Visible on toggle */
     visibility: visible;
     position: fixed;
   }
 
   .sidebar-toggle-btn {
-    display: block; /* Always show toggle button on mobile */
+    display: block;
+    /* Always show toggle button on mobile */
   }
 }
 
@@ -47,20 +64,25 @@
     position: fixed;
     height: 100%;
     background-color: whitesmoke;
-    z-index: 1001; /* Higher than other content */
-    transform: translateX(-100%); /* Hidden by default */
+    z-index: 1001;
+    /* Higher than other content */
+    transform: translateX(-100%);
+    /* Hidden by default */
     visibility: hidden;
     overflow: hidden;
   }
 
   .overlay.visible {
-    transform: translateX(0); /* Visible when toggled */
+    transform: translateX(0);
+    /* Visible when toggled */
     visibility: visible;
   }
 
   body.overlay-visible {
-    overflow: hidden; /* Prevent scroll on the body */
-    height: 100%; /* Ensure body height is fixed */
+    overflow: hidden;
+    /* Prevent scroll on the body */
+    height: 100%;
+    /* Ensure body height is fixed */
   }
 
   // header {

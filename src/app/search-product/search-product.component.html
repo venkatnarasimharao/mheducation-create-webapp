@@ -1,10 +1,10 @@
 <section class="py-4 container-fluid">
-  <h2 class="mb-3">{{ 'BeginCreatingNow' | translate }}</h2>
+  <h2 class="mb-3 heading">{{ 'BeginCreatingNow' | translate }}</h2>
   <h6>{{ 'SearchProduct' | translate }}</h6>
-  <div class="row g-0 justify-content-center align-items-center">
+  <div class="search-container d-flex row g-0 justify-content-center align-items-center">
     <!-- Dropdown -->
     <div class="col-lg-2 col-md-3 col-sm-4 col-12">
-      <select class="form-select" title="dropdown" (keydown)="handleKeydown($event)">
+      <select class="form-select rounded-0" title="dropdown" (keydown)="handleKeydown($event)">
         <option value="" disabled selected>{{ 'SelectAll' | translate }}</option>
         <option>{{ 'KeyWord' | translate }}</option>
         <option>{{ 'Title' | translate }}</option>
@@ -14,20 +14,15 @@
     </div>
     <!-- Search Bar -->
     <div class="col-lg-8 col-md-6 col-sm-8 col-12 d-flex">
-      <input
-  type="search"
-  class="form-control"
-  [attr.aria-label]="'SearchProduct' | translate"
-  placeholder="{{ 'FindContentByKeywordsTitleAuthorISBN' | translate }}" />
-        <div class="col-lg-1 col-md-3 col-sm-4 col-12">
-          <button
-            type="button"
-            class="btn btn-primary w-100 d-flex align-items-center justify-content-center"
-            (click)="onSearch()">
-            <span class="search-icon">🔍</span>
-            <span class="search-text" >{{ 'Search ' | translate }}</span>
-          </button>
-        </div>
+      <input type="search" class="form-control" [attr.aria-label]="'SearchProduct' | translate"
+        placeholder="{{ 'FindContentByKeywordsTitleAuthorISBN' | translate }}" />
+      <div class="col-lg-1 col-md-3 col-sm-4 col-12">
+        <button type="button" class="btn btn-primary w-100 d-flex align-items-center justify-content-center"
+          (click)="onSearch()">
+          <span class="search-icon">🔍</span>
+          <span class="search-text">{{ 'Search ' | translate }}</span>
+        </button>
+      </div>
     </div>
   </div>
 </section>

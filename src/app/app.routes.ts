@@ -37,4 +37,5 @@ export const routes: Routes = [
     path: 'arrange',
     component: ArrangeComponent
   }
+
 ];
