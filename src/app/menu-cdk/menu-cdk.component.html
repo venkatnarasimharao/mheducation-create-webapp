@@ -1,0 +1,46 @@
+<div class="container">
+    <!-- Trigger Button -->
+    <button
+      class="example-standalone-trigger"
+      (click)="toggleMenu()"
+      [attr.aria-expanded]="isMenuOpen"
+      [cdkMenuTriggerFor]="menu"
+    >
+      {{ selectedLabel }}
+    </button>
+  
+    <!-- Dropdown Menu -->
+     <div #menu>
+    <div class="example-menu" [class.open]="isMenuOpen" cdkMenu >
+      <button
+        class="example-menu-item"
+        (click)="handleMenuItemClick('Refresh')"
+        cdkMenuItem
+      >
+        Refresh
+      </button>
+      <button
+        class="example-menu-item"
+        (click)="handleMenuItemClick('Settings')"
+        cdkMenuItem
+      >
+        Settings
+      </button>
+      <button
+        class="example-menu-item"
+        (click)="handleMenuItemClick('Help')"
+        cdkMenuItem
+      >
+        Help
+      </button>
+      <button
+        class="example-menu-item"
+        (click)="handleMenuItemClick('Sign out')"
+        cdkMenuItem
+      >
+        Sign out
+      </button>
+    </div>
+</div>
+  </div>
+  

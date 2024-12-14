@@ -4,5 +4,6 @@
     <div class="position-relative d-flex justify-content-between align-items-center">
        <app-dropdown-select (selectedItem)="onLanguageChange($event)" class="me-3" [items]="languages"/>
        <app-dropdown-select (selectedItem)="onAccountTypeChange($event)" [items]="accountType" />
+       <app-menu-cdk/>
     </div>
 </div>

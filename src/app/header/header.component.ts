@@ -4,12 +4,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { LogoComponent } from '../logo/logo.component';
 import { DropdownSelectComponent } from '../dropdown-select/dropdown-select.component';
 import { SharedstateService } from '../services/sharedstate.service';
+import { MenuCdkComponent } from '../menu-cdk/menu-cdk.component';
 
 @Component({
   selector: 'header',
   standalone: true,
   imports: [
-    RouterLink,LogoComponent,DropdownSelectComponent
+    RouterLink,LogoComponent,DropdownSelectComponent,MenuCdkComponent
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'

@@ -1,0 +1,66 @@
+.example-menu {
+    display: none; /* Initially hidden */
+    flex-direction: column;
+    min-width: 180px;
+    max-width: 280px;
+    background-color: rgba(255, 255, 255);
+    padding: 6px 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06); /* Add shadow */
+    border-radius: 4px; /* Rounded corners */
+    position: absolute; /* Ensure the menu is positioned correctly */
+    z-index: 1000; /* Keep it above other content */
+}
+
+.example-menu.open {
+    display: flex; /* Show the menu when open */
+}
+
+.example-menu-item,
+.example-standalone-trigger {
+    background-color: transparent;
+    cursor: pointer;
+    border: none;
+    user-select: none;
+    min-width: 180px;
+    line-height: 36px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    flex: 1;
+    border-radius: 4px; /* Rounded corners for items */
+}
+
+.example-menu-item:hover {
+    background-color: rgb(208, 208, 208);
+}
+
+.example-menu-item:focus {
+    background-color: rgb(209, 69, 69);
+}
+
+.example-menu-item:active {
+    background-color: rgb(170, 170, 170);
+}
+
+.example-standalone-trigger {
+    background-color: rgb(239, 239, 239);
+    padding: 8px 16px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06); /* Add shadow to the trigger */
+}
+
+.example-standalone-trigger:hover {
+    background-color: rgb(208, 208, 208);
+}
+
+.example-standalone-trigger[aria-expanded='true'] {
+    background-color: rgb(208, 208, 208);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Enhance shadow when open */
+}
+
+.container {
+    display: inline-block; /* Wrap the button and menu together */
+    position: relative; /* Position the container relative to the document */
+}
