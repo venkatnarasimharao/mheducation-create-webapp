@@ -2,7 +2,6 @@ import { Component, HostListener, inject } from '@angular/core';
 import { A11yModule } from '@angular/cdk/a11y';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { HeaderBannerComponent } from '../../shared/components/header-banner/header-banner.component';
 
 
 @Component({
@@ -11,7 +10,6 @@ import { HeaderBannerComponent } from '../../shared/components/header-banner/hea
   imports: [
     A11yModule,
     RouterModule,
-    HeaderBannerComponent,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
