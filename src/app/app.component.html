@@ -1,12 +1,12 @@
-<app-header-wrapper></app-header-wrapper>
-
-<div class="sidenavFlex">
-  <app-sidenav></app-sidenav>
-
-  <!-- Main content, shifted when sidebar is visible -->
-  <main class="body-container flex-grow-1" [class.shifted]="isSidebarVisible" id="main-content">
-    <router-outlet></router-outlet>
-  </main>
+<div class="container-fluid">
+  <header></header>
 </div>
-
-<app-footer></app-footer>
+<main class="container-fluid">
+  <div class="row">
+    <hec-sidebar />
+    <main>
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+  <!-- <footer></footer> -->
+</main>

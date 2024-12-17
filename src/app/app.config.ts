@@ -2,14 +2,13 @@ import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } fr
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
-import { TrapFocusDirective } from './trap-focus.directive';
 import { HttpClient, provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { ApiService } from './services/api.service';
-import { httpInterceptor } from './services/http.interceptor';
-import { CommonService } from './services/common.service';
-import { SharedstateService } from './services/sharedstate.service';
+import { httpInterceptor } from './core/interceptors/http.interceptor';
+import { ApiService } from './core/services/api/api.service';
+import { CommonService } from './core/services/common/common.service';
+import { SharedstateService } from './core/services/shared-state/sharedstate.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -22,17 +21,16 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     importProvidersFrom([
       TranslateModule.forRoot({
-        loader:{
+        loader: {
           provide: TranslateLoader,
           useFactory: HttpLoaderFactory,
-           deps: [HttpClient]
+          deps: [HttpClient]
 
         },
-        defaultLanguage:'english',
+        defaultLanguage: 'en',
       })
     ]),
     provideRouter(routes),
-    TrapFocusDirective,
     ApiService,
     CommonService,
     SharedstateService,

@@ -1,0 +1,50 @@
+$active-color: #06235B;
+
+.main-app-nav {
+  &.nav {
+    gap: 0.5rem;
+    @include media-breakpoint-up(lg) {
+      gap: 1.5rem;
+
+    }
+    .nav-item {
+      .nav-link {
+        gap: 0.5rem;
+        @include media-breakpoint-up(lg) {
+          flex-direction: column;
+          margin-left: 0.25rem;
+          margin-right: 0.25rem;
+          gap: 0.25rem;
+          text-align: center;
+          line-height: 1;
+        }
+        i.bi {
+          color: $black;
+          display: flex;
+          align-self: start;
+          font-size: 1.25rem;
+          @include media-breakpoint-up(lg) {
+            align-self: center;
+          }
+        }
+        span {
+          color: #444444; // TODO - move to var
+          @include media-breakpoint-up(lg) {
+            font-size: 0.75rem;
+          }
+        }
+        &:hover{
+          border: none;
+        }
+        &.active {
+          box-shadow: -0.25rem 0 0 0 $active-color;
+          @include media-breakpoint-up(lg) {
+            box-shadow: -0.25rem 0 0 0 $active-color;
+          }
+        }
+      }
+    }
+  }
+}
+
+// TODO - need to work on the focus

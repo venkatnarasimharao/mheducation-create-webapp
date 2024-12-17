@@ -1,56 +1,12 @@
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html, body {
-  width: 100%;
-  overflow-x: hidden;
-  margin: 0;
-  padding: 0;
-}
-
-.container-fluid {
-  max-width: 100%;
-  padding: 0;
-}
-
-.hidden-sm {
-  overflow-x: hidden;
-}
-
-.nav-link,
-.header,
-.footer,
-.search-container {
-  max-width: 100%;
-}
-
-
-
-
 /* You can add global styles to this file, and also import other style files */
-
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
+@import '@mhe/he-bs-themes/src/5/he-bs5/index';
+@import "bootstrap-icons/font/bootstrap-icons";
 @import 'variables.scss';
 
-html,
-body {
-    margin: 0;
-    padding: 0;
-    overflow-x: auto;
-    box-sizing: border-box;
-}
-
-* {
-    font-size: 14px;
-    box-sizing: inherit;
-}
-
+// custom scss imports
+@import "./styles/main-app-nav";
 
 :focus:not(body):not(div) {
     outline: 2px solid $teal-blue !important;
@@ -74,29 +30,50 @@ body {
     }
 }
 
-// 768px
-@media (min-width: $screen-sm-min) and (max-width: 1023px) {
+// 768px and 1023px
+@media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
     .hidden-sm {
         display: none !important;
     }
 }
 
-@media (min-width: 1024px) and (max-width: 1279px) {
+// 1024px and 1279px
+@media (min-width: $screen-md-min) and (max-width: $screen-md-max) {
     .hidden-md {
         display: none !important;
     }
 }
 
-@media (min-width: 1280px) {
+// 1280px
+@media (min-width: $screen-lg-min) {
     .hidden-lg {
         display: none !important;
     }
 }
 
+::-webkit-scrollbar {
+    width: 0.7em;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #808080;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+
+    &:hover {
+        background: #808080;
+    }
+}
 
 
 body {
-    font-size: calc(16px + 0.5vw);
+    overflow-x: hidden;
     direction: ltr;
     text-align: left;
 }

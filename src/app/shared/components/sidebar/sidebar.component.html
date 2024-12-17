@@ -1,0 +1,42 @@
+<div class="col-auto offcanvas-lg d-flex h-100 border-end">
+  <ng-container
+      *ngTemplateOutlet="navTemplate; context: { menuItems: menuItems }"
+    ></ng-container>
+</div>
+
+
+<ng-template #menuContent>
+  <div class="offcanvas-end h-100 overflow-x-auto">
+    <div class="offcanvas-header border-bottom">
+      <h4 class="offcanvas-title">Main menu</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="openMenu()"></button>
+    </div>
+    <div class="offcanvas-body">
+      <ng-container
+      *ngTemplateOutlet="navTemplate; context: { menuItems: menuItems }"
+    ></ng-container>
+    </div>
+  </div>
+</ng-template>
+
+
+
+<ng-template #navTemplate let-menuItems="menuItems">
+  <nav class="d-lg-block">
+    <ul class="main-app-nav nav flex-column my-3">
+      <ng-container *ngFor="let menuItem of menuItems">
+        <li class="nav-item text-center">
+          <a
+            [routerLink]="[menuItem.path]"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="nav-link d-flex align-items-center p-2"
+          >
+            <i class="bi" [ngClass]="menuItem.icon"></i>
+            <span>{{ menuItem.label }}</span>
+          </a>
+        </li>
+      </ng-container>
+    </ul>
+  </nav>
+</ng-template>
