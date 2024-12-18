@@ -14,7 +14,7 @@ import { MenuSidebarService } from '../../../core/services/menu-sidebar/menuSide
 })
 export class SidebarComponent {
   menuItems = [
-    { label: 'Find Content', icon: 'bi-search', path: '' },
+    { label: 'Find Content', icon: 'bi-search', path: 'searchFindContent' },
     { label: 'Projects', icon: 'bi-collection', path: '/projects' },
     { label: 'Arrange', icon: 'bi-view-list' },
     { label: 'Personalize', icon: 'bi-grid-1x2' },
