@@ -1,27 +1,33 @@
-<div class="container py-2">
+<div class="p-md-4 w-100">
     <!-- Header -->
-    <h6 class="fw-bold mb-2">{{title}}</h6>
+    <label class="fw-bold">{{ title }}</label>
   
     <!-- Search Bar -->
     <div class="input-group">
       <!-- Dropdown -->
       <div class="input-group-prepend">
-        <div ngbDropdown class="dropdown">
+        <div ngbDropdown class="w-100">
+          <!-- Dropdown Button -->
           <button
-            class="btn btn-outline-secondary dropdown-toggle rounded-0"
+            class="btn btn-outline-secondary w-100 rounded-end-0"
             ngbDropdownToggle
             type="button"
           >
-            {{ selectedCategory }}
+            {{ getDropdownLabel() }}
           </button>
-          <div ngbDropdownMenu>
-            <button
-              class="dropdown-item"
-              *ngFor="let category of searchCategories"
-              (click)="onSelectCategory(category)"
-            >
-              {{ category }}
-            </button>
+  
+          <!-- Dropdown Menu -->
+          <div ngbDropdownMenu class="w-100">
+            <div *ngFor="let category of searchCategories" class="form-check d-flex gap-1">
+              <input
+                type="checkbox"
+                [(ngModel)]="category.checked"
+                (change)="onCategoryToggle(category.id, $event)"
+                class="form-check-input ms-1"
+                id="'category-' + category.id"
+              />
+              <label for="'category-' + category.id">{{ category.label }}</label>
+            </div>
           </div>
         </div>
       </div>
@@ -30,16 +36,17 @@
       <input
         type="text"
         class="form-control rounded-0"
-        placeholder="Find content by Keywords, Title, Author, ISBN or Description"
+        [placeholder]="placeholder"
         [(ngModel)]="searchTerm"
       />
   
       <!-- Search Button -->
       <button
-        class="btn btn-primary rounded-0 px-4"
+        class="btn btn-primary px-4 d-flex justify-content-center gap-2 rounded-right"
         type="button"
-        (click)="onSearch()">
-        <i class="bi bi-search"></i> Search
+        (click)="onSearch()"
+      >
+        <i class="bi bi-search"></i> <span class="d-none d-sm-inline">Search</span>
       </button>
     </div>
   </div>
