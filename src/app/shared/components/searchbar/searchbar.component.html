@@ -24,9 +24,9 @@
                 [(ngModel)]="category.checked"
                 (change)="onCategoryToggle(category.id, $event)"
                 class="form-check-input ms-1"
-                id="'category-' + category.id"
+                [id]="'category-' + category.id"
               />
-              <label for="'category-' + category.id">{{ category.label }}</label>
+              <label [for]="'category-' + category.id">{{ category.label }}</label>
             </div>
           </div>
         </div>
