@@ -2,10 +2,10 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
-    path: 'home',
+    path: '',
     loadComponent: () =>
-      import('./features/home/home.component').then(
-        (m) => m.HomeComponent
+      import('./features/landing/landing.component').then(
+        (m) => m.LandingComponent
       ),
   },
   {
