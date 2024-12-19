@@ -36,7 +36,7 @@
                     <a *ngFor="let language of column" href="javascript:void(0)"
                         class="text-primary text-decoration-none mb-2"
                         (click)="selectLanguage(language); modal.close('language selected')">
-                        {{ language }}
+                        {{ language.label}}
                     </a>
                 </div>
             </div>
