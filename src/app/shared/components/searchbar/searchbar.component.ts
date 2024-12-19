@@ -20,7 +20,7 @@ export class SearchbarComponent {
 
   // Updated Categories as an array of objects
   searchCategories = [
-    { label: 'Search All', checked: false, id: 'search_all' },
+    { label: 'Search All', checked: true, id: 'search_all' },
     { label: 'Keywords', checked: false, id: 'keywords' },
     { label: 'Title', checked: false, id: 'title' },
     { label: 'Author', checked: false, id: 'author' },
@@ -29,15 +29,24 @@ export class SearchbarComponent {
 
   searchTerm: string = '';
 
+   // Reusable method for toggling "Search All" functionality
+   private toggleSearchAll(isChecked: boolean) {
+    this.searchCategories.forEach((category) => {
+      category.checked = isChecked;
+    });
+  }
+
+  ngOnInit() {
+    this.toggleSearchAll(true); // Ensure all categories are selected if "Search All" is checked by default
+  }
+
   // Toggle category when checkbox changes
   onCategoryToggle(categoryId: string, event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked;
 
     if (categoryId === 'search_all') {
-      // If Search All is toggled, update all categories
-      this.searchCategories.forEach((category) => {
-        category.checked = isChecked;
-      });
+      // If "Search All" is toggled, update all categories
+      this.toggleSearchAll(isChecked);
     } else {
       // Update individual category
       const category = this.searchCategories.find(
@@ -46,7 +55,7 @@ export class SearchbarComponent {
       if (category) {
         category.checked = isChecked;
 
-        // If all individual categories are selected, mark Search All as checked
+        // If all individual categories are selected, mark "Search All" as checked
         const allSelected = this.searchCategories
           .filter((cat) => cat.id !== 'search_all')
           .every((cat) => cat.checked);

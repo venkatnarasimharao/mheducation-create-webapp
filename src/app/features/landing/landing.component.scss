@@ -1,0 +1,4 @@
+.btn:focus-visible,
+button:focus:not(:focus-visible) {
+    background-color: white !important;
+}

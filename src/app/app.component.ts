@@ -4,7 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { HeaderComponent } from './shared/components/header/header.component';
-import { HomeComponent } from './features/home/home.component';
+
 
 @Component({
   selector: 'hec-root',
@@ -15,7 +15,6 @@ import { HomeComponent } from './features/home/home.component';
     HeaderComponent,
     SidebarComponent,
     FooterComponent,
-    HomeComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
