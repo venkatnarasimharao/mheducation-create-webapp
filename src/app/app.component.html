@@ -2,11 +2,11 @@
   <header></header>
 </div>
 <main class="container-fluid">
-  <div class="d-flex">
-    <hec-sidebar/>
-    <main class="flex-grow-1">
+  <div class="row flex-nowrap border-bottom">
+    <hec-sidebar class="col-auto p-0 sidebar-canvas" />
+    <main class="col p-0">
       <router-outlet></router-outlet>
     </main>
   </div>
-  <!-- <footer></footer> -->
+  <footer><h1>Footer</h1></footer>
 </main>
