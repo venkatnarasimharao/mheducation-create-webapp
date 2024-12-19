@@ -14,13 +14,13 @@ import { MenuSidebarService } from '../../../core/services/menu-sidebar/menuSide
 })
 export class SidebarComponent {
   menuItems = [
-    { label: 'Find Content', icon: 'bi-search', path: '' },
-    { label: 'Projects', icon: 'bi-collection', path: '/projects' },
-    { label: 'Arrange', icon: 'bi-view-list' },
-    { label: 'Personalize', icon: 'bi-grid-1x2' },
-    { label: 'Uploads', icon: 'bi-upload' },
-    { label: 'Favorites', icon: 'bi-heart' },
-    { label: 'Help', icon: 'bi-question-circle' },
+    { label: 'Find Content', icon: 'bi-search', path: 'search' },
+    { label: 'Projects', icon: 'bi-collection', path: 'projects' },
+    { label: 'Arrange', icon: 'bi-view-list' , path: 'arrange' },
+    { label: 'Personalize', icon: 'bi-grid-1x2', path: 'personalize' },
+    { label: 'Uploads', icon: 'bi-upload' , path :'uploads' },
+    { label: 'Favorites', icon: 'bi-heart' ,path: 'favourites' },
+    { label: 'Help', icon: 'bi-question-circle', path : 'help' },
   ];
   @ViewChild('menuContent', { static: true }) menuContent!: TemplateRef<any>;
 
