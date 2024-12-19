@@ -1,8 +1,13 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item" *ngFor="let item of list; let i = index">
-      <span [ngClass]="getClassForItem(i)" *ngIf="isLastItem(i)" aria-current="page">{{ item }}</span>
-      <a *ngIf="!isLastItem(i)" href="#">{{ item }}</a>
+      <span
+        [ngClass]="getClassForItem(i)"
+        *ngIf="isLastItem(i)"
+        aria-current="page"
+        >{{ item.label }}</span
+      >
+      <a *ngIf="!isLastItem(i)" href="item.routerLink">{{ item.label }}</a>
     </li>
   </ol>
 </nav>

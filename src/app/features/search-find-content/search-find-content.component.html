@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <div class="row">
     <!-- First Dropdown -->
-    <div class="col-12">
+    <div class="col-12 border-0 border-bottom border-gray pb-2">
       <div
         class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-2 btn-sm"
       >
@@ -23,8 +23,11 @@
 
           <!-- arrange button -->
           <div class="d-flex flex-column align-item-start">
-            <span class="fw-bold mb-1">{{thirdDropdownHeading}}</span>
-            <button type="button" class="btn bg-transparent fw-bold custom-dark-blue">
+            <span class="fw-bold mb-1">{{ thirdDropdownHeading }}</span>
+            <button
+              type="button"
+              class="btn bg-transparent fw-bold custom-dark-blue"
+            >
               Arrange
               <i class="bi bi-chevron-right ms-5"></i>
             </button>
@@ -33,14 +36,23 @@
       </div>
     </div>
 
-    <!-- Horizontal Line -->
-    <div class="col-12">
-      <hr class="my-2 border-top border-dark w-100" />
+    <!-- Breadcrumb Section -->
+    <div class="col-12 my-2 ms-3">
+      <hec-breadcrumb></hec-breadcrumb>
     </div>
 
-    <!-- Breadcrumb Section -->
-    <div class="col-12">
-      <hec-breadcrumb></hec-breadcrumb>
+    <!-- accordion component -->
+    <div class="col-4 mt-5">
+      <hec-filter-accordion></hec-filter-accordion>
+    </div>
+
+    <!-- pagination component and card component -->
+    <div class="col-8 d-flex flex-column" >
+      <!-- card needs to added below div -->
+      <div></div>
+      <div class="mt-auto d-flex justify-content-end">
+        <hec-pagination></hec-pagination>
+      </div>
     </div>
   </div>
 </div>

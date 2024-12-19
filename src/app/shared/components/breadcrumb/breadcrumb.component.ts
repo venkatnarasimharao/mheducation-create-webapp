@@ -9,19 +9,19 @@ import { Component, Input } from '@angular/core';
   styleUrl: './breadcrumb.component.scss',
 })
 export class BreadcrumbComponent {
-  @Input() list: string[] = [
-    'Find Content',
-    'Browse Collection',
-    'Negotiation Collection',
+  @Input() list: any[] = [
+    { label: 'Find Content', routerLink: 'findcontent' },
+    { label: 'Browse Collections', routerLink: 'browsecollection' },
+    { label: 'Negotiation Collection', routerLink: 'negotiationcollection' },
   ];
 
-    // checking last breadcrumb item
-    isLastItem(index: number): boolean {
-      return index === this.list.length - 1;
-    }
-  
-    // Method to get the class for a breadcrumb item
-    getClassForItem(index: number): string {
-      return this.isLastItem(index) ? 'inactive' : 'active';
-    }
+  // checking last breadcrumb item
+  isLastItem(index: number): boolean {
+    return index === this.list.length - 1;
+  }
+
+  // Method to get the class for a breadcrumb item
+  getClassForItem(index: number): string {
+    return this.isLastItem(index) ? 'inactive' : 'active';
+  }
 }
