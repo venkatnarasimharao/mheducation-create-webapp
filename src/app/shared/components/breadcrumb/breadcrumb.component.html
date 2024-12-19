@@ -1,0 +1,8 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li *ngFor="let item of list; let last = last" class="breadcrumb-item m-0 p-0" >
+      <a *ngIf="!last" [routerLink]="item.routerLink" class="text-decoration-none">{{ item.label }}</a>
+      <span *ngIf="last" aria-current="page">{{ item.label }}</span>
+    </li>
+  </ol>
+</nav>

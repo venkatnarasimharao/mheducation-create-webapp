@@ -1,0 +1,46 @@
+<div class="container-fluid">
+  <div class="row">
+    <!-- First Dropdown -->
+    <div class="col-12">
+      <div
+        class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-2 btn-sm"
+      >
+        <hec-customdropdown
+          [buttonTitle]="selectProjectTitle"
+          [dropdownItem]="selectProjectItems"
+          [titleHeading]="selectProjectHeading"
+        >
+        </hec-customdropdown>
+
+        <!-- Second Dropdown-->
+        <div class="d-flex gap-3 mt-2 mt-md-0 flex-wrap justify-content-center">
+          <hec-customdropdown
+            [buttonTitle]="selectFormatTitle"
+            [dropdownItem]="selectFormatItems"
+            [titleHeading]="selectFormatHeading"
+          >
+          </hec-customdropdown>
+
+          <!-- arrange button -->
+          <div class="d-flex flex-column align-item-start">
+            <span class="fw-bold mb-1">{{arrangeHeading}}</span>
+            <button type="button" class="btn btn-outline-primary fw-bold">
+              Arrange
+              <i class="bi bi-chevron-right ms-5"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Horizontal Line -->
+    <div class="col-12">
+      <hr class="my-2 border-top border-dark w-100" />
+    </div>
+
+    <!-- Breadcrumb Section -->
+    <div class="col-12">
+      <hec-breadcrumb></hec-breadcrumb>
+    </div>
+  </div>
+</div>
