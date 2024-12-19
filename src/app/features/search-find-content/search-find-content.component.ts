@@ -5,23 +5,21 @@ import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcru
 @Component({
   selector: 'hec-search-find-content',
   standalone: true,
-  imports: [CustomdropdownComponent,BreadcrumbComponent],
+  imports: [CustomdropdownComponent, BreadcrumbComponent],
   templateUrl: './search-find-content.component.html',
   styleUrl: './search-find-content.component.scss'
 })
 export class SearchFindContentComponent {
-//dropdownTitle
-firstDropDownTitle: string = 'Test123';
-secondDropDownTitle: string = 'Please Select';
-thirdDropdownTitle: string = 'Arrange';
+  //dropdownTitle
+  selectProjectTitle: string = 'Test123';
+  selectFormatTitle: string = 'Please Select';
 
-//dropdown items
-firstDropdownItems = ['Option 1', 'Option 2', 'Option 3'];
-secondDropdownItems = ['Item A', 'Item B', 'Item C'];
-thirdDropdownItems = [];
+  //dropdown items
+  selectProjectItems = ['Option 1', 'Option 2', 'Option 3'];
+  selectFormatItems = ['Item A', 'Item B', 'Item C'];
 
-//dropdown heading
-firstDropdownHeading: string = 'Select Project';
-secondDropdownHeading: string = 'Select Format';
-thirdDropdownHeading: string = '86 pgs / $12.46 est';
+  //dropdown heading
+  selectProjectHeading: string = 'Select Project';
+  selectFormatHeading: string = 'Select Format';
+  arrangeHeading: string = '86 pgs / $12.46 est';
 }

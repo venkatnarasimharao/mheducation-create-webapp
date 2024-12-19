@@ -6,24 +6,24 @@
         class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-2 btn-sm"
       >
         <hec-customdropdown
-          [buttonTitle]="firstDropDownTitle"
-          [dropdownItem]="firstDropdownItems"
-          [titleHeading]="firstDropdownHeading"
+          [buttonTitle]="selectProjectTitle"
+          [dropdownItem]="selectProjectItems"
+          [titleHeading]="selectProjectHeading"
         >
         </hec-customdropdown>
 
         <!-- Second Dropdown-->
         <div class="d-flex gap-3 mt-2 mt-md-0 flex-wrap justify-content-center">
           <hec-customdropdown
-            [buttonTitle]="secondDropDownTitle"
-            [dropdownItem]="secondDropdownItems"
-            [titleHeading]="secondDropdownHeading"
+            [buttonTitle]="selectFormatTitle"
+            [dropdownItem]="selectFormatItems"
+            [titleHeading]="selectFormatHeading"
           >
           </hec-customdropdown>
 
           <!-- arrange button -->
           <div class="d-flex flex-column align-item-start">
-            <span class="fw-bold mb-1">{{thirdDropdownHeading}}</span>
+            <span class="fw-bold mb-1">{{arrangeHeading}}</span>
             <button type="button" class="btn btn-outline-primary fw-bold">
               Arrange
               <i class="bi bi-chevron-right ms-5"></i>
