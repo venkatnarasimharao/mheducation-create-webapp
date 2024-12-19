@@ -2,7 +2,7 @@
   <ol class="breadcrumb">
     <li class="breadcrumb-item" *ngFor="let item of list; let i = index">
       <span [ngClass]="getClassForItem(i)" *ngIf="isLastItem(i)" aria-current="page">{{ item }}</span>
-      <a *ngIf="!isLastItem(i)" href="#">{{ item }}</a>
+      <a *ngIf="!isLastItem(i)" href="javascript:void(0)">{{ item }}</a>
     </li>
   </ol>
 </nav>
