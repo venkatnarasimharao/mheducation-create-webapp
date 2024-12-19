@@ -1,0 +1,26 @@
+<div class="d-flex flex-column align-item-start">
+  <span class="fw-bold mb-1">{{titleHeading}}</span>
+  <div ngbDropdown class="d-inline-block">
+    <button
+      type="button"
+      class="btn btn-outline-dark text-dark bg-transparent"
+      id="findContentDropdown"
+      ngbDropdownToggle
+      noCaret
+    >
+      {{ buttonTitle }}
+      <i class="bi bi-chevron-down ms-5"></i>
+    </button>
+    <div ngbDropdownMenu aria-labelledby="findContentDropdown">
+      <button
+        type="button"
+        class="dropdown-item"
+        *ngFor="let item of dropdownItem"
+        (click)="onSelect(item)"
+      >
+        {{ item }}
+      </button>
+    </div>
+  </div>
+</div>
+
