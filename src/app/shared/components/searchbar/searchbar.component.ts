@@ -86,12 +86,6 @@ export class SearchbarComponent {
       .filter((cat) => cat.checked && cat.id !== 'search_all')
       .map((cat) => cat.id);
 
-    // If no categories are selected and the search term is empty--
-    if (selectedCategories.length === 0 || this.searchTerm.trim() === '') {
-      alert('Please select at least one category and enter a search term.');
-      return;
-    }
-
     const searchData = {
       categories: selectedCategories,
       term: this.searchTerm,

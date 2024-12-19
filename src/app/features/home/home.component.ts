@@ -2,6 +2,7 @@ import { Component, HostListener, inject } from '@angular/core';
 import { A11yModule } from '@angular/cdk/a11y';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { SearchbarComponent } from '../../shared/components/searchbar/searchbar.component';
 
 
 @Component({
@@ -10,6 +11,7 @@ import { TranslateService } from '@ngx-translate/core';
   imports: [
     A11yModule,
     RouterModule,
+    SearchbarComponent
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
@@ -58,6 +60,10 @@ export class HomeComponent {
     this.detectZoomLevel()
   }
 
+  handleSearch(data: any) {
+    console.log('Search Data:', data);
+  }
+
   @HostListener('window:resize', ['$event'])
   detectZoomLevel() {
     const zoomLevel = window.innerWidth / window.screen.width * 100;
@@ -74,4 +80,5 @@ export class HomeComponent {
   isAllCollectionsPage(): boolean {
     return this.router.url === '/all-collections';
   }
+
 }
