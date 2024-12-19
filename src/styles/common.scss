@@ -6,7 +6,7 @@ a:focus, .list-group-item:focus {
 }
 
 //for all the buttons when focussed
-.btn:focus-visible,
+.btn:focus-visible, .btn:hover,
 button:focus:not(:focus-visible) {
     background-color: $active-color !important;
 }
