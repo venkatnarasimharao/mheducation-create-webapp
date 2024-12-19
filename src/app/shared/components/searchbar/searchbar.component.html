@@ -1,0 +1,53 @@
+<div class="p-md-4 w-100">
+    <!-- Header -->
+    <label class="fw-bold">{{ title }}</label>
+  
+    <!-- Search Bar -->
+    <div class="input-group">
+      <!-- Dropdown -->
+      <div class="input-group-prepend">
+        <div ngbDropdown class="w-100">
+          <!-- Dropdown Button -->
+          <button
+            class="btn btn-outline-secondary w-100 rounded-end-0 d-flex align-items-center gap-1"
+            ngbDropdownToggle
+            type="button"
+          >
+            {{ getDropdownLabel() }}
+          </button>
+  
+          <!-- Dropdown Menu -->
+          <div ngbDropdownMenu class="w-100">
+            <div *ngFor="let category of searchCategories" class="form-check d-flex gap-1">
+              <input
+                type="checkbox"
+                [(ngModel)]="category.checked"
+                (change)="onCategoryToggle(category.id, $event)"
+                class="form-check-input ms-1"
+                [id]="category.id"
+              />
+              <label [for]="category.id">{{ category.label }}</label>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Input Field -->
+      <input
+        type="text"
+        class="form-control rounded-0"
+        [placeholder]="placeholder"
+        [(ngModel)]="searchTerm"
+      />
+  
+      <!-- Search Button -->
+      <button
+        class="btn btn-primary btn-search px-4 d-flex justify-content-center gap-2 rounded-right"
+        type="button"
+        (click)="onSearch()"
+      >
+        <i class="bi bi-search"></i> <span class="d-none d-sm-inline">Search</span>
+      </button>
+    </div>
+  </div>
+  
