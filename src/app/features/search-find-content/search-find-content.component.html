@@ -2,28 +2,55 @@
   <div class="row">
     <!-- First Dropdown -->
     <div class="col-12">
-      <div
-        class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-2 btn-sm"
+
+      <div  class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-2 btn-sm"
       >
-        <hec-customdropdown
-          [buttonTitle]="firstDropDownTitle"
-          [dropdownItem]="firstDropdownItems"
-          [titleHeading]="firstDropdownHeading"
-        >
-        </hec-customdropdown>
-
-        <!-- Second Dropdown-->
-        <div class="d-flex gap-3 mt-2 mt-md-0 flex-wrap justify-content-center">
-          <hec-customdropdown
-            [buttonTitle]="secondDropDownTitle"
-            [dropdownItem]="secondDropdownItems"
-            [titleHeading]="secondDropdownHeading"
-          >
-          </hec-customdropdown>
-
-          <!-- arrange button -->
-          <div class="d-flex flex-column align-item-start">
-            <span class="fw-bold mb-1">{{thirdDropdownHeading}}</span>
+        <div class="d-flex flex-column align-items-start">
+          <span class="fw-bold mb-1">{{ firstDropdownHeading }}</span>
+          <div ngbDropdown class="d-inline-block">
+            <button type="button" ngbDropdownToggle noCaret class="btn btn-outline-primary">
+              {{ firstDropDownTitle }}
+              <i class="bi bi-chevron-down ms-5"></i>
+            </button>
+            <div ngbDropdownMenu aria-labelledby="findContentDropdown">
+              <button
+                type="button"
+                class="dropdown-item"
+                *ngFor="let item of firstDropdownItems"
+                (click)="onSelect(item)"
+              >
+                {{ item }}
+              </button>
+            </div>
+          </div>
+        </div>
+    
+        <!-- Second Dropdown and Arrange Button (Right) -->
+        <div class="d-flex gap-1 mt-2 mt-md-0 flex-wrap justify-content-center">
+          <!-- Second Dropdown -->
+          <div class="d-flex flex-column align-items-start me-3">
+            <span class="fw-bold mb-1">{{ secondDropdownHeading }}</span>
+            <div ngbDropdown class="d-inline-block">
+              <button type="button" ngbDropdownToggle noCaret class="btn btn-outline-primary">
+                {{ secondDropDownTitle }}
+                <i class="bi bi-chevron-down ms-5"></i>
+              </button>
+              <div ngbDropdownMenu aria-labelledby="findContentDropdown">
+                <button
+                  type="button"
+                  class="dropdown-item"
+                  *ngFor="let item of secondDropdownItems"
+                  (click)="onSelected(item)"
+                >
+                  {{ item }}
+                </button>
+              </div>
+            </div>
+          </div>
+    
+          <!-- Arrange Button -->
+          <div class="d-flex flex-column align-items-start">
+            <span class="fw-bold mb-1">{{ thirdDropdownHeading }}</span>
             <button type="button" class="btn btn-outline-primary fw-bold">
               Arrange
               <i class="bi bi-chevron-right ms-5"></i>
@@ -31,6 +58,8 @@
           </div>
         </div>
       </div>
+     
+     
     </div>
 
     <!-- Horizontal Line -->
