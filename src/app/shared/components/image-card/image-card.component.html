@@ -1,0 +1,13 @@
+<div class="image-card">
+  <a class="d-block text-decoration-none border" href="javascript:void(0)" (click)="viewDetails(image)">
+    <img 
+      class="w-100 d-flex justify-content-center align-items-center" 
+      [src]="image" 
+      [alt]="name | translate" 
+    />
+    
+    <div *ngIf="name">
+      <h6 class="mt-2 text-center">{{ name | translate }}</h6>
+    </div>
+  </a>
+</div>

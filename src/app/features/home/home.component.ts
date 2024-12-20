@@ -1,8 +1,10 @@
-import { Component, HostListener, inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { ImageGalleryService } from '../../core/services/image-gallery/image-gallery.service';
+import { ImageCardComponent } from '../../shared/components/image-card/image-card.component';
+import { CommonModule } from '@angular/common';
 import { A11yModule } from '@angular/cdk/a11y';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-
 
 @Component({
   selector: 'hec-home',
@@ -10,63 +12,36 @@ import { TranslateService } from '@ngx-translate/core';
   imports: [
     A11yModule,
     RouterModule,
+    ImageCardComponent,
+    CommonModule,
+    TranslateModule
   ],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+  styleUrls: ['./home.component.scss']
 })
-export class HomeComponent {
-  translate: TranslateService = inject(TranslateService);
-  showAll: boolean = false;
-  isSidebarVisible: boolean = false;
-  isZoomedIn: boolean = false;
+export class HomeComponent implements OnInit {
+  collectionsData: { code: string; name: string; image: string; category: string }[] = [];
 
-  collections = [
-    { name: 'Darden Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
-    { name: 'Harvard Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/lewicki_logo.png' },
-    { name: 'INSEAD Business School', logo: 'https://create.mheducation.com/createonline/images/sites/MEPS_logo.png' },
-    { name: 'NACRA Case Research', logo: 'https://create.mheducation.com/createonline/images/sites/literature.png' },
-    { name: 'MIT Sloan Management', logo: 'https://create.mheducation.com/createonline/images/sites/nacra_logo.png' },
-    { name: 'Darden Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/lewicki_logo.png' },
-    { name: 'Harvard Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
-    { name: 'INSEAD Business School', logo: 'https://create.mheducation.com/createonline/images/sites/nacra_logo.png' },
-    { name: 'NACRA Case Research', logo: 'https://create.mheducation.com/createonline/images/sites/MEPS_logo.png' },
-    { name: 'MIT Sloan Management', logo: 'https://create.mheducation.com/createonline/images/sites/literature.png' },
-    { name: 'Darden Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
-    { name: 'Harvard Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/lewicki_logo.png' },
-    { name: 'INSEAD Business School', logo: 'https://create.mheducation.com/createonline/images/sites/MEPS_logo.png' },
-    { name: 'NACRA Case Research', logo: 'https://create.mheducation.com/createonline/images/sites/literature.png' },
-    { name: 'MIT Sloan Management', logo: 'https://create.mheducation.com/createonline/images/sites/nacra_logo.png' },
-    { name: 'Darden Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/lewicki_logo.png' },
-    { name: 'Harvard Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
-    { name: 'INSEAD Business School', logo: 'https://create.mheducation.com/createonline/images/sites/nacra_logo.png' },
-    { name: 'NACRA Case Research', logo: 'https://create.mheducation.com/createonline/images/sites/MEPS_logo.png' },
-    { name: 'MIT Sloan Management', logo: 'https://create.mheducation.com/createonline/images/sites/literature.png' },
-    { name: 'Darden Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
-    { name: 'Harvard Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/lewicki_logo.png' },
-    { name: 'INSEAD Business School', logo: 'https://create.mheducation.com/createonline/images/sites/MEPS_logo.png' },
-    { name: 'NACRA Case Research', logo: 'https://create.mheducation.com/createonline/images/sites/literature.png' },
-    { name: 'MIT Sloan Management', logo: 'https://create.mheducation.com/createonline/images/sites/nacra_logo.png' },
-    { name: 'Darden Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/lewicki_logo.png' },
-    { name: 'Harvard Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
-    { name: 'INSEAD Business School', logo: 'https://create.mheducation.com/createonline/images/sites/nacra_logo.png' },
-    { name: 'NACRA Case Research', logo: 'https://create.mheducation.com/createonline/images/sites/MEPS_logo.png' },
-    { name: 'MIT Sloan Management', logo: 'https://create.mheducation.com/createonline/images/sites/literature.png' },
-    { name: 'Darden Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/jfk_logo.png' },
-    { name: 'Harvard Business Publishing', logo: 'https://create.mheducation.com/createonline/images/sites/lewicki_logo.png' }
-  ];
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
-    this.detectZoomLevel()
+  constructor(
+    private readonly router: Router,
+    private readonly imageService: ImageGalleryService
+  ) {}
+
+  ngOnInit(): void {
+    this.loadCollections();
   }
 
-  @HostListener('window:resize', ['$event'])
-  detectZoomLevel() {
-    const zoomLevel = window.innerWidth / window.screen.width * 100;
-    this.isZoomedIn = zoomLevel > 175; // Set to true if zoom is more than 175%
+  private loadCollections(): void {
+    this.imageService.getCollections().subscribe({
+      next: (data) => {
+        this.collectionsData = data.slice(0, 16);;
+      },
+      error: (err) => {
+        console.error('Error loading collections data:', err);
+      }
+    });
   }
 
-  onSidebarToggle() {
-    this.isSidebarVisible = !this.isSidebarVisible;
-  }
   isHomePage(): boolean {
     return this.router.url === '/home';
   }

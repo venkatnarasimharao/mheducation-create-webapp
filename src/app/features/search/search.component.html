@@ -1,0 +1,12 @@
+<div class="card-detail">
+  <h2>Card Details</h2>
+
+  <div *ngIf="image; else noImage">
+    <img [src]="image" alt="Card Image" class="w-25" />
+    <p>Here are the details of the card.</p>
+  </div>
+
+  <ng-template #noImage>
+    <p>No image available.</p>
+  </ng-template>
+</div>
