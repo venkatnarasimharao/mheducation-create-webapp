@@ -11,8 +11,8 @@ import { RouterModule } from '@angular/router';
 })
 export class BreadcrumbComponent {
   @Input() list: any[] = [
-    { label: 'Find Content', routerLink: '/findcontent' },
-    { label: 'Browse Collections', routerLink: '/browseCollection' },
-    { label: 'Negotiation Collection', routerLink: '/negotiationCollection' },
+    { label: 'Find Content', url: '/special-collection' },
+    { label: 'Browse Collections', url: '/special-collection' },
+    { label: 'Negotiation Collection', url: '/special-collection' },
   ];
 }
