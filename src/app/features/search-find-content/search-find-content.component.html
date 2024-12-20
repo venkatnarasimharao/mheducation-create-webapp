@@ -1,22 +1,21 @@
 <div class="container-fluid">
   <div class="row">
-    <!-- First Dropdown -->
-    <div class="col-12">
+    <div class="col-12 border-0 border-bottom pb-3 my-2">
 
       <div  class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-2 btn-sm"
-      >
+       >
         <div class="d-flex flex-column align-items-start">
-          <span class="fw-bold mb-1">{{ firstDropdownHeading }}</span>
-          <div ngbDropdown class="d-inline-block">
-            <button type="button" ngbDropdownToggle noCaret class="btn btn-outline-dark text-dark bg-transparent w-100">
-              {{ firstDropDownTitle }}
+          <span class="fw-bold mb-1">{{ selectProjectHeading }}</span>
+          <div ngbDropdown class="d-inline-block" aria-labelledby="select-project-heading">
+            <button type="button" ngbDropdownToggle noCaret class="btn btn-outline-dark text-dark bg-transparent w-100"  aria-label="Select a project">
+              {{ selectProjectTitle }}
               <i class="bi bi-chevron-down ms-7"></i>
             </button>
-            <div ngbDropdownMenu class="w-100" aria-labelledby="findContentDropdown">
+            <div ngbDropdownMenu class="w-100" aria-labelledby="select-project-heading">
               <button
                 type="button"
                 class="dropdown-item"
-                *ngFor="let item of firstDropdownItems"
+                *ngFor="let item of selectProjectItems"
                 (click)="onSelect(item)"
               >
                 {{ item }}
@@ -25,21 +24,19 @@
           </div>
         </div>
     
-        <!-- Second Dropdown and Arrange Button (Right) -->
         <div class="d-flex gap-1 mt-2 mt-md-0 flex-wrap justify-content-center">
-          <!-- Second Dropdown -->
           <div class="d-flex flex-column align-items-start me-3">
-            <span class="fw-bold mb-1">{{ secondDropdownHeading }}</span>
-            <div ngbDropdown class="d-inline-block">
-              <button type="button" ngbDropdownToggle noCaret class="btn btn-outline-dark text-dark bg-transparent w-100">
-                {{ secondDropDownTitle }}
+            <span class="fw-bold mb-1">{{ selectFormatHeading }}</span>
+            <div ngbDropdown class="d-inline-block" aria-labelledby="select-format-heading">
+              <button type="button" ngbDropdownToggle noCaret class="btn btn-outline-dark text-dark bg-transparent w-100" aria-label="Select a format">
+                {{ selectFormatTitle }}
                 <i class="bi bi-chevron-down ms-7"></i>
               </button>
-              <div ngbDropdownMenu class="w-100" aria-labelledby="findContentDropdown">
+              <div ngbDropdownMenu class="w-100" aria-labelledby="select-format-heading">
                 <button
                   type="button"
                   class="dropdown-item"
-                  *ngFor="let item of secondDropdownItems"
+                  *ngFor="let item of selectFormatItems"
                   (click)="onSelected(item)"
                 >
                   {{ item }}
@@ -50,8 +47,8 @@
     
           <!-- Arrange Button -->
           <div class="d-flex flex-column align-items-start">
-            <span class="fw-bold mb-1">{{ thirdDropdownHeading }}</span>
-            <button type="button" class="btn fw-bold custom-dark-blue">
+            <span class="fw-bold mb-1">{{ selectArrangeTitle }}</span>
+            <button type="button" class="btn fw-bold custom-dark-blue" aria-label="Arrange items">
               Arrange
               <i class="bi bi-chevron-right ms-5"></i>
             </button>
@@ -60,11 +57,6 @@
       </div>
      
      
-    </div>
-
-    <!-- Horizontal Line -->
-    <div class="col-12">
-      <hr class="my-2 border-top border-dark w-100" />
     </div>
 
     <!-- Breadcrumb Section -->
