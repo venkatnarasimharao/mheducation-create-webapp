@@ -29,6 +29,8 @@ export class SearchbarComponent {
 
   searchTerm: string = '';
 
+  firstSelectedLabel: string | null = null;
+
    // Reusable method for toggling "Search All" functionality
    private toggleSearchAll(isChecked: boolean) {
     this.searchCategories.forEach((category) => {
@@ -72,21 +74,17 @@ export class SearchbarComponent {
 
   // Dropdown Label Logic
   getDropdownLabel(): string {
-    const selectedLabels = this.searchCategories
-      .filter((cat) => cat.checked && cat.id !== 'search_all')
-      .map((cat) => cat.label);
+    const selectedLabels = this.searchCategories.filter(cat => cat.checked);
+    console.log('Selected Labels-', selectedLabels);
 
-    if (
-      this.searchCategories.find(
-        (cat) => cat.id === 'search_all' && cat.checked
-      )
-    ) {
-      return 'Search All';
+    if (selectedLabels.length === 0) {
+      return 'Select Categories';
+    } else if(selectedLabels.length === 1){
+      this.firstSelectedLabel = selectedLabels[0].label;
+      return this.firstSelectedLabel;
+    } else{
+      return selectedLabels[0].label == 'Search All' ? 'Search All' : `${this.firstSelectedLabel} + ${selectedLabels.length - 1}`
     }
-
-    return selectedLabels.length > 0
-      ? selectedLabels.join(', ')
-      : 'Select Categories';
   }
 
   // Search Logic
