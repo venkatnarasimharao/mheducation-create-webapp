@@ -62,6 +62,6 @@ export class FilterAccordionComponent {
 
   onCheckBoxChange(event: Event, item: any) {
     const isChecked = (event.target as HTMLInputElement).checked;
-    console.log(`checkbox  is ${isChecked ? 'checked' : 'unchecked'}`);
+    console.log(`the ${item.label} checkbox  is ${isChecked ? 'checked' : 'unchecked'}`);
   }
 }

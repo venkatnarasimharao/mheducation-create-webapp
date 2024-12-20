@@ -3,6 +3,9 @@ import { CustomdropdownComponent } from '../../shared/components/customdropdown/
 import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
 import { FilterAccordionComponent } from '../../shared/components/filter-accordion/filter-accordion.component';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
+import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownToggleNoCaretDirective } from '../../shared/directives/dropdown-toggle-css.directive';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'hec-search-find-content',
@@ -12,6 +15,9 @@ import { PaginationComponent } from '../../shared/components/pagination/paginati
     BreadcrumbComponent,
     FilterAccordionComponent,
     PaginationComponent,
+    NgbDropdown,
+    NgbDropdownToggleNoCaretDirective,
+    CommonModule
   ],
   templateUrl: './search-find-content.component.html',
   styleUrl: './search-find-content.component.scss',
@@ -25,7 +31,7 @@ export class SearchFindContentComponent {
   //dropdown items
   firstDropdownItems = ['Option 1', 'Option 2', 'Option 3'];
   secondDropdownItems = ['Item A', 'Item B', 'Item C'];
-  thirdDropdownItems = [];
+
 
   //dropdown heading
   firstDropdownHeading: string = 'Select Project';
