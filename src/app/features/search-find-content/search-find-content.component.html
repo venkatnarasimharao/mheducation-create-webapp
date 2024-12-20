@@ -8,11 +8,11 @@
         <div class="d-flex flex-column align-items-start">
           <span class="fw-bold mb-1">{{ firstDropdownHeading }}</span>
           <div ngbDropdown class="d-inline-block">
-            <button type="button" ngbDropdownToggle noCaret class="btn btn-outline-primary">
+            <button type="button" ngbDropdownToggle noCaret class="btn btn-outline-dark text-dark bg-transparent w-100">
               {{ firstDropDownTitle }}
-              <i class="bi bi-chevron-down ms-5"></i>
+              <i class="bi bi-chevron-down ms-7"></i>
             </button>
-            <div ngbDropdownMenu aria-labelledby="findContentDropdown">
+            <div ngbDropdownMenu class="w-100" aria-labelledby="findContentDropdown">
               <button
                 type="button"
                 class="dropdown-item"
@@ -31,11 +31,11 @@
           <div class="d-flex flex-column align-items-start me-3">
             <span class="fw-bold mb-1">{{ secondDropdownHeading }}</span>
             <div ngbDropdown class="d-inline-block">
-              <button type="button" ngbDropdownToggle noCaret class="btn btn-outline-primary">
+              <button type="button" ngbDropdownToggle noCaret class="btn btn-outline-dark text-dark bg-transparent w-100">
                 {{ secondDropDownTitle }}
-                <i class="bi bi-chevron-down ms-5"></i>
+                <i class="bi bi-chevron-down ms-7"></i>
               </button>
-              <div ngbDropdownMenu aria-labelledby="findContentDropdown">
+              <div ngbDropdownMenu class="w-100" aria-labelledby="findContentDropdown">
                 <button
                   type="button"
                   class="dropdown-item"
@@ -51,7 +51,7 @@
           <!-- Arrange Button -->
           <div class="d-flex flex-column align-items-start">
             <span class="fw-bold mb-1">{{ thirdDropdownHeading }}</span>
-            <button type="button" class="btn btn-outline-primary fw-bold">
+            <button type="button" class="btn fw-bold custom-dark-blue">
               Arrange
               <i class="bi bi-chevron-right ms-5"></i>
             </button>
