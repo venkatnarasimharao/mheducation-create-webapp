@@ -53,7 +53,7 @@ export class SpecialCollectionComponent implements OnInit {
   }
 
   isHomePage(): boolean {
-    return this.router.url === '/home';
+    return this.router.url === ' ';
   }
 
   isAllCollectionsPage(): boolean {

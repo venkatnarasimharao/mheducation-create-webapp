@@ -1,26 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ImageGalleryService } from '../../core/services/image-gallery/image-gallery.service';
 import { ImageCardComponent } from '../../shared/components/image-card/image-card.component';
 import { CommonModule } from '@angular/common';
-import { A11yModule } from '@angular/cdk/a11y';
 
 @Component({
-  selector: 'hec-home',
+  selector: 'hec-landing',
   standalone: true,
-  imports: [
-    A11yModule,
-    RouterModule,
-    ImageCardComponent,
-    CommonModule,
-    TranslateModule
-  ],
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  imports: [TranslateModule,RouterModule,ImageCardComponent,CommonModule],
+  templateUrl: './landing.component.html',
+  styleUrl: './landing.component.scss'
 })
-export class HomeComponent implements OnInit {
-  collectionsData: { code: string; name: string; image: string; category: string }[] = [];
+export class LandingComponent {
+collectionsData: { code: string; name: string; image: string; category: string }[] = [];
 
   constructor(
     private readonly router: Router,
