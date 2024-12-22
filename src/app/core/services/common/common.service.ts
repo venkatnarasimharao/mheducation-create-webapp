@@ -13,6 +13,7 @@ export class CommonService {
 
   async convertXmlToJson(xml: string) {
     try {
+      console.log(xml);
       return JSON.parse(xml2json(xml, { compact: true, spaces: 2 }));
     } catch (error) {
       console.error('Error parsing XML:', error);

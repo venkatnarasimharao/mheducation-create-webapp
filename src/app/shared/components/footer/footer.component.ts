@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, TemplateRef } from '@angular/core';
+import { Component, inject, OnInit, TemplateRef,effect ,runInInjectionContext,Injector  } from '@angular/core';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SharedstateService } from '../../../core/services/shared-state/sharedstate.service';
+
 
 @Component({
   selector: 'footer',
@@ -13,28 +14,38 @@ import { SharedstateService } from '../../../core/services/shared-state/sharedst
 })
 export class FooterComponent implements OnInit {
 
+  private injector = inject(Injector);
   constructor(private sharedstateService: SharedstateService) { }
   languages: { value: string, label: string, dir: string }[] = [];
-  ngOnInit(): void {
-    const savedLanguage = sessionStorage.getItem('selectedLanguage');
+  selectedLanguage: { value: string; label: string; dir: string } = {
+    value: "English",
+    label: "English",
+    dir: "ltr"
+  };
+
+
+    ngOnInit(): void {
+      const savedLanguage = sessionStorage.getItem('selectedLanguage');
     if (savedLanguage) {
-      this.selectedLanguage = savedLanguage;
+      this.selectedLanguage = JSON.parse(savedLanguage);
+      document.documentElement.setAttribute('dir', this.selectedLanguage.dir);
     }
     this.sharedstateService.getLanguages();
     const languagesSignal = this.sharedstateService.getLanguagesSignal();
-    if (languagesSignal()) {
+    console.log(sessionStorage.getItem('languages'));
+    runInInjectionContext(this.injector, () => {
+    effect(() => {
       const language = languagesSignal();
-      console.log(language);
-      if (language && Array.isArray(language)) {
-        this.languages = language.map((lang: any) => {
-          return {
-            value: lang.name._text,
-            label: lang.displayValue._text,
-            dir: lang.direction._text
-          }
-        })
+      if (language) {
+        this.languages = language.map((lang: any) => ({
+          value: lang.name._text,
+          label: lang.displayValue._text,
+          dir: lang.direction._text,
+        }));
       }
-    }
+    });
+  });
+
     console.log(this.selectedLanguage);
   }
 
@@ -42,8 +53,6 @@ export class FooterComponent implements OnInit {
 
   private modalService = inject(NgbModal);
   closeResult = '';
-  selectedLanguage: string = "English";
-
   minRows: number = 5;
   // TODO  add api-language type in interface
 
@@ -58,8 +67,10 @@ export class FooterComponent implements OnInit {
     return result;
   }
   selectLanguage(language: { value: string; label: string; dir: string }): void {
-    this.selectedLanguage = language.value;
-    sessionStorage.setItem('selectedLanguage', this.selectedLanguage);
+    sessionStorage.setItem('selectedLanguage',  JSON.stringify(language));
+    this.selectedLanguage =language;
+    document.documentElement.setAttribute('dir', this.selectedLanguage.dir);
+
 
   }
 
