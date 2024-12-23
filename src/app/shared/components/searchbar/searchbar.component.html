@@ -1,6 +1,6 @@
 <div class="p-md-4 w-100">
     <!-- Header -->
-    <label class="fw-bold">{{ title }}</label>
+    <label class="fw-bold">{{ title | translate}}</label>
   
     <!-- Search Bar -->
     <div class="input-group">
@@ -13,21 +13,23 @@
             ngbDropdownToggle
             type="button"
           >
-            {{ getDropdownLabel() }}
+            {{ getDropdownLabel() | translate}}
           </button>
   
           <!-- Dropdown Menu -->
           <div ngbDropdownMenu class="w-100">
-            <div *ngFor="let category of searchCategories" class="form-check d-flex gap-1">
-              <input
-                type="checkbox"
-                [(ngModel)]="category.checked"
-                (change)="onCategoryToggle(category.id, $event)"
-                class="form-check-input ms-1"
-                [id]="category.id"
-              />
-              <label [for]="category.id">{{ category.label }}</label>
-            </div>
+            @for(category of searchCategories; track category.id){
+              <div class="form-check d-flex gap-1">
+                <input
+                  type="checkbox"
+                  [(ngModel)]="category.checked"
+                  (change)="onCategoryToggle(category.id, $event)"
+                  class="form-check-input ms-1"
+                  [id]="category.id"
+                />
+                <label [for]="category.id">{{ category.label | translate}}</label>
+              </div>
+            }
           </div>
         </div>
       </div>
@@ -36,7 +38,7 @@
       <input
         type="text"
         class="form-control rounded-0"
-        [placeholder]="placeholder"
+        [placeholder]="placeholder | translate"
         [(ngModel)]="searchTerm"
       />
   
@@ -46,7 +48,7 @@
         type="button"
         (click)="onSearch()"
       >
-        <i class="bi bi-search"></i> <span class="d-none d-sm-inline">Search</span>
+        <i class="bi bi-search"></i> <span class="d-none d-sm-inline">{{'Search' | translate}}</span>
       </button>
     </div>
   </div>

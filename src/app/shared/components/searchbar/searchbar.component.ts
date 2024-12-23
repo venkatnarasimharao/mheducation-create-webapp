@@ -1,12 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+
 
 @Component({
   selector: 'hec-searchbar',
   standalone: true,
-  imports: [FormsModule, NgbDropdownModule, CommonModule],
+  imports: [FormsModule, NgbDropdownModule, CommonModule, TranslateModule],
   templateUrl: './searchbar.component.html',
   styleUrls: ['./searchbar.component.scss'],
 })
@@ -17,6 +19,8 @@ export class SearchbarComponent {
     categories: string[];
     term: string;
   }>();
+
+  translate : TranslateService = inject(TranslateService);
 
   // Updated Categories as an array of objects
   searchCategories = [

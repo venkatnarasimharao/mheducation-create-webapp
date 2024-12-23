@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { Component, inject } from '@angular/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SearchbarComponent } from '../../shared/components/searchbar/searchbar.component';
 
 @Component({
@@ -10,7 +10,10 @@ import { SearchbarComponent } from '../../shared/components/searchbar/searchbar.
   styleUrl: './landing.component.scss'
 })
 export class LandingComponent {
+  translate :TranslateService =inject(TranslateService);
+
   handleSearch(event: { categories: string[]; term: string }) {
     console.log('Search Data:', event);
   }
+ 
 }
