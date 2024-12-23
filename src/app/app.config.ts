@@ -1,6 +1,5 @@
 import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-
 import { routes } from './app.routes';
 import { HttpClient, provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -9,6 +8,8 @@ import { httpInterceptor } from './core/interceptors/http.interceptor';
 import { ApiService } from './core/services/api/api.service';
 import { CommonService } from './core/services/common/common.service';
 import { SharedstateService } from './core/services/shared-state/sharedstate.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalService } from './core/services/modal/modal.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -27,13 +28,15 @@ export const appConfig: ApplicationConfig = {
           deps: [HttpClient]
 
         },
-        defaultLanguage: 'en',
+        defaultLanguage: 'en_US',
       })
     ]),
     provideRouter(routes),
     ApiService,
     CommonService,
     SharedstateService,
+    ModalService,
+    NgbModal
   ]
 };
 

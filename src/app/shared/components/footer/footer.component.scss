@@ -1,9 +1,10 @@
-a {
-    text-decoration: underline;
-    text-underline-offset: 2px;
+button:hover,
+a:hover {
+    border-bottom: none !important;
 }
 
-a:hover {
-    text-decoration: none;
-    border-bottom: none !important;
+a,
+button {
+    text-decoration: underline;
+    text-underline-offset: 2px;
 }

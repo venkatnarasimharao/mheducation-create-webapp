@@ -4,7 +4,7 @@
         <div class="col-12 col-md-6 mb-3 py-0">
             <div class="d-flex flex-column flex-md-row">
                 <a href="https://mhedu.force.com/createhelp/s/article/How-do-I-contact-Customer-Service"
-                    class="text-primary me-md-4 mb-2 mb-md-0">{{"CustomerSupport" | translate}}</a>
+                    class="text-primary me-md-4 mb-2 mb-md-0 ">{{"CustomerSupport" | translate}}</a>
                 <a href="http://mheducation.com/terms-use" class="text-primary me-md-4 mb-2 mb-md-0">{{"TermsOfUse" |
                     translate}}</a>
                 <a href="https://www.mheducation.com/privacy.html"
@@ -17,29 +17,14 @@
 
         <div
             class="col-12 col-md-6 d-flex flex-column flex-md-row justify-content-start justify-content-md-end align-items-start">
-            <a href="#" class="text-primary mb-2 mb-md-0"><i class="bi bi-globe2 "> </i> <span> Region:
-                    United States</span></a>
-            <a class="text-primary ms-0 ms-md-3 mb-2 mb-md-0" (click)="open(content)">{{"Language" | translate}}</a>
+            <button class="text-primary mb-2 mb-md-0 border-0 bg-transparent ml-0" (click)="openRegionModal()"><i
+                    class="bi bi-globe2 ">
+                </i> <span>
+                    Region:
+                    United States</span></button>
+            <button class="text-primary ms-0 ms-md-3 mb-2 mb-md-0 border-0 bg-transparent ml-0"
+                (click)="openLanguageModal()">{{"Language" |
+                translate}}</button>
         </div>
     </div>
 </div>
-
-<ng-template #content let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">Select your language</h4>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-    </div>
-    <div class="modal-body">
-        <div class="row">
-            <div class="col" *ngFor="let column of getLanguageColumns()">
-                <div class="d-flex flex-column">
-                    <a *ngFor="let language of column" href="javascript:void(0)"
-                        class="text-primary text-decoration-none mb-2"
-                        (click)="selectLanguage(language); modal.close('language selected')">
-                        {{ language.label}}
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</ng-template>
