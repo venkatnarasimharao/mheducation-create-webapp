@@ -63,4 +63,8 @@ export class FooterComponent implements OnInit {
       console.log('Selected Item:', selectedItem);
     });
   }
+
+  openUrl(url: string) {
+    window.open(url, 'popupWindow', 'width=800,height=600,scrollbars=no,resizable=no');
+  }
 }

@@ -13,7 +13,7 @@ import { HeaderComponent } from './shared/components/header/header.component';
     TranslateModule,
     HeaderComponent,
     SidebarComponent,
-    FooterComponent
+    FooterComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
