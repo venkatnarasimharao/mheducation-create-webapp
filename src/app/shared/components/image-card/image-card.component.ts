@@ -2,12 +2,11 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ImageGalleryService } from '../../../core/services/image-gallery/image-gallery.service';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'hec-image-card',
   standalone: true,
-  imports: [TranslateModule, CommonModule],
+  imports: [TranslateModule],
   templateUrl: './image-card.component.html',
   styleUrls: ['./image-card.component.scss']
 })

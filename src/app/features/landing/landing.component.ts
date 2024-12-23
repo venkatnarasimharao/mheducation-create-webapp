@@ -3,12 +3,11 @@ import { Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ImageGalleryService } from '../../core/services/image-gallery/image-gallery.service';
 import { ImageCardComponent } from '../../shared/components/image-card/image-card.component';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'hec-landing',
   standalone: true,
-  imports: [TranslateModule,RouterModule,ImageCardComponent,CommonModule],
+  imports: [TranslateModule,RouterModule,ImageCardComponent],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.scss'
 })

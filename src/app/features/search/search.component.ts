@@ -1,11 +1,11 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ImageGalleryService } from '../../core/services/image-gallery/image-gallery.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'hec-search',
   standalone: true,
-  imports: [CommonModule],
+  imports: [TranslateModule],
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss']
 })

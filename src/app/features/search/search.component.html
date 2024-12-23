@@ -1,12 +1,16 @@
 <div class="card-detail">
-  <h2>Card Details</h2>
+  <h2>{{ 'CardDetails' | translate }}</h2>
 
-  <div *ngIf="image; else noImage">
-    <img [src]="image" alt="Card Image" class="w-25" />
-    <p>Here are the details of the card.</p>
-  </div>
+  @if(image){
+    <div>
+      <img [src]="image" alt="{{ 'CardImageAlt' | translate }}" class="w-25" />
+      <p>{{ 'CardDetailsDescription' | translate }}</p>
+    </div>
+  }
+
+  
 
   <ng-template #noImage>
-    <p>No image available.</p>
+    <p>{{ 'NoImageAvailable' | translate }}</p>
   </ng-template>
 </div>

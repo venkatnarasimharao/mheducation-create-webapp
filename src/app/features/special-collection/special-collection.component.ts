@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ImageCardComponent } from '../../shared/components/image-card/image-card.component';
@@ -19,7 +18,7 @@ interface GroupedCollection {
 @Component({
   selector: 'hec-special-collection',
   standalone: true,
-  imports: [CommonModule, RouterModule, ImageCardComponent, TranslateModule],
+  imports: [RouterModule, ImageCardComponent, TranslateModule],
   templateUrl: './special-collection.component.html',
   styleUrls: ['./special-collection.component.scss']
 })

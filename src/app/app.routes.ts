@@ -57,7 +57,6 @@ export const routes: Routes = [
       import('./features/special-collection/special-collection.component').then(
         (m) => m.SpecialCollectionComponent
       ),
-      data: { hideLayout: true },
   },
   {
     path: 'detail-info',

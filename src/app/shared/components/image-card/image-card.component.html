@@ -6,8 +6,11 @@
       [alt]="name | translate" 
     />
     
-    <div *ngIf="name">
-      <h6 class="mt-2 text-center">{{ name | translate }}</h6>
-    </div>
+    @if(name){
+      <div>
+        <h6 class="mt-2 text-center">{{ name | translate }}</h6>
+      </div>
+    }
+   
   </a>
 </div>
