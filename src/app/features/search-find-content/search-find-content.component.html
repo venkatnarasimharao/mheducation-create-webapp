@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-12 border-0 border-bottom pb-3 my-2">
 
-      <div  class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-2 btn-sm"
+      <div  class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-2"
        >
         <div class="d-flex flex-column align-items-start">
           <span class="fw-bold mb-1">{{ selectProjectHeading }}</span>
@@ -12,14 +12,17 @@
               <i class="bi bi-chevron-down ms-7"></i>
             </button>
             <div ngbDropdownMenu class="w-100" aria-labelledby="select-project-heading">
-              <button
+              @for(item of selectProjectItems; track item.name){
+                <button
                 type="button"
                 class="dropdown-item"
-                *ngFor="let item of selectProjectItems"
                 (click)="onSelect(item)"
+                
               >
-                {{ item }}
+                {{ item.name }}
               </button>
+              }
+           
             </div>
           </div>
         </div>
@@ -33,14 +36,15 @@
                 <i class="bi bi-chevron-down ms-7"></i>
               </button>
               <div ngbDropdownMenu class="w-100" aria-labelledby="select-format-heading">
-                <button
+                @for(item of selectFormatItems; track item.name){
+                  <button
                   type="button"
                   class="dropdown-item"
-                  *ngFor="let item of selectFormatItems"
                   (click)="onSelected(item)"
                 >
-                  {{ item }}
+                  {{ item.name }}
                 </button>
+                }
               </div>
             </div>
           </div>
@@ -48,7 +52,7 @@
           <!-- Arrange Button -->
           <div class="d-flex flex-column align-items-start">
             <span class="fw-bold mb-1">{{ selectArrangeTitle }}</span>
-            <button type="button" class="btn fw-bold custom-dark-blue" aria-label="Arrange items">
+            <button type="button" class="btn fw-bold custom-dark-blue" [routerLink]="['/arrange']" aria-label="Arrange items">
               Arrange
               <i class="bi bi-chevron-right ms-5"></i>
             </button>

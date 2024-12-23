@@ -10,9 +10,13 @@ import { RouterModule } from '@angular/router';
   styleUrl: './breadcrumb.component.scss',
 })
 export class BreadcrumbComponent {
-  @Input() list: any[] = [
+  list: any[] = [
     { label: 'Find Content', url: '/special-collection' },
     { label: 'Browse Collections', url: '/special-collection' },
-    { label: 'Negotiation Collection', url: '/special-collection' },
+    { label: 'Negotiation Collection', url: '' },
   ];
+  
+  isLast(item: any): boolean {
+    return this.list[this.list.length - 1] === item;
+  }
 }

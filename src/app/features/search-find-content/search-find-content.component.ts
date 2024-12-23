@@ -3,6 +3,7 @@ import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcru
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { NgbDropdownToggleNoCaretDirective } from '../../shared/directives/dropdown-toggle-css.directive';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'hec-search-find-content',
@@ -12,6 +13,7 @@ import { NgbDropdownToggleNoCaretDirective } from '../../shared/directives/dropd
     NgbDropdownModule,
     CommonModule,
     NgbDropdownToggleNoCaretDirective,
+    RouterModule,
   ],
   templateUrl: './search-find-content.component.html',
   styleUrl: './search-find-content.component.scss',
@@ -23,19 +25,29 @@ export class SearchFindContentComponent {
   selectArrangeTitle: string = 'Arrange';
 
   //dropdown items
-  selectProjectItems = ['Option 1', 'Option 2', 'Option 3'];
-  selectFormatItems = ['Item A', 'Item B', 'Item C'];
+  selectProjectItems: any[] = [
+    { id: 1, name: 'Project 1' },
+    { id: 2, name: 'Project 2' },
+    { id: 3, name: 'Project 3' },
+  ];
+
+  selectFormatItems: any[] = [
+    { id: 1, name: 'Format 1' },
+    { id: 2, name: 'Format 2' },
+    { id: 3, name: 'Format 3' },
+  ];
 
   //dropdown heading
   selectProjectHeading: string = 'Select Project';
   selectFormatHeading: string = 'Select Format';
   arrangeHeading: string = '86 pgs / $12.46 est';
 
-  onSelect(item: string) {
-    this.selectProjectTitle = item; 
+  onSelect(item: { id: number; name: string }) {
+    this.selectProjectTitle = item.name;
   }
 
-  onSelected(item: string) {
-    this.selectFormatTitle = item; 
+  onSelected(item: { id: number; name: string }) {
+    this.selectFormatTitle = item.name;
   }
+
 }
