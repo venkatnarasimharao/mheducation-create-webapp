@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-
 @Component({
   selector: 'hec-searchbar',
   standalone: true,
@@ -20,9 +19,8 @@ export class SearchbarComponent {
     term: string;
   }>();
 
-  translate : TranslateService = inject(TranslateService);
+  translate: TranslateService = inject(TranslateService);
 
-  // Updated Categories as an array of objects
   searchCategories = [
     { label: 'Search All', checked: true, id: 'search_all' },
     { label: 'Keywords', checked: false, id: 'keywords' },
@@ -32,26 +30,26 @@ export class SearchbarComponent {
   ];
 
   searchTerm: string = '';
+  firstSelectedLabel: string = '';
 
-  firstSelectedLabel: string | null = null;
-
-   // Reusable method for toggling "Search All" functionality
-   private toggleSearchAll(isChecked: boolean) {
+  // Toggle all categories if "Search All" is checked
+  toggleSearchAll(isChecked: boolean) {
     this.searchCategories.forEach((category) => {
       category.checked = isChecked;
     });
   }
 
+  // Initialization
   ngOnInit() {
-    this.toggleSearchAll(true); // Ensure all categories are selected if "Search All" is checked by default
+    this.toggleSearchAll(true); // Ensure search All is checked if DOMS re-render
   }
 
-  // Toggle category when checkbox changes
+  // Handle category toggling
   onCategoryToggle(categoryId: string, event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked;
 
     if (categoryId === 'search_all') {
-      // If "Search All" is toggled, update all categories
+      // "Search All" toggled
       this.toggleSearchAll(isChecked);
     } else {
       // Update individual category
@@ -61,7 +59,7 @@ export class SearchbarComponent {
       if (category) {
         category.checked = isChecked;
 
-        // If all individual categories are selected, mark "Search All" as checked
+        // Check "Search All" state based on other checkboxes
         const allSelected = this.searchCategories
           .filter((cat) => cat.id !== 'search_all')
           .every((cat) => cat.checked);
@@ -76,22 +74,25 @@ export class SearchbarComponent {
     }
   }
 
-  // Dropdown Label Logic
+  // Generate dropdown label dynamically
   getDropdownLabel(): string {
-    const selectedLabels = this.searchCategories.filter(cat => cat.checked);
-    console.log('Selected Labels-', selectedLabels);
+    const selectedCategories = this.searchCategories.filter((cat) => cat.checked);
 
-    if (selectedLabels.length === 0) {
+    if (selectedCategories.length === 0) {
       return 'Select Categories';
-    } else if(selectedLabels.length === 1){
-      this.firstSelectedLabel = selectedLabels[0].label;
+    } else if (selectedCategories.length === 1) {
+      this.firstSelectedLabel = selectedCategories[0].label;
       return this.firstSelectedLabel;
-    } else{
-      return selectedLabels[0].label == 'Search All' ? 'Search All' : `${this.firstSelectedLabel} + ${selectedLabels.length - 1}`
+    } else {
+      const firstSelected = selectedCategories[0].label;
+      const remainingCount = selectedCategories.length - 1;
+      return firstSelected === 'Search All'
+        ? 'Search All'
+        : `${firstSelected} + ${remainingCount}`;
     }
   }
 
-  // Search Logic
+  // Emit search event
   onSearch() {
     const selectedCategories = this.searchCategories
       .filter((cat) => cat.checked && cat.id !== 'search_all')

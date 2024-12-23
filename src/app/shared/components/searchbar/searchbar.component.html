@@ -1,6 +1,6 @@
 <div class="p-md-4 w-100">
     <!-- Header -->
-    <label class="fw-bold">{{ title | translate}}</label>
+    <label class="fw-bold">{{ title | translate }}</label>
   
     <!-- Search Bar -->
     <div class="input-group">
@@ -13,12 +13,12 @@
             ngbDropdownToggle
             type="button"
           >
-            {{ getDropdownLabel() | translate}}
+            {{ getDropdownLabel() | translate }}
           </button>
   
           <!-- Dropdown Menu -->
           <div ngbDropdownMenu class="w-100">
-            @for(category of searchCategories; track category.id){
+            @for (category of searchCategories; track category.id) {
               <div class="form-check d-flex gap-1">
                 <input
                   type="checkbox"
@@ -27,7 +27,7 @@
                   class="form-check-input ms-1"
                   [id]="category.id"
                 />
-                <label [for]="category.id">{{ category.label | translate}}</label>
+                <label [for]="category.id">{{ category.label | translate }}</label>
               </div>
             }
           </div>
@@ -48,7 +48,8 @@
         type="button"
         (click)="onSearch()"
       >
-        <i class="bi bi-search"></i> <span class="d-none d-sm-inline">{{'Search' | translate}}</span>
+        <i class="bi bi-search"></i>
+        <span class="d-none d-sm-inline">{{ 'Search' | translate }}</span>
       </button>
     </div>
   </div>
