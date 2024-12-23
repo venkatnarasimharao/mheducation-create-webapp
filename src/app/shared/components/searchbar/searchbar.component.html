@@ -1,6 +1,6 @@
 <div class="p-md-4 w-100">
     <!-- Header -->
-    <label class="fw-bold">{{ title | translate }}</label>
+    <label class="fw-bold">{{ searchbarTitle | translate }}</label>
   
     <!-- Search Bar -->
     <div class="input-group">
@@ -13,7 +13,7 @@
             ngbDropdownToggle
             type="button"
           >
-            {{ getDropdownLabel() | translate }}
+            {{ dropdownLabelText | translate }}
           </button>
   
           <!-- Dropdown Menu -->
