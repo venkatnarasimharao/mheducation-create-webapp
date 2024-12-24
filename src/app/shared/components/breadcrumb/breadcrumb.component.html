@@ -1,0 +1,13 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb d-flex gap-1">
+    @for(item of list;track item.label){
+      <li class="breadcrumb-item m-0 p-0">
+        @if(!isLast(item)){
+          <a href="#" [routerLink]="item.url" class="text-decoration-none">{{item.label}}</a>
+        } @else {
+          <span aria-current="page">{{item.label}}</span>
+        }
+      </li>
+    }
+  </ol>
+</nav>
