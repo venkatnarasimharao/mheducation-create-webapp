@@ -15,8 +15,7 @@ describe('SearchFindContentComponent', () => {
       providers: [
         provideRouter([])
       ]
-    })
-      .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SearchFindContentComponent);
     component = fixture.componentInstance;
