@@ -19,9 +19,8 @@
             class="col-12 col-md-6 d-flex flex-column flex-md-row justify-content-start justify-content-md-end align-items-start">
             <button class="text-primary mr-md-4 mb-2 mb-md-0 border-0 bg-transparent mx-md-3"
                 (click)="openRegionModal(content)"><i class="bi bi-globe2 ">
-                </i> <span>
-                    Region:
-                    United States</span></button>
+                </i> <span> {{"Region" | translate}}
+                </span></button>
             <button class="text-primary mb-2 m-md-0 border-0 bg-transparent"
                 (click)="openLanguageModal(content)">{{"Language"
                 |
@@ -33,7 +32,7 @@
 
 <ng-template #content let-modal>
     <div class="modal-header d-flex justify-content-between">
-        <h4 class="modal-title">Select your {{modalData.title}}</h4>
+        <h4 class="modal-title">{{modalData.title | translate}}</h4>
         <button type="button" class="bg-transparent border-0 fs-1" aria-label="Close"
             (click)="modal.dismiss('Cross click')"><i class="bi bi-x-lg text-white "> </i></button>
     </div>

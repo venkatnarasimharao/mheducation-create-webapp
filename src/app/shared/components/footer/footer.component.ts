@@ -47,7 +47,7 @@ export class FooterComponent implements OnInit {
 
   }
   openLanguageModal(content: any) {
-    this.modalData.title = 'language';
+    this.modalData.title = 'LanguagePopupTitle';
     this.modalData.items = this.languages();
     const modalRef = this.modalService.open(content, { ariaLabelledBy: 'Select Language' });
     modalRef.result
@@ -61,7 +61,7 @@ export class FooterComponent implements OnInit {
   }
   openRegionModal(content: any) {
 
-    this.modalData.title = 'Region';
+    this.modalData.title = 'RegionPopupTitle';
 
     this.modalData.items = this.regionList;
     const modalRef = this.modalService.open(content, { ariaLabelledBy: 'Select Regions' });
