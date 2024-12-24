@@ -2,13 +2,7 @@ import { Injectable } from '@angular/core';
 import { COLLECTION_CODES } from '../../../shared/constants/search-payload.config';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-
-interface Collection {
-  code: string;
-  name: string;
-  image: string;
-  category: string;
-}
+import {Collection} from  '../../../shared/models/search.model';
 
 @Injectable({
   providedIn: 'root'

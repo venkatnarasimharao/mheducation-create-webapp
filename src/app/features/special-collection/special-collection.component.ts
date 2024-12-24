@@ -3,18 +3,7 @@ import { Router, RouterModule } from '@angular/router';
 import { ImageCardComponent } from '../../shared/components/image-card/image-card.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { ImageGalleryService } from '../../core/services/image-gallery/image-gallery.service';
-
-interface Collection {
-  code: string;
-  name: string;
-  image: string;
-}
-
-interface GroupedCollection {
-  category: string;
-  collections: Collection[];
-}
-
+import {GroupedCollection} from '../../shared/models/search.model';
 @Component({
   selector: 'hec-special-collection',
   standalone: true,
@@ -49,10 +38,6 @@ export class SpecialCollectionComponent implements OnInit {
         console.error('Error loading collections:', err);
       }
     });
-  }
-
-  isHomePage(): boolean {
-    return this.router.url === ' ';
   }
 
   isAllCollectionsPage(): boolean {

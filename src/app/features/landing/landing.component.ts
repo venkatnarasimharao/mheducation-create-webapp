@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ImageGalleryService } from '../../core/services/image-gallery/image-gallery.service';
 import { ImageCardComponent } from '../../shared/components/image-card/image-card.component';
@@ -15,7 +15,6 @@ export class LandingComponent {
 collectionsData: { code: string; name: string; image: string; category: string }[] = [];
 
   constructor(
-    private readonly router: Router,
     private readonly imageService: ImageGalleryService
   ) {}
 
@@ -32,13 +31,5 @@ collectionsData: { code: string; name: string; image: string; category: string }
         console.error('Error loading collections data:', err);
       }
     });
-  }
-
-  isHomePage(): boolean {
-    return this.router.url === '/home';
-  }
-
-  isAllCollectionsPage(): boolean {
-    return this.router.url === '/all-collections';
   }
 }
