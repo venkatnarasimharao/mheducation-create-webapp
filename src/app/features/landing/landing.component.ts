@@ -9,6 +9,5 @@ import { TranslateModule } from '@ngx-translate/core';
   styleUrl: './landing.component.scss'
 })
 export class LandingComponent {
-  constructor() { }
 
 }

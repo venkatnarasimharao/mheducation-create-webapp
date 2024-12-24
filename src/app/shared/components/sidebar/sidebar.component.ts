@@ -4,7 +4,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { MenuSidebarService } from '../../../core/services/menu-sidebar/menuSidebarService.service';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'hec-sidebar',
@@ -28,8 +28,7 @@ export class SidebarComponent {
   constructor(
     private offcanvasService: NgbOffcanvas,
     private menuService: MenuSidebarService,
-    private breakpointObserver: BreakpointObserver,
-    private translate: TranslateService
+    private breakpointObserver: BreakpointObserver
   ) { }
 
   ngOnInit(): void {

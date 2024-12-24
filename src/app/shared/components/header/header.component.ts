@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDropdownToggleNoCaretDirective } from '../../directives/dropdown-toggle-css.directive';
 import { MenuSidebarService } from '../../../core/services/menu-sidebar/menuSidebarService.service';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'header',
@@ -17,8 +17,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 export class HeaderComponent {
   imageUrl: string = "https://www.mheducation.co.in/static/version1732692363/frontend/Cti/canada-theme/en_GB/images/logo.svg";
   brandName: string = "Create";
-  constructor(private menuService: MenuSidebarService,
-    private translate: TranslateService
+  constructor(private menuService: MenuSidebarService
   ) {
   }
 
