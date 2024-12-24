@@ -6,7 +6,6 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { httpInterceptor } from './core/interceptors/http.interceptor';
 import { ApiService } from './core/services/api/api.service';
-import { CommonService } from './core/services/common/common.service';
 import { SharedstateService } from './core/services/shared-state/sharedstate.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -31,7 +30,6 @@ export const appConfig: ApplicationConfig = {
     ]),
     provideRouter(routes),
     ApiService,
-    CommonService,
     SharedstateService,
   ]
 };
