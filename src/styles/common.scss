@@ -1,15 +1,10 @@
 $active-color: #06235B;
 
-// overwritten bs focus
+// overwritten by focus
 a:focus, .list-group-item:focus {
     border-radius: 0 !important;
 }
 
-//for all the buttons when focussed
-.btn:focus-visible,
-button:focus:not(:focus-visible) {
-    background-color: $active-color !important;
-}
 
 .btn:focus,
 .form-control:focus {
