@@ -42,7 +42,7 @@
     <div class="modal-body">
         <ul class="row list-unstyled g-3">
             @for (item of modalData.items; track $index) {
-            <a class="col-12 col-md-4 text-center" (click)="modal.close(item)">{{
+            <a class="col-12 col-md-4 text-center" (click)="modal.close(item)" tabindex="0">{{
                 item?.displayValue._text
                 }}
             </a>
