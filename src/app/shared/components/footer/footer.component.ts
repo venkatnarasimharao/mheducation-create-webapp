@@ -1,8 +1,10 @@
-
-import { Component, inject, OnInit, Renderer2 } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SharedstateService } from '../../../core/services/shared-state/sharedstate.service';
-import { ModalService } from '../../../core/services/modal/modal.service';
+// import { ModalService } from '../../../core/services/modal/modal.service';
+import { DOCUMENT } from '@angular/common';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalContentComponent } from '../modal-content/modal-content.component';
 
 @Component({
   selector: 'footer',
@@ -12,55 +14,66 @@ import { ModalService } from '../../../core/services/modal/modal.service';
   styleUrl: './footer.component.scss'
 })
 export class FooterComponent implements OnInit {
-  constructor(private modalService: ModalService,
+  constructor(
     private sharedstateService: SharedstateService,
-    private renderer: Renderer2,
-    private translate: TranslateService) { }
+    private translate: TranslateService,
+    private modalService: NgbModal,
+    @Inject(DOCUMENT) private document: Document) { }
 
-  regionList: any = [{ displayValue: { _text: 'Asia' } }, { displayValue: { _text: 'Europe' } }];
+  regionList: any = [{ displayValue: { _text: 'Asia' } }, { displayValue: { _text: 'Europe' } }, { displayValue: { _text: 'United States' } }];
   languages: any;
   currentLanguage: any = sessionStorage.getItem('selectedLanguage');
+  modalData = {
+    title: '',
+    items: [] as any
+  };
 
   ngOnInit(): void {
     this.languages = this.sharedstateService.getLanguagesSignal();
-
     if (this.currentLanguage) {
-      this.handleLanguageSettings(this.currentLanguage);
+      this.handleLanguageChange(this.currentLanguage);
     }
-
     if (!this.languages()?.length) {
       this.sharedstateService.getLanguages();
     }
   }
-  setTextAlignment(lang: string) {
-    const htmlElement = this.renderer.selectRootElement('html', true);
-    this.renderer.setAttribute(htmlElement, 'lang', lang);
-    if (lang == "ar_SA") {
-      this.renderer.setAttribute(htmlElement, 'dir', 'rtl');
-    }
-    else {
-      this.renderer.setAttribute(htmlElement, 'dir', 'ltr');
-    }
-  }
-
-  handleLanguageSettings(lang: string): void {
-    this.translate.use(lang);
-    this.setTextAlignment(lang);
-
-  }
-  openLanguageModal() {
-    this.modalService.openModal('Languages', this.languages()).then((selectedItem: any) => {
-      this.handleLanguageSettings(selectedItem.locale._text);
-      sessionStorage.setItem("selectedLanguage", selectedItem.locale._text);
-    }).catch(() => {
-      console.log('Modal dismissed');
+  handleLanguageChange(lang: string): void {
+    this.translate.use(lang).subscribe(() => {
+      // Fetch translations once the language is loaded
+      this.translate.get(['langCode', 'textAlign']).subscribe(translations => {
+        this.document.documentElement.lang = translations['langCode'];
+        this.document.documentElement.dir = translations['textAlign'];
+      });
     });
 
   }
-  openRegionModal() {
-    this.modalService.openModal('Regions', this.regionList).then((selectedItem: any) => {
+  openLanguageModal(content: any) {
+    this.modalData.title = 'language';
+    this.modalData.items = this.languages();
+    const modalRef = this.modalService.open(content, { ariaLabelledBy: 'Select Language' });
+    modalRef.result
+      .then((selectedItem) => {
+        this.handleLanguageChange(selectedItem.locale._text);
+        sessionStorage.setItem("selectedLanguage", selectedItem.locale._text);
+      })
+      .catch((error) => {
+        console.log('Languages Modal dismissed:', error);
+      });
+  }
+  openRegionModal(content: any) {
 
-      console.log('Selected Item:', selectedItem);
-    });
+    this.modalData.title = 'Region';
+
+    this.modalData.items = this.regionList;
+    const modalRef = this.modalService.open(content, { ariaLabelledBy: 'Select Regions' });
+    modalRef.result
+      .then((selectedItem) => {
+        console.log('Region selected:', selectedItem);
+      })
+      .catch((error) => {
+        console.log('Region Modal dismissed:', error);
+      });
+
   }
 }
+
