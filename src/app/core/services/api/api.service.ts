@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, from, map, Observable, switchMap, tap, throwError } from 'rxjs';
-import { CommonService } from '../common/common.service';
+import { Observable } from 'rxjs';
 import { BOOK_COVER_IMAGES, USER_SEARCH_CONFIG } from '../../../shared/constants/search-payload.config';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +10,7 @@ import { BOOK_COVER_IMAGES, USER_SEARCH_CONFIG } from '../../../shared/constants
 export class ApiService {
 
   constructor(
-    private commonService: CommonService
+    private http: HttpClient,
   ) { }
 
   getSearchListing() {
@@ -24,29 +24,17 @@ export class ApiService {
         _selected: "false" // item.enabled._text === "true" ? "true" : 
       }))
     }
-    finalPay.search.textTypes.textType = 'title' // title | all | ["title","authors", "isbn", ""];
-    return this.commonService.apiMethodService({
+    finalPay.search.textTypes.textType = 'all' // title | all | ["title","authors", "isbn", "description"];
+    return this.apiMethodService({
       url: `/p/users/anonymous/search`,
       method: 'POST',
-      body: JSON.stringify(finalPay)
-    }).pipe(
-      switchMap((response: string) => {
-        console.error('processing response:', response);
-        if (response.startsWith('<?xml')) {
-          return from(this.commonService.convertXmlToJson(response));
-        } else {
-          throw new Error('Unexpected response format');
-        }
-      }),
-      catchError((error: any) => {
-        console.error('Error processing response:', error);
-        return throwError(() => error);
-      })
-    );
+      body: finalPay,
+      options: { responseType: 'text' }
+    })
   }
 
   userLogin() {
-    return this.commonService.apiMethodService({
+    return this.apiMethodService({
       url: '/loginUser.do', method: 'POST', headers: {
         headers: new HttpHeaders({
           'Authorization': 'Basic S2FydGhpa2luczFAbWhlcWEuY29tOlB3ZEAxMjM0',
@@ -57,48 +45,48 @@ export class ApiService {
 
 
   getCollectionsList() {
-    return this.commonService.apiMethodService({ url: '/p/collectionsfilter', method: 'GET' }).pipe(
-      switchMap((response: string) => {
-        if (response.startsWith('<?xml')) {
-          return from(this.commonService.convertXmlToJson(response));
-        } else {
-          throw new Error('Unexpected response format');
-        }
-      }),
-      catchError((error: any) => {
-        return throwError(() => error);
-      })
-    );
+    return this.apiMethodService({ url: '/p/collectionsfilter', method: 'GET' })
   }
 
   getTaxonomyfacetsList() {
-    return this.commonService.apiMethodService({ url: '/p/taxonomyfacets/create.mheducation.com/80/createonline', method: 'GET' }).pipe(
-      switchMap((response: string) => {
-        return from(this.commonService.convertXmlToJson(response));
-      }),
-      catchError((error: any) => {
-        return throwError(() => error);
-      })
-    );
+    return this.apiMethodService({ url: '/p/taxonomyfacets/create.mheducation.com/80/createonline', method: 'GET' })
   }
 
   getCoverPhotosList() {
-    const body = this.commonService.JsonToXml(BOOK_COVER_IMAGES)
-    this.commonService.JsonToXml(BOOK_COVER_IMAGES).then((xml:any) => console.log('Generated XML:', xml))
-      .catch((error:any) => console.error('Error:', error));
-    // console.log(body, 'check this out')
-    return this.commonService.apiMethodService({ url: '/p/searchcovers', method: 'POST', body }).pipe(
-      switchMap((response: string) => {
-        return from(this.commonService.convertXmlToJson(response));
-      }),
-      catchError((error: any) => {
-        return throwError(() => error);
-      })
-    );
+    return this.apiMethodService({ url: '/p/searchcovers', method: 'POST', body: BOOK_COVER_IMAGES })
   }
 
   getLanguagePropsList() {
     const languageCode = 'en_US'
-    return this.commonService.apiMethodService({ url: `/locale/${languageCode}/props.json`, method: 'GET' });
+    return this.apiMethodService({ url: `/locale/${languageCode}/props.json`, method: 'GET' });
+  }
+
+  apiMethodService<T>({ url, method, body, params = {}, options = {} }: any): Observable<any> {
+    url = environment.apiUrl + url;
+    if (!options['responseType']) {
+      options['responseType'] = 'text';
+    }
+    if (!options['observe']) {
+      options['observe'] = 'response';
+    }
+
+    switch (method?.toUpperCase()) {
+      case 'GET':
+        return this.http.get(url, options);
+      case 'GET_PARMS':
+        return this.http.get(url, { params: params, ...options });
+      case 'GET_IMAGE':
+        return this.http.get(url, { responseType: 'blob' as 'json', ...options });
+      case 'PUT':
+        return this.http.put(url, body, options);
+      case 'PUT_PARAMS':
+        return this.http.put(url, body, { params: params, ...options });
+      case 'POST':
+        return this.http.post(url, body, options);
+      case 'DELETE':
+        return this.http.delete(url, options);
+      default:
+        return this.http.get(url, options);
+    }
   }
 }

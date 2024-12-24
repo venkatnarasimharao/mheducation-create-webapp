@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HeaderBannerComponent } from './header-banner.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('HeaderBannerComponent', () => {
   let component: HeaderBannerComponent;
@@ -8,7 +9,10 @@ describe('HeaderBannerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HeaderBannerComponent]
+      imports: [
+        HeaderBannerComponent,
+        TranslateModule.forRoot()
+      ]
     })
     .compileComponents();
 
