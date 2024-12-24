@@ -61,7 +61,7 @@ export class ApiService {
     return this.apiMethodService({ url: `/locale/${languageCode}/props.json`, method: 'GET' });
   }
 
-  apiMethodService<T>({ url, method, body, params, options = {} }: any): Observable<any> {
+  apiMethodService<T>({ url, method, body, params = {}, options = {} }: any): Observable<any> {
     url = environment.apiUrl + url;
     if (!options['responseType']) {
       options['responseType'] = 'text';
@@ -71,22 +71,20 @@ export class ApiService {
     }
 
     switch (method?.toUpperCase()) {
-      case 'LOGIN':
-        return this.http.post(url, body, options);
+      case 'GET':
+        return this.http.get(url, options);
+      case 'GET_PARMS':
+        return this.http.get(url, { params: params, ...options });
+      case 'GET_IMAGE':
+        return this.http.get(url, { responseType: 'blob' as 'json', ...options });
+      case 'PUT':
+        return this.http.put(url, body, options);
+      case 'PUT_PARAMS':
+        return this.http.put(url, body, { params: params, ...options });
       case 'POST':
         return this.http.post(url, body, options);
       case 'DELETE':
         return this.http.delete(url, options);
-      case 'GET_PARMS':
-        return this.http.get(url, { params: params, ...options });
-      case 'PUT_PARAMS':
-        return this.http.put(url, body, { params: params, ...options });
-      case 'PUT':
-        return this.http.put(url, body, options);
-      case 'GET_IMAGE':
-        return this.http.get(url, { responseType: 'blob' as 'json', ...options });
-      case 'GET':
-        return this.http.get(url, options);
       default:
         return this.http.get(url, options);
     }

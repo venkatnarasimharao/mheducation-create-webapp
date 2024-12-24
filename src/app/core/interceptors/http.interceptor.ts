@@ -5,11 +5,12 @@ import { XmlTransformerUtil } from '../../shared/utils/xml-transformer/xml-trans
 export const httpInterceptor: HttpInterceptorFn = (request, next) => {
   const token = sessionStorage.getItem('token');
 
-  let transformedReq = token
-    ? request.clone({
+  let transformedReq = request
+  if (token) {
+    transformedReq = request.clone({
       headers: request.headers.set('Authorization', `Bearer ${token}`),
     })
-    : request;
+  }
 
   if (request.body && typeof request.body === 'object') {
     const xmlBody = XmlTransformerUtil.jsonToXml(request.body);
