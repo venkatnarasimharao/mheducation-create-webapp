@@ -72,7 +72,9 @@ export class FooterComponent implements OnInit {
       .catch((error) => {
         console.log('Region Modal dismissed:', error);
       });
-
+  }
+  openUrl(url: string) {
+    window.open(url, 'popupWindow', 'width=800,height=600,scrollbars=no,resizable=no');
   }
 }
 

@@ -3,13 +3,16 @@
 
         <div class="col-12 col-md-5 col-lg-4 mb-3 py-0">
             <div class="d-flex flex-column flex-md-row justify-content-md-between">
-                <a href="https://mhedu.force.com/createhelp/s/article/How-do-I-contact-Customer-Service"
+                <a href="javascript:void(0)"
+                    (click)="openUrl('https://mhedu.force.com/createhelp/s/article/How-do-I-contact-Customer-Service')"
                     class="text-primary me-md-0 mb-2 m-md-0 ">{{"CustomerSupport" | translate}}</a>
-                <a href="http://mheducation.com/terms-use" class="text-primary me-md-0 mb-2 mb-m-0">{{"TermsOfUse" |
+                <a href="javascript:void(0)" (click)="openUrl('http://mheducation.com/terms-use')"
+                    class="text-primary me-md-0 mb-2 mb-m-0">{{"TermsOfUse" |
                     translate}}</a>
-                <a href="https://www.mheducation.com/privacy.html"
+                <a href="javascript:void(0)" (click)="openUrl('https://www.mheducation.com/privacy.html')"
                     class="text-primary me-md-0 mb-2 m-md-0">{{"PrivacyNotice" | translate}}</a>
-                <a href="https://mh.my.site.com/createhelp/s/" class="text-primary mb-2 mb-m-0">{{"Help" |
+                <a href="javascript:void(0)" (click)="openUrl('https://mh.my.site.com/createhelp/s/')"
+                    class="text-primary mb-2 mb-m-0">{{"Help" |
                     translate}}</a>
             </div>
             <p class="m-0 text-muted">{{"Copyright" | translate}}</p>
