@@ -21,12 +21,7 @@ export class SpecialCollectionComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.checkPageType();
     this.loadGroupedCollections();
-  }
-
-  private checkPageType(): void {
-    this.showAll = this.isAllCollectionsPage();
   }
 
   private loadGroupedCollections(): void {
@@ -38,14 +33,5 @@ export class SpecialCollectionComponent implements OnInit {
         console.error('Error loading collections:', err);
       }
     });
-  }
-
-  isAllCollectionsPage(): boolean {
-    return this.router.url === '/all-collections';
-  }
-
-  viewDetails(image: string): void {
-    this.imageService.setImage(image);
-    this.router.navigate(['/detail-info']);
   }
 }

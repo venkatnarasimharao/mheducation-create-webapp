@@ -2,7 +2,7 @@ import * as env from '../assets/env';
 
 export const environment = {
   production: false,
-  apiUrl: env.clientUrl.apiUrl,
+  apiUrl: env.clientUrl.apiDevUrl,
   SECURITY_KEY: env.clientUrl.SECURITY_KEY,
 };
 

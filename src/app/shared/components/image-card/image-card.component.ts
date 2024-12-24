@@ -26,7 +26,7 @@ export class ImageCardComponent implements OnInit {
   viewDetails(image: string): void {
     if (this.image) {
       this.imageService.setImage(this.image);
-      this.router.navigate(['/detail-info']);
+      this.router.navigate(['/search-content'], { queryParams: { collectionCode: 'caseTopic' } });
     }
   }
 }

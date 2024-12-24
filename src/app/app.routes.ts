@@ -9,6 +9,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'search-content',
+    loadComponent: () =>
+      import(
+        './features/search-find-content/search-find-content.component'
+      ).then((m) => m.SearchFindContentComponent),
+  },
+  {
     path: 'projects',
     loadComponent: () =>
       import('./features/projects/projects.component').then(
@@ -56,13 +63,6 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/special-collection/special-collection.component').then(
         (m) => m.SpecialCollectionComponent
-      ),
-  },
-  {
-    path: 'detail-info',
-    loadComponent: () =>
-      import('./features/search/search.component').then(
-        (m) => m.SearchComponent
       ),
   },
 ];
