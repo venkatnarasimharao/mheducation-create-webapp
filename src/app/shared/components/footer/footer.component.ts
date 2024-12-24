@@ -1,10 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SharedstateService } from '../../../core/services/shared-state/sharedstate.service';
-// import { ModalService } from '../../../core/services/modal/modal.service';
 import { DOCUMENT } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ModalContentComponent } from '../modal-content/modal-content.component';
 
 @Component({
   selector: 'footer',
@@ -27,6 +25,7 @@ export class FooterComponent implements OnInit {
     title: '',
     items: [] as any
   };
+  // TODO -- define modal data type
 
   ngOnInit(): void {
     this.languages = this.sharedstateService.getLanguagesSignal();

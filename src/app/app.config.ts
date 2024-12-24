@@ -8,8 +8,6 @@ import { httpInterceptor } from './core/interceptors/http.interceptor';
 import { ApiService } from './core/services/api/api.service';
 import { CommonService } from './core/services/common/common.service';
 import { SharedstateService } from './core/services/shared-state/sharedstate.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ModalService } from './core/services/modal/modal.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -35,8 +33,6 @@ export const appConfig: ApplicationConfig = {
     ApiService,
     CommonService,
     SharedstateService,
-    ModalService,
-    NgbModal
   ]
 };
 
