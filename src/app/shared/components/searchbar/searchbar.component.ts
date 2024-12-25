@@ -22,10 +22,10 @@ export class SearchbarComponent {
   translate: TranslateService = inject(TranslateService);
 
   searchCategories = [
-    { label: 'Search All', checked: true, id: 'search_all' },
-    { label: 'Keywords', checked: false, id: 'keywords' },
+    { label: 'Search All', checked: true, id: 'all' },
+    { label: 'Keywords', checked: false, id: 'description' },
     { label: 'Title', checked: false, id: 'title' },
-    { label: 'Author', checked: false, id: 'author'},
+    { label: 'Author', checked: false, id: 'authors'},
     { label: 'ISBN', checked: false, id: 'isbn' },
   ];
 
@@ -56,7 +56,7 @@ export class SearchbarComponent {
     const isChecked = (event.target as HTMLInputElement).checked;
   
     //Handle "Search All" case
-    if (categoryId === 'search_all') {
+    if (categoryId === 'all') {
       this.toggleSearchAll(isChecked);    //Toggle all checkboxes
       this.updateDropdownLabel();         
       return;                           
@@ -70,10 +70,10 @@ export class SearchbarComponent {
     category.checked = isChecked;
     
     //Find and update "Search All" checkbox
-    const searchAll = this.searchCategories.find(cat => cat.id === 'search_all');
+    const searchAll = this.searchCategories.find(cat => cat.id === 'all');
     if (searchAll) {
       searchAll.checked = this.searchCategories
-        .filter(cat => cat.id !== 'search_all')  //Exclude "Search All" from check
+        .filter(cat => cat.id !== 'all')  //Exclude "Search All" from check
         .every(cat => cat.checked);              //Check if all others are checked
     }
   
@@ -104,7 +104,7 @@ export class SearchbarComponent {
   // Emit search event
   onSearch() {
     const selectedCategories = this.searchCategories
-      .filter((cat) => cat.checked && cat.id !== 'search_all')
+      .filter((cat) => cat.checked && cat.id !== 'all')
       .map((cat) => cat.id);
 
     const searchData = {
