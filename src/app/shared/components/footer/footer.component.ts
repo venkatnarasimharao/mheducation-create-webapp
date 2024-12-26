@@ -18,7 +18,7 @@ export class FooterComponent implements OnInit {
     private modalService: NgbModal,
     @Inject(DOCUMENT) private document: Document) { }
 
-  regionList: any = [{ displayValue: { _text: 'Asia' } }, { displayValue: { _text: 'Europe' } }, { displayValue: { _text: 'United States' } }];
+  regionList: any = [{ displayValue: 'Asia' }, { displayValue: 'Europe' }, { displayValue: 'United States' }];
   languages: any;
   currentLanguage: any = sessionStorage.getItem('selectedLanguage');
   modalData = {
@@ -54,7 +54,7 @@ export class FooterComponent implements OnInit {
     const modalRef = this.modalService.open(content, { ariaLabelledBy: 'Select Language' });
     modalRef.result
       .then((selectedItem) => {
-        this.handleLanguageChange(selectedItem.locale._text);
+        this.handleLanguageChange(selectedItem.locale);
         sessionStorage.setItem("selectedLanguage", selectedItem.locale._text);
       })
       .catch((error) => {
