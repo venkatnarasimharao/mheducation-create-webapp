@@ -23,6 +23,8 @@
                 <input
                   type="checkbox"
                   [(ngModel)]="category.checked"
+                  [checked]="category.checked"
+                  [disabled]="category.disabled"
                   (change)="onCategoryToggle(category.id, $event)"
                   class="form-check-input ms-1"
                   [id]="category.id"
