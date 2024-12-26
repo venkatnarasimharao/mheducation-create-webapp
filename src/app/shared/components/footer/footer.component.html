@@ -1,0 +1,52 @@
+<div class="footer border-top py-3">
+    <div class="row flex-row justify-content-between text-nowrap">
+
+        <div class="col-12 col-md-5 col-lg-4 mb-3 py-0">
+            <div class="d-flex flex-column flex-md-row justify-content-md-between">
+                <a href="javascript:void(0)"
+                    (click)="openUrl('https://mhedu.force.com/createhelp/s/article/How-do-I-contact-Customer-Service')"
+                    class="text-primary me-md-0 mb-2 m-md-0 ">{{"CustomerSupport" | translate}}</a>
+                <a href="javascript:void(0)" (click)="openUrl('http://mheducation.com/terms-use')"
+                    class="text-primary me-md-0 mb-2 mb-m-0">{{"TermsOfUse" |
+                    translate}}</a>
+                <a href="javascript:void(0)" (click)="openUrl('https://www.mheducation.com/privacy.html')"
+                    class="text-primary me-md-0 mb-2 m-md-0">{{"PrivacyNotice" | translate}}</a>
+                <a href="javascript:void(0)" (click)="openUrl('https://mh.my.site.com/createhelp/s/')"
+                    class="text-primary mb-2 mb-m-0">{{"Help" |
+                    translate}}</a>
+            </div>
+            <p class="m-0 text-muted">{{"Copyright" | translate}}</p>
+        </div>
+
+        <div
+            class="col-12 col-md-6 d-flex flex-column flex-md-row justify-content-start justify-content-md-end align-items-start">
+            <button class="text-primary mr-md-4 mb-2 mb-md-0 border-0 bg-transparent mx-md-3"
+                (click)="openRegionModal(content)"><i class="bi bi-globe2 ">
+                </i> <span> {{"Region" | translate}}
+                </span></button>
+            <button class="text-primary mb-2 m-md-0 border-0 bg-transparent"
+                (click)="openLanguageModal(content)">{{"Language"
+                |
+                translate}}</button>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #content let-modal>
+    <div class="modal-header d-flex justify-content-between">
+        <h4 class="modal-title">{{modalData.title | translate}}</h4>
+        <button type="button" class="bg-transparent border-0 fs-1" aria-label="Close"
+            (click)="modal.dismiss('Cross click')"><i class="bi bi-x-lg text-white "> </i></button>
+    </div>
+    <div class="modal-body">
+        <ul class="row list-unstyled g-3">
+            @for (item of modalData.items; track $index) {
+            <li class="hec-cursor-pointer col-12 col-md-4 text-center" (click)="modal.close(item)" tabindex="0">{{
+                item?.displayValue
+                }}
+            </li>
+            }
+        </ul>
+    </div>
+</ng-template>

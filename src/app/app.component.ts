@@ -1,6 +1,5 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
 import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { HeaderComponent } from './shared/components/header/header.component';
@@ -10,7 +9,6 @@ import { HeaderComponent } from './shared/components/header/header.component';
   standalone: true,
   imports: [
     RouterOutlet,
-    TranslateModule,
     HeaderComponent,
     SidebarComponent,
     FooterComponent,
@@ -18,11 +16,10 @@ import { HeaderComponent } from './shared/components/header/header.component';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
 
   constructor() { }
 
   ngOnInit(): void {
   }
-
 }

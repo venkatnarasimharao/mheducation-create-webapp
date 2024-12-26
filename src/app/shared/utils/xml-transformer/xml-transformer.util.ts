@@ -21,7 +21,6 @@ export class XmlTransformerUtil {
             }
         }
         nodeString = nodeString.replace(/\s{2,}/g, ' ').replace(/\t/g, ' ');
-        nodeString = encodeURI(nodeString);
         return nodeString;
     }
 
@@ -42,12 +41,12 @@ export class XmlTransformerUtil {
                 for (let index = 0; index < node.attributes.length; index++) {
                     const attributeName = node.attributes[index].nodeName;
                     const attributeValue = node.attributes[index].nodeValue;
-                    nodeObject['@attributes'][attributeName] = encodeURI(attributeValue);
+                    nodeObject['@attributes'][attributeName] = attributeValue;
                 }
             }
 
             if (nodeName === 'content') {
-                nodeObject.$ = this.contentNode(node);
+                nodeObject = this.contentNode(node);
             } else {
                 if (node.hasChildNodes()) {
                     for (let index = 0; index < node.childNodes.length; index++) {
@@ -69,15 +68,15 @@ export class XmlTransformerUtil {
                         } else {
                             // Handle text nodes
                             if (childType === 3) {
-                                if (nodeName === 'description' && nodeObject.$ === undefined) {
-                                    nodeObject.$ = '';
+                                if (nodeName === 'description' && nodeObject === undefined) {
+                                    nodeObject = '';
                                 }
                                 nodeText = childNode.nodeValue.replace(/\s{2,}/g, ' ').replace(/\t/g, ' ').replace(/\n/g, ' ');
                                 if (!(nodeText === "" || nodeText === " ")) {
                                     if (nodeName !== 'description') {
-                                        nodeObject.$ = encodeURI(nodeText);
+                                        nodeObject = nodeText;
                                     } else {
-                                        nodeObject.$ += encodeURI(nodeText);
+                                        nodeObject += nodeText;
                                     }
                                 }
                             }
