@@ -7,7 +7,8 @@
 <div class="modal-body">
     <ul class="row list-unstyled g-3">
         @for (item of data.items; track $index) {
-        <li class="col-12 col-md-4 text-center cursor-pointer" (click)="selectItem(item)" tabindex="0">{{
+        <li class=" hec_cursor-pointer col-12 col-md-4 text-center cursor-pointer" (click)="selectItem(item)"
+            tabindex="0">{{
             item?.displayValue?._text
             }}
         </li>

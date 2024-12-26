@@ -1,4 +1,5 @@
 {
+    "brand": "إنشاء",
     "textAlign": "rtl",
     "langCode": "ar_SA",
     "LanguagePopupTitle": "اختر لغتك",
@@ -9,7 +10,7 @@
     "MyAccount": "حسابي",
     "Settings": "الإعدادات",
     "LogOut": "تسجيل الخروج",
-    "HeaderBannerTitle": "مرحبًا بك في Create",
+    "HeaderBannerTitle": "مرحبًا بك في إنشاء",
     "Banner1stHeading": "ابحث عن المحتوى",
     "Banner2ndHeading": "نظم",
     "Banner3rdHeading": "خصص",

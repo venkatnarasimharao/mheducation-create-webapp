@@ -1,4 +1,5 @@
 {
+  "brand": "Crea",
   "textAlign": "ltr",
   "langCode": "ca_ES",
   "LanguagePopupTitle": "Selecciona la teva llengua",
@@ -9,7 +10,7 @@
   "MyAccount": "El meu compte",
   "Settings": "Configuració",
   "LogOut": "Tanca la sessió",
-  "HeaderBannerTitle": "Benvingut a Crear",
+  "HeaderBannerTitle": "Benvingut a Crea",
   "Banner1stHeading": "Cerca de Contingut",
   "Banner2ndHeading": "Organitzar",
   "Banner3rdHeading": "Personalitzar",

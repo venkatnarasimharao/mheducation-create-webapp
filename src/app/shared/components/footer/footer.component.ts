@@ -50,12 +50,11 @@ export class FooterComponent implements OnInit {
 
     this.modalData.title = 'LanguagePopupTitle';
     this.modalData.items = this.languages();
-    console.log(this.modalData.items);
     const modalRef = this.modalService.open(content, { ariaLabelledBy: 'Select Language' });
     modalRef.result
       .then((selectedItem) => {
         this.handleLanguageChange(selectedItem.locale);
-        sessionStorage.setItem("selectedLanguage", selectedItem.locale._text);
+        sessionStorage.setItem("selectedLanguage", selectedItem.locale);
       })
       .catch((error) => {
         console.log('Languages Modal dismissed:', error);

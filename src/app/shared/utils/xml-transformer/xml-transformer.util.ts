@@ -21,7 +21,6 @@ export class XmlTransformerUtil {
             }
         }
         nodeString = nodeString.replace(/\s{2,}/g, ' ').replace(/\t/g, ' ');
-        // nodeString = encodeURI(nodeString);
         return nodeString;
     }
 

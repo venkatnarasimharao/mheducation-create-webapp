@@ -1,4 +1,9 @@
 // overwritten bs focus
-a:focus, .list-group-item:focus {
+a:focus,
+.list-group-item:focus {
     border-radius: 0 !important;
+}
+
+.hec_cursor-pointer:hover {
+    cursor: pointer;
 }
