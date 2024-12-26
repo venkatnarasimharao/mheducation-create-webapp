@@ -9,7 +9,7 @@
         @for (item of data.items; track $index) {
         <li class=" hec_cursor-pointer col-12 col-md-4 text-center cursor-pointer" (click)="selectItem(item)"
             tabindex="0">{{
-            item?.displayValue?._text
+            item?.displayValue
             }}
         </li>
         }

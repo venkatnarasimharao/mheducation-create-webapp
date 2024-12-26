@@ -16,7 +16,6 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class HeaderComponent {
   imageUrl: string = "https://www.mheducation.co.in/static/version1732692363/frontend/Cti/canada-theme/en_GB/images/logo.svg";
-  brandName: string = "Create";
   constructor(private menuService: MenuSidebarService
   ) {
   }

@@ -13,15 +13,3 @@ export class ModalService {
     return modalRef.result;
   }
 }
-
-// for using the modalService
-
-// openLanguageModal() {
-//   this.modalService.openModal('Languages', this.languages()).then((selectedItem: any) => {
-//     this.handleLanguageSettings(selectedItem.locale._text);
-//     sessionStorage.setItem("selectedLanguage", selectedItem.locale._text);
-//   }).catch(() => {
-//     console.log('Modal dismissed');
-//   });
-
-// }
