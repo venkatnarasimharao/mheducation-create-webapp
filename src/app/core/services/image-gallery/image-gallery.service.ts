@@ -15,7 +15,7 @@ export class ImageGalleryService {
     this.image = image;
   }
 
-  getImage(): string {
+  getImage(): any{
     return this.image;
   }
 

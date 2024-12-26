@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { SearchFindContentComponent } from '../search-find-content/search-find-content.component';
 import { ImageGalleryService } from '../../core/services/image-gallery/image-gallery.service';
 
 @Component({
   selector: 'hec-search-collection-banner',
   standalone: true,
-  imports: [TranslateModule, SearchFindContentComponent],
+  imports: [TranslateModule],
   templateUrl: './search-collection-banner.component.html',
   styleUrl: './search-collection-banner.component.scss'
 })
