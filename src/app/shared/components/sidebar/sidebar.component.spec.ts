@@ -33,7 +33,7 @@ describe('SidebarComponent', () => {
       imports: [
         SidebarComponent,
         TranslateModule.forRoot({
-          defaultLanguage: 'en',
+          defaultLanguage: 'en_US',
           loader: {
             provide: TranslateLoader,
             useClass: MockTranslateLoader,
@@ -58,8 +58,8 @@ describe('SidebarComponent', () => {
 
     // Initialize translate service
     const translate = TestBed.inject(TranslateService);
-    translate.setDefaultLang('en');
-    translate.use('en');
+    translate.setDefaultLang('en_US');
+    translate.use('en_US');
 
     fixture.detectChanges();
   });

@@ -28,7 +28,7 @@ describe('HeaderComponent', () => {
         HeaderComponent,
         NgbDropdownModule,
         TranslateModule.forRoot({
-          defaultLanguage: 'en',
+          defaultLanguage: 'en_US',
           loader: {
             provide: TranslateLoader,
             useClass: MockTranslateLoader,
@@ -44,8 +44,8 @@ describe('HeaderComponent', () => {
       .compileComponents();
 
     const translate = TestBed.inject(TranslateService);
-    translate.setDefaultLang('en');
-    translate.use('en');
+    translate.setDefaultLang('en_US');
+    translate.use('en_US');
 
     fixture = TestBed.createComponent(HeaderComponent);
     component = fixture.componentInstance;
