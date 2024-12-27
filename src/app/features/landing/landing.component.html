@@ -49,7 +49,7 @@
         </div>
     </div>
     <div class="row pt-3">
-        <h2>Begin Creating Now !</h2>
+        <h2>{{"BeginCreatingNow" |translate}}</h2>
     </div>
 
     <div class="flex-md-row">
@@ -67,7 +67,7 @@
 
             <!-- Collections List -->
             <ul class="row list-unstyled">
-                @for(collection of collectionsData; track collection.code){
+                @for(collection of collectionsData; track $index){
                     <li class="col-lg-3 col-md-6 col-sm-6 mb-4">
                         <hec-image-card [image]="collection.image" [name]="collection.name">
                             <span>{{ collection.name | translate }}</span>

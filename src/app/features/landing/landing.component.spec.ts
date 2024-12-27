@@ -1,34 +1,31 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
 import { LandingComponent } from './landing.component';
 import { TranslateModule } from '@ngx-translate/core';
-import { of } from 'rxjs';
+import { provideRouter } from '@angular/router';
+import { ImageGalleryService } from '../../core/services/image-gallery/image-gallery.service';
+import { of, throwError } from 'rxjs';
 
 describe('LandingComponent', () => {
   let component: LandingComponent;
   let fixture: ComponentFixture<LandingComponent>;
+  let imageGalleryServiceMock: any;
 
   beforeEach(async () => {
+    // Create a mock for ImageGalleryService
+    imageGalleryServiceMock = {
+      getCollections: jasmine.createSpy('getCollections').and.returnValue(of([]))
+    };
+
     await TestBed.configureTestingModule({
       imports: [
         LandingComponent,
         TranslateModule.forRoot()
       ],
       providers: [
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: {
-              paramMap: {
-                get: (key: string) => 'mockValue',
-              },
-            },
-            queryParams: of({ testParam: 'mockQueryParam' }),
-          },
-        },
-      ],
-    })
-    .compileComponents();
+        provideRouter([]),
+        { provide: ImageGalleryService, useValue: imageGalleryServiceMock }
+      ]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(LandingComponent);
     component = fixture.componentInstance;
@@ -37,5 +34,20 @@ describe('LandingComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should handle error when loadCollections fails', () => {
+    const consoleErrorSpy = spyOn(console, 'error'); // Spy on console.error
+    const mockError = new Error('Test error');
+
+    // Simulate an error from the service
+    imageGalleryServiceMock.getCollections.and.returnValue(throwError(() => mockError));
+
+    // Call ngOnInit to trigger loadCollections
+    component.ngOnInit();
+
+    // Assert that console.error was called with the correct error
+    expect(consoleErrorSpy).toHaveBeenCalledWith('Error loading collections data:', mockError);
+    expect(component.collectionsData).toEqual([]); // Ensure collectionsData remains empty
   });
 });

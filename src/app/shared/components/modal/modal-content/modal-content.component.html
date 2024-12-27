@@ -1,0 +1,17 @@
+<div class="modal-header d-flex justify-content-between">
+    <h4 class="modal-title"> Select your {{ data.title }}</h4>
+
+    <button type="button" class="bg-transparent border-0 fs-1" aria-label="Close" (click)="activeModal.dismiss()"><i
+            class="bi bi-x-lg text-white "></i></button>
+</div>
+<div class="modal-body">
+    <ul class="row list-unstyled g-3">
+        @for (item of data.items; track $index) {
+        <li class=" hec-cursor-pointer col-12 col-md-4 text-center cursor-pointer" (click)="selectItem(item)"
+            tabindex="0">{{
+            item?.displayValue
+            }}
+        </li>
+        }
+    </ul>
+</div>
