@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import { NgbDropdownToggleNoCaretDirective } from '../../shared/directives/dropdown-toggle-css.directive';
 import { RouterModule } from '@angular/router';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
+import { FilterAccordionComponent } from '../../shared/components/filter-accordion/filter-accordion.component';
+import { AccordionItem } from '../../shared/models/search.model';
 
 @Component({
   selector: 'hec-search-find-content',
@@ -16,6 +18,7 @@ import { PaginationComponent } from '../../shared/components/pagination/paginati
     NgbDropdownToggleNoCaretDirective,
     RouterModule,
     PaginationComponent,
+    FilterAccordionComponent
   ],
   templateUrl: './search-find-content.component.html',
   styleUrl: './search-find-content.component.scss',
@@ -61,4 +64,51 @@ export class SearchFindContentComponent {
     this.currentPageNumber = newPage;
     console.log('Page changed to:', newPage);
   }
+
+  collectionfilter: AccordionItem[] = [
+      {
+        id: 'panel1',
+        header: 'Type',
+        collectionTypes: [
+          { label: 'Part', value: '(171)' },
+          { label: 'PartOpener', value: '(183)' },
+          { label: 'Books', value: '(13)' },
+          { label: 'Videos', value: '(104)' },
+          { label: 'Upload', value: '' },
+          { label: 'Article', value: '(5)' },
+          { label: 'Case', value: '(177)' },
+        ],
+      },
+      {
+        id: 'panel2',
+        header: 'Instructor Materials',
+        collectionTypes: [{ label: 'Available as eBook', value: '(305)' }],
+      },
+      {
+        id: 'panel3',
+        header: 'Publication Year',
+        collectionTypes: [
+          { label: '2022', value: '' },
+          { label: '2021', value: '' },
+          { label: '2020', value: '(39)' },
+          { label: '2019', value: '' },
+          { label: '2018', value: '(63)' },
+          { label: '2017', value: '' },
+          { label: '2016', value: '(27)' },
+          { label: '2015', value: '(49)' },
+          { label: '2014', value: '(18)' },
+          { label: 'before 2014', value: '(104)' },
+        ],
+      },
+      {
+        id: 'panel4',
+        header: 'Page Length',
+        collectionTypes: [
+          { label: 'Brief (1-4 pages)', value: '(135)' },
+          { label: 'Medium (5-9 pages)', value: '(27)' },
+          { label: 'Long (10+ pages)', value: '(169)' },
+        ],
+      },
+    ];
+
 }

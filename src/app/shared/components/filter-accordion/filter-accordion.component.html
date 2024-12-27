@@ -1,0 +1,41 @@
+ <!-- accordion with checkboxes -->
+ <div ngbAccordion [closeOthers]="false">
+    @for(list of collectionfilterData;track list){
+      <div ngbAccordionItem class="border-0 border-bottom">
+        <h2 ngbAccordionHeader>
+          <button  ngbAccordionButton class="fw-bold">{{ list.header }}</button>
+        </h2>
+        <div ngbAccordionCollapse>
+          <div ngbAccordionBody>
+            <ng-template>
+              <!-- if collectionTypes available from list  -->
+               @if(list.collectionTypes && list.collectionTypes.length > 0){
+                  @for(item of list.collectionTypes;track item.label){
+                    <div class="form-check">
+                      <div class="d-flex justify-content-between">
+                        <div>
+                          <input
+                            type="checkbox"
+                            class="form-check-input"
+                            [name]="item.label"
+                            (click)="onCheckBoxChange($event,item)"
+                          />
+                          <label class="form-check-label" for="{{ item.label }}">{{
+                            item.label
+                          }}</label>
+                        </div>
+                        <span class="text-muted">{{ item.value }}</span>
+                      </div>
+                    </div>
+                  }
+               }
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    }
+  
+  </div>
+
+
+
