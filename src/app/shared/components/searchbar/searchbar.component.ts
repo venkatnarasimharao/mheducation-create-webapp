@@ -33,14 +33,14 @@ export class SearchbarComponent {
   dropdownLabelText: string = '';
 
   // Check if all categories (excluding 'Search All') are checked
-  private areAllCategoriesChecked(): boolean {
+   areAllCategoriesChecked(): boolean {
     return this.searchCategories
       .filter((cat) => cat.id !== 'all') // Exclude 'Search All'
       .every((cat) => cat.checked); // Check if all are checked
   }
 
   // Toggle all categories if "Search All" is checked
-  private toggleSearchAll(isChecked: boolean) {
+  toggleSearchAll(isChecked: boolean) {
     this.searchCategories.forEach((category) => {
       category.checked = isChecked;
       category.disabled = isChecked && category.id !== 'all'; // Disable other options if "Search All" is checked
@@ -63,7 +63,7 @@ export class SearchbarComponent {
     // Handle "Search All" case
     if (categoryId === 'all') {
       this.toggleSearchAll(isChecked); // Toggle all checkboxes
-      return;
+      this.getDropdownLabel(); // to update if search all option is rechecked after unchecking
     }
 
     // Find the clicked category
