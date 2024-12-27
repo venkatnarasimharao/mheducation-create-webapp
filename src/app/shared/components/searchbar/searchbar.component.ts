@@ -32,6 +32,13 @@ export class SearchbarComponent {
   searchTerm: string = '';
   dropdownLabelText: string = '';
 
+  // Check if all categories (excluding 'Search All') are checked
+  private areAllCategoriesChecked(): boolean {
+    return this.searchCategories
+      .filter((cat) => cat.id !== 'all') // Exclude 'Search All'
+      .every((cat) => cat.checked); // Check if all are checked
+  }
+
   // Toggle all categories if "Search All" is checked
   private toggleSearchAll(isChecked: boolean) {
     this.searchCategories.forEach((category) => {
@@ -46,7 +53,7 @@ export class SearchbarComponent {
   // Initialization
   ngOnInit() {
     this.toggleSearchAll(true); // Ensures "Search All" is checked if DOM re-renders
-    this.getDropdownLabel();    // Ensures the label is updated if DOM re-renders
+    this.getDropdownLabel(); // Ensures the label is updated if DOM re-renders
   }
 
   // Handle category toggling
@@ -76,9 +83,7 @@ export class SearchbarComponent {
     // Update the "Search All" checkbox status
     const searchAll = this.searchCategories.find((cat) => cat.id === 'all');
     if (searchAll) {
-      searchAll.checked = this.searchCategories
-        .filter((cat) => cat.id !== 'all') // Exclude "Search All"
-        .every((cat) => cat.checked); // Check if all others are checked
+      searchAll.checked = this.areAllCategoriesChecked();
     }
 
     // Update dropdown label
@@ -86,40 +91,25 @@ export class SearchbarComponent {
   }
 
   // Generate dropdown label dynamically
-  private getDropdownLabel(): string {
+  getDropdownLabel(): void {
     // Check if all options (excluding 'Search All') are checked
-    const allChecked = this.searchCategories
-      .filter((cat) => cat.id !== 'all') // Exclude 'Search All'
-      .every((cat) => cat.checked); // Check if all are checked
-
-    // If all are checked, set label to "Search All"
-    if (allChecked) {
+    if (this.areAllCategoriesChecked()) {
       this.dropdownLabelText = 'Search All';
-      return this.dropdownLabelText;
+      return;
     }
 
     // Get the selected categories
-    const selectedCategories = this.checkedOptions;
-    console.log(selectedCategories)
-
-    // Default label
-    this.dropdownLabelText = 'Select Categories';
-
-    if (selectedCategories?.length === 1) {
+    //const selectedCategories = this.checkedOptions;
+    if (this.checkedOptions?.length === 1) {
       // If only one category is selected
-      this.dropdownLabelText = selectedCategories[0]?.label;
-    } 
-    if (selectedCategories?.length > 1) {
+      this.dropdownLabelText = this.checkedOptions[0]?.label;
+    } else if (this.checkedOptions?.length > 1) {
       // If multiple categories are selected
-      const firstSelected = selectedCategories[0]?.label;
-      const remainingCount = selectedCategories?.length - 1;
-
-      this.dropdownLabelText = `${firstSelected} + ${remainingCount}`;
+      this.dropdownLabelText = `${this.checkedOptions[0]?.label} + ${this.checkedOptions?.length - 1}`;
+    } else {
+      this.dropdownLabelText = 'Select Categories';
     }
-
-    return this.dropdownLabelText;
-}
-
+  }
 
   // Emit search event
   onSearch() {

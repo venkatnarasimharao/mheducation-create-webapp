@@ -1,130 +1,142 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SearchbarComponent } from './searchbar.component';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-import { of } from 'rxjs';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 describe('SearchbarComponent', () => {
   let component: SearchbarComponent;
   let fixture: ComponentFixture<SearchbarComponent>;
-  let translateServiceMock: jasmine.SpyObj<TranslateService>;
 
   beforeEach(async () => {
-    translateServiceMock = jasmine.createSpyObj('TranslateService', ['instant', 'get']);
-    // Mock both instant and get methods
-    translateServiceMock.instant.and.callFake((key: string) => key);
-    translateServiceMock.get.and.callFake((key: string) => of(key));
-    
     await TestBed.configureTestingModule({
-      imports: [
-        FormsModule,
-        NgbDropdownModule,
-        SearchbarComponent,
-        TranslateModule.forRoot() // Add TranslateModule
-      ],
-      providers: [
-        { provide: TranslateService, useValue: translateServiceMock }
-      ]
+      imports: [SearchbarComponent, FormsModule, NgbDropdownModule, TranslateModule.forRoot()],
+      providers: [TranslateService],
     }).compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(SearchbarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create with default values', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
-    expect(component.searchbarTitle).toBe('');
-    expect(component.placeholder).toBe('');
-    expect(component.searchTerm).toBe('');
-    expect(component.searchCategories.length).toBe(5);
-    expect(component.searchCategories.every(cat => cat.checked)).toBeTrue();
   });
 
-  describe('Category Toggle Functionality', () => {
-    it('should handle "Search All" toggle correctly', () => {
-      // Test toggling off
-      component.onCategoryToggle('all', { target: { checked: false } } as unknown as Event);
-      fixture.detectChanges();
-      expect(component.searchCategories.every(cat => !cat.checked)).toBeTrue();
-      
-      // Test toggling on
-      component.onCategoryToggle('all', { target: { checked: true } } as unknown as Event);
-      fixture.detectChanges();
-      expect(component.searchCategories.every(cat => cat.checked)).toBeTrue();
-    });
+  it('should initialize with "Search All" checked and others disabled', () => {
+    component.ngOnInit();
+    const allOption = component.searchCategories.find((cat) => cat.id === 'all');
+    const otherOptions = component.searchCategories.filter((cat) => cat.id !== 'all');
 
-    it('should update "Search All" based on other category selections', () => {
-      // Uncheck one category and verify "Search All" gets unchecked
-      component.onCategoryToggle('title', { target: { checked: false } } as unknown as Event);
-      fixture.detectChanges();
-      expect(component.searchCategories.find(cat => cat.id === 'all')?.checked).toBeFalse();
+    expect(allOption?.checked).toBeTrue();
+    expect(otherOptions.every((opt) => opt.disabled)).toBeTrue();
+    expect(component.dropdownLabelText).toBe('Search All');
+  });
 
-      // Check all individual categories and verify "Search All" gets checked
-      component.searchCategories
-        .filter(cat => cat.id !== 'all')
-        .forEach(cat => {
-          component.onCategoryToggle(cat.id, { target: { checked: true } } as unknown as Event);
-          fixture.detectChanges();
-        });
-      expect(component.searchCategories.find(cat => cat.id === 'all')?.checked).toBeTrue();
+  it('should disable other options when "Search All" is toggled on', () => {
+    component.onCategoryToggle('all', { target: { checked: true } } as any);
+
+    const otherOptions = component.searchCategories.filter((cat) => cat.id !== 'all');
+    expect(otherOptions.every((opt) => opt.disabled)).toBeTrue();
+    expect(component.checkedOptions.length).toBe(component.searchCategories.length);
+    expect(component.dropdownLabelText).toBe('Search All');
+  });
+
+  it('should enable other options when "Search All" is toggled off', () => {
+    component.onCategoryToggle('all', { target: { checked: false } } as any);
+
+    const otherOptions = component.searchCategories.filter((cat) => cat.id !== 'all');
+    expect(otherOptions.every((opt) => opt.disabled)).toBeFalse();
+    expect(component.checkedOptions.length).toBe(0);
+    expect(component.dropdownLabelText).toBe('Select Categories');
+  });
+
+  it('should update the label when a single category is selected', () => {
+    component.onCategoryToggle('description', { target: { checked: true } } as any);
+    expect(component.dropdownLabelText).toBe('Keywords');
+  });
+
+  it('should update the label when multiple categories are selected', () => {
+    component.onCategoryToggle('description', { target: { checked: true } } as any);
+    component.onCategoryToggle('title', { target: { checked: true } } as any);
+
+    expect(component.dropdownLabelText).toBe('Keywords + 1');
+  });
+
+  it('should reset to "Search All" when all categories are checked', () => {
+    component.onCategoryToggle('description', { target: { checked: true } } as any);
+    component.onCategoryToggle('title', { target: { checked: true } } as any);
+    component.onCategoryToggle('authors', { target: { checked: true } } as any);
+    component.onCategoryToggle('isbn', { target: { checked: true } } as any);
+
+    const allOption = component.searchCategories.find((cat) => cat.id === 'all');
+    expect(allOption?.checked).toBeTrue();
+    expect(component.dropdownLabelText).toBe('Search All');
+  });
+
+  it('should correctly handle toggling off a category when all were previously checked', () => {
+    component.onCategoryToggle('description', { target: { checked: true } } as any);
+    component.onCategoryToggle('title', { target: { checked: true } } as any);
+    component.onCategoryToggle('authors', { target: { checked: true } } as any);
+    component.onCategoryToggle('isbn', { target: { checked: true } } as any);
+
+    // Toggle off "Keywords"
+    component.onCategoryToggle('description', { target: { checked: false } } as any);
+
+    const allOption = component.searchCategories.find((cat) => cat.id === 'all');
+    expect(allOption?.checked).toBeFalse();
+    expect(component.dropdownLabelText).toBe('Title + 3');
+  });
+
+  it('should emit the correct search data on search', () => {
+    spyOn(component.searchEvent, 'emit');
+
+    component.onCategoryToggle('description', { target: { checked: true } } as any);
+    component.searchTerm = 'Angular';
+
+    component.onSearch();
+
+    expect(component.searchEvent.emit).toHaveBeenCalledWith({
+      categories: ['description'],
+      term: 'Angular',
     });
   });
 
-  describe('Dropdown Label', () => {
-    it('should display correct label based on selection', () => {
-      // Test "Search All" label
-      component.ngOnInit();
-      fixture.detectChanges();
-      expect(component['dropdownLabelText']).toBe('Search All');
+  it('should emit empty categories if none are selected on search', () => {
+    spyOn(component.searchEvent, 'emit');
 
-      // Test no selection label
-      component.onCategoryToggle('all', { target: { checked: false } } as unknown as Event);
-      fixture.detectChanges();
-      expect(component['dropdownLabelText']).toBe('Select Categories');
+    component.searchTerm = 'Angular';
+    component.onCategoryToggle('all', { target: { checked: false } } as any);
 
-      // Test single category label
-      component.onCategoryToggle('title', { target: { checked: true } } as unknown as Event);
-      fixture.detectChanges();
-      expect(component['dropdownLabelText']).toBe('Title');
+    component.onSearch();
 
-      // Test multiple categories label
-      component.onCategoryToggle('authors', { target: { checked: true } } as unknown as Event);
-      fixture.detectChanges();
-      expect(component['dropdownLabelText']).toBe('Title + 1');
+    expect(component.searchEvent.emit).toHaveBeenCalledWith({
+      categories: [],
+      term: 'Angular',
     });
   });
 
-  describe('Search Functionality', () => {
-    it('should emit search event with correct data', () => {
-      spyOn(component.searchEvent, 'emit');
-      
-      // Test with specific search criteria
-      component.searchTerm = 'test search';
-      component.onCategoryToggle('all', { target: { checked: false } } as unknown as Event);
-      component.onCategoryToggle('title', { target: { checked: true } } as unknown as Event);
-      component.onCategoryToggle('authors', { target: { checked: true } } as unknown as Event);
-      fixture.detectChanges();
-      
-      component.onSearch();
-      
-      expect(component.searchEvent.emit).toHaveBeenCalledWith({
-        categories: ['title', 'authors'],
-        term: 'test search'
-      });
+  it('should toggle checkedOptions correctly', () => {
+    component.onCategoryToggle('description', { target: { checked: true } } as any);
+    expect(component.checkedOptions.some((opt) => opt.id === 'description')).toBeTrue();
 
-      // Test with no categories selected
-      component.onCategoryToggle('title', { target: { checked: false } } as unknown as Event);
-      component.onCategoryToggle('authors', { target: { checked: false } } as unknown as Event);
-      fixture.detectChanges();
-      
-      component.onSearch();
-      
-      expect(component.searchEvent.emit).toHaveBeenCalledWith({
-        categories: [],
-        term: 'test search'
-      });
-    });
+    component.onCategoryToggle('description', { target: { checked: false } } as any);
+    expect(component.checkedOptions.some((opt) => opt.id === 'description')).toBeFalse();
+  });
+
+  it('should handle edge cases in getDropdownLabel', () => {
+    component.checkedOptions = [];
+    expect(component.getDropdownLabel()).toBe('Select Categories');
+
+    component.checkedOptions = [{ label: 'Title', id: 'title' }];
+    expect(component.getDropdownLabel()).toBe('Title');
+
+    component.checkedOptions = [
+      { label: 'Keywords', id: 'description' },
+      { label: 'Title', id: 'title' },
+    ];
+    expect(component.getDropdownLabel()).toBe('Keywords + 1');
   });
 });
