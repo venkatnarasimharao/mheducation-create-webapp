@@ -21,7 +21,7 @@ export class SearchbarComponent {
   translate: TranslateService = inject(TranslateService);
 
   searchCategories = [
-    { label: 'Search All', checked: true, id: 'all', disabled: false },
+    { label: 'SearchAll', checked: true, id: 'all', disabled: false },
     { label: 'Keywords', checked: false, id: 'description', disabled: false },
     { label: 'Title', checked: false, id: 'title', disabled: false },
     { label: 'Author', checked: false, id: 'authors', disabled: false },
@@ -70,9 +70,6 @@ export class SearchbarComponent {
     const category = this.searchCategories.find((cat) => cat.id === categoryId);
     if (!category) return;
 
-    // Update the clicked category's state
-    category.checked = isChecked;
-
     // Update checkedOptions
     if (isChecked) {
       this.checkedOptions.push({ label: category.label, id: category.id });
@@ -94,22 +91,15 @@ export class SearchbarComponent {
   getDropdownLabel(): void {
     // Check if all options (excluding 'Search All') are checked
     if (this.areAllCategoriesChecked()) {
-      this.dropdownLabelText = 'Search All';
-      return;
-    }
-
-    // Get the selected categories
-    //const selectedCategories = this.checkedOptions;
-    if (this.checkedOptions?.length === 1) {
-      // If only one category is selected
-      this.dropdownLabelText = this.checkedOptions[0]?.label;
+        this.dropdownLabelText = 'SearchAll';
+    } else if (this.checkedOptions?.length === 1) {
+        // If only one category is selected
+        this.dropdownLabelText = this.checkedOptions[0]?.label;
     } else if (this.checkedOptions?.length > 1) {
-      // If multiple categories are selected
-      this.dropdownLabelText = `${this.checkedOptions[0]?.label} + ${this.checkedOptions?.length - 1}`;
-    } else {
-      this.dropdownLabelText = 'Select Categories';
-    }
-  }
+        // If multiple categories are selected
+        this.dropdownLabelText = `${this.checkedOptions[0]?.label} + ${this.checkedOptions?.length - 1}`;
+    } 
+}
 
   // Emit search event
   onSearch() {

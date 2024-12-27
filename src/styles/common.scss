@@ -1,13 +1,10 @@
-$active-color: #06235B;
-
-// overwritten by focus
-a:focus, .list-group-item:focus {
+// overwritten bs focus
+a:focus,
+.list-group-item:focus {
     border-radius: 0 !important;
 }
 
-
-.btn:focus,
-.form-control:focus {
-  outline: 2px solid #007bff; 
-  outline-offset: 2px;
+.hec-cursor-pointer:hover,
+.hec-cursor-pointer {
+    cursor: pointer;
 }
