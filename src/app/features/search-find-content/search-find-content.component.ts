@@ -4,6 +4,7 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { NgbDropdownToggleNoCaretDirective } from '../../shared/directives/dropdown-toggle-css.directive';
 import { RouterModule } from '@angular/router';
+import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 
 @Component({
   selector: 'hec-search-find-content',
@@ -14,6 +15,7 @@ import { RouterModule } from '@angular/router';
     CommonModule,
     NgbDropdownToggleNoCaretDirective,
     RouterModule,
+    PaginationComponent,
   ],
   templateUrl: './search-find-content.component.html',
   styleUrl: './search-find-content.component.scss',
@@ -50,4 +52,13 @@ export class SearchFindContentComponent {
     this.selectFormatTitle = item.name;
   }
 
+  //pagination
+  currentPageNumber: number = 1;
+  totalPagesCount: number = 100;
+  pagePerItem: number = 5;
+  
+  onPageChange(newPage: number) {
+    this.currentPageNumber = newPage;
+    console.log('Page changed to:', newPage);
+  }
 }
