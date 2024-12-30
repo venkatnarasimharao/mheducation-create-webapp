@@ -58,9 +58,6 @@ describe('FooterComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
-
-
-
     it('should not call getLanguages when languages are already present in ngOnInit', () => {
         mockSharedstateService.getLanguagesSignal.and.returnValue(signal(['en_US', 'it_IT']));
 
@@ -68,13 +65,12 @@ describe('FooterComponent', () => {
 
         expect(mockSharedstateService.getLanguages).not.toHaveBeenCalled();
     });
-
     it('should initialize languages from the sharedstate service', () => {
         expect(mockSharedstateService.getLanguagesSignal).toHaveBeenCalled();
         expect(component.languages()).toEqual(['en_US', 'it_IT', 'ar_SA']);
     });
     it('should call handleLanguageChange when a language is selected in the modal', async () => {
-        const content = {}; // Mock content
+        const content = {};
         const selectedItem = { locale: 'en_US', displayValue: 'English' };
 
         spyOn(component, 'handleLanguageChange');
@@ -89,27 +85,21 @@ describe('FooterComponent', () => {
         expect(component.handleLanguageChange).toHaveBeenCalledWith(selectedItem.locale);
         expect(sessionStorage.getItem('selectedLanguage')).toBe(selectedItem.locale);
     });
-
     it('should open the language modal with the correct title and items', () => {
         const content = {};
-
-        // Mock data for languages
         component.languages = () => [
             { locale: 'en_US', displayValue: 'English' },
             { locale: 'it_IT', displayValue: 'Italian' },
             { locale: 'ar_SA', displayValue: 'Arabic' },
         ];
 
-        // Mock the modal service
         const mockModalRef = {
-            result: Promise.resolve(), // Mock result as a resolved Promise
-            componentInstance: {}, // Add any additional properties as required
+            result: Promise.resolve({ locale: 'en_US', displayValue: 'English' }),
+            componentInstance: {},
         } as unknown as NgbModalRef;
 
         modalService.open.and.returnValue(mockModalRef);
-
         component.openLanguageModal(content);
-
         expect(component.modalData.title).toBe('LanguagePopupTitle');
         expect(component.modalData.items).toEqual([
             { locale: 'en_US', displayValue: 'English' },
@@ -119,7 +109,6 @@ describe('FooterComponent', () => {
 
         expect(modalService.open).toHaveBeenCalledWith(content, { ariaLabelledBy: 'Select Language' });
     });
-
     it('should open region modal and log selected region', async () => {
         const content = {}; // Mock content
         const mockModalRef = {
@@ -140,7 +129,6 @@ describe('FooterComponent', () => {
             expect(selectedItem.displayValue).toBe('Asia');
         });
     });
-
     it('should open a URL in a popup window', () => {
         spyOn(window, 'open');
         const url = 'https://example.com';
