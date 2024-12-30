@@ -51,4 +51,5 @@
     <div class="row pt-3">
         <h2>{{"BeginCreatingNow" |translate}}</h2>
     </div>
+        <hec-searchbar [searchbarTitle]="'SearchProduct'" [placeholder]="'FindContentByKeywordsTitleAuthorISBN'" (searchEvent)="handleSearch($event) "></hec-searchbar>
 </div>
