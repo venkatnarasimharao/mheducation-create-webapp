@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TranslateModule, TranslateService, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';  // Import TranslateHttpLoader
-import { HttpClient } from '@angular/common/http';  // Import HttpClient for the loader factory
+import { HttpClient, provideHttpClient } from '@angular/common/http';  // Import HttpClient for the loader factory
 import { ApiService } from './core/services/api/api.service';
 import { SharedstateService } from './core/services/shared-state/sharedstate.service';
 
@@ -16,7 +16,6 @@ describe('AppComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         AppComponent,
-        HttpClientTestingModule,
         TranslateModule.forRoot({
           loader: {
             provide: TranslateLoader,
@@ -27,6 +26,8 @@ describe('AppComponent', () => {
         }),
       ],
       providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
         ApiService,
         SharedstateService,
       ],
