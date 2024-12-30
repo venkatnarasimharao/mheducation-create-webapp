@@ -46,7 +46,7 @@ export class SearchbarComponent {
     });
 
     // Update checkedOptions
-    this.checkedOptions = isChecked ? this.searchCategories.filter(cat => cat.id !== 'all') : [];
+    this.checkedOptions = isChecked ? this.searchCategories.slice(1) : [];
     this.getDropdownLabel(); // Update the dropdown label after toggling
   }
 
@@ -56,35 +56,31 @@ export class SearchbarComponent {
     this.getDropdownLabel(); // Ensures the label is updated if DOM re-renders
   }
 
-  // Handle category toggling
-  onCategoryToggle(categoryId: string, event: Event): void {
+  onCategoryToggle(category: { label: string; id: string; checked: boolean}, event: Event): void {
     const isChecked = (event.target as HTMLInputElement).checked;
-
+  
     // Handle "Search All" case
-    if (categoryId === 'all') {
+    if (category.id === 'all') {
       this.toggleSearchAll(isChecked); // Toggle all checkboxes
     } else {
-      // Find the clicked category
-      const category = this.searchCategories.find((cat) => cat.id === categoryId);
-      if (!category) return;
-
       // Update checkedOptions
       if (isChecked) {
         this.checkedOptions.push({ label: category.label, id: category.id });
       } else {
-        this.checkedOptions = this.checkedOptions.filter((opt) => opt.id !== categoryId);
+        this.checkedOptions = this.checkedOptions.filter((opt) => opt.id !== category.id);
       }
-
+  
       // Update the "Search All" checkbox status
       const searchAll = this.searchCategories.find((cat) => cat.id === 'all');
       if (searchAll) {
         searchAll.checked = this.areAllCategoriesChecked();
       }
     }
-
+  
     // Update dropdown label
     this.getDropdownLabel();
   }
+  
 
   // Generate dropdown label dynamically
   getDropdownLabel(): void {
@@ -111,9 +107,7 @@ export class SearchbarComponent {
     
     if (searchAll?.checked) {
       // If "Search All" is checked, select all categories except "Search All"
-      selectedCategories = this.searchCategories
-        .filter((cat) => cat.id !== 'all')
-        .map((cat) => cat.id);
+      selectedCategories = ['all'];
     } else {
       // Otherwise, use the selected options
       selectedCategories = this.checkedOptions.map((opt) => opt.id);
