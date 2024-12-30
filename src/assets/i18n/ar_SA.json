@@ -34,7 +34,7 @@
     "KeyWords": "الكلمات المفتاحية",
     "Title": "العنوان",
     "Author": "المؤلف",
-    "ISBN": "رقم الكتاب الدولي",
+    "ISBN": "ISBN",
     "Search": "بحث",
     "Favourites": "المفضلة",
     "FindContentByKeywordsTitleAuthorISBN": "ابحث عن المحتوى باستخدام الكلمات الرئيسية، العنوان، المؤلف، أو رقم ISBN",

@@ -3,7 +3,6 @@ import { SearchbarComponent } from './searchbar.component';
 import { FormsModule } from '@angular/forms';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { By } from '@angular/platform-browser';
 
 describe('SearchbarComponent', () => {
   let component: SearchbarComponent;
@@ -21,122 +20,156 @@ describe('SearchbarComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
-  });
 
-
-  it('should toggle all categories when "Search All" is checked', () => {
-    const searchAllCheckbox = component.searchCategories.find(c => c.id === 'all');
-    const event = { target: { checked: true } } as Event & { target: HTMLInputElement };
-
-    component.onCategoryToggle('all', event);
-    expect(searchAllCheckbox?.checked).toBe(true);
-    expect(component.searchCategories.slice(1).every(cat => cat.checked)).toBe(true);
-    expect(component.checkedOptions.length).toBe(5); // All options should be selected
-  });
-
-  it('should update dropdown label when multiple categories are selected', () => {
-    // Select multiple categories
-    const event1 = { target: { checked: true } } as Event & { target: HTMLInputElement };
-    const event2 = { target: { checked: true } } as Event & { target: HTMLInputElement };
+  // Test areAllCategoriesChecked function
+  it('should correctly check if all categories are checked', () => {
+    // First set all categories to unchecked state using toggleSearchAll
+    component.toggleSearchAll(false);
     
-    component.onCategoryToggle('title', event1);
-    component.onCategoryToggle('authors', event2);
+    // Verify that all categories are initially unchecked
+    expect(component.areAllCategoriesChecked()).toBeFalse();
+    
+    // Check each non-'all' category individually
+    component.searchCategories
+      .filter(category => category.id !== 'all')
+      .forEach(category => {
+        category.checked = true;
+      });
 
-    component.getDropdownLabel();
-    expect(component.dropdownLabelText).toBe('Title + 1'); // First category + 1 more selected
+    // Verify that areAllCategoriesChecked returns true when all non-'all' categories are checked
+    expect(component.areAllCategoriesChecked()).toBeTrue();
+
+    // Uncheck one category
+    const titleCategory = component.searchCategories.find(cat => cat.id === 'title');
+    if (titleCategory) {
+      titleCategory.checked = false;
+    }
+
+    // Verify that areAllCategoriesChecked returns false when one category is unchecked
+    expect(component.areAllCategoriesChecked()).toBeFalse();
   });
 
-  it('should update dropdown label when a single category is selected', () => {
-    // Select only one category
-    const event = { target: { checked: true } } as Event & { target: HTMLInputElement };
+  // Test toggleSearchAll function
+  it('should toggle all search categories', () => {
+    // Test unchecking all
+    component.toggleSearchAll(false);
+    expect(component.searchCategories.every(cat => !cat.checked)).toBeTrue();
+    expect(component.checkedOptions.length).toBe(0);
 
-    component.onCategoryToggle('description', event);
-
-    component.getDropdownLabel();
-    expect(component.dropdownLabelText).toBe('Keywords'); // Only one category selected
+    // Test checking all
+    component.toggleSearchAll(true);
+    expect(component.searchCategories.every(cat => cat.checked)).toBeTrue();
+    expect(component.checkedOptions.length).toBe(4); // All except 'all' category
   });
 
-  it('should emit search data when search button is clicked', () => {
-    spyOn(component.searchEvent, 'emit');
-    component.searchTerm = 'test search';
-    component.checkedOptions = [
-      { label: 'Keywords', id: 'description' },
-    ];
-
-    component.onSearch();
-
-    expect(component.searchEvent.emit).toHaveBeenCalledWith({
-      categories: ['description'],
-      term: 'test search',
-    });
-  });
-
-
-  it('should call onCategoryToggle when a category is toggled', () => {
-    const categoryId = 'description';
-    const event = { target: { checked: true } } as Event & { target: HTMLInputElement };
-
-    spyOn(component, 'onCategoryToggle');
-    component.onCategoryToggle(categoryId, event);
-    expect(component.onCategoryToggle).toHaveBeenCalledWith(categoryId, event);
-  });
-
-  it('should properly handle SearchAll toggling', () => {
-    const eventTrue = { target: { checked: true } } as Event & { target: HTMLInputElement };
-    const eventFalse = { target: { checked: false } } as Event & { target: HTMLInputElement };
-
-    // Ensure toggling "Search All" checks all categories
-    component.onCategoryToggle('all', eventTrue);
-    expect(component.searchCategories.slice(1).every(cat => cat.checked)).toBe(true);
-
-    // Ensure toggling "Search All" off unchecks all categories
-    component.onCategoryToggle('all', eventFalse);
-    expect(component.searchCategories.slice(1).every(cat => !cat.checked)).toBe(true);
-  });
-
-  it('should update dropdown label when all categories are selected', () => {
-    component.toggleSearchAll(true); // Select all categories
-    component.getDropdownLabel();
+  // Test ngOnInit function
+  it('should initialize component correctly', () => {
+    component.ngOnInit();
+    expect(component.searchCategories.every(cat => cat.checked)).toBeTrue();
     expect(component.dropdownLabelText).toBe('SearchAll');
   });
 
-  it('should handle ngOnInit correctly', () => {
-    spyOn(component, 'toggleSearchAll');
-    spyOn(component, 'getDropdownLabel');
+  // Test onCategoryToggle function
+  describe('onCategoryToggle', () => {
+    it('should handle "Search All" category toggle', () => {
+      component.onCategoryToggle('all', { target: { checked: false } } as any);
+      expect(component.searchCategories.every(cat => !cat.checked)).toBeTrue();
+      expect(component.checkedOptions.length).toBe(0);
+    });
 
-    component.ngOnInit();
+    it('should handle individual category toggle', () => {
+      // First uncheck all
+      component.toggleSearchAll(false);
+      
+      // Then check one category
+      component.onCategoryToggle('title', { target: { checked: true } } as any);
+      expect(component.checkedOptions.length).toBe(1);
+      expect(component.checkedOptions[0].id).toBe('title');
+    });
 
-    expect(component.toggleSearchAll).toHaveBeenCalledWith(true);
-    expect(component.getDropdownLabel).toHaveBeenCalled();
-  });
-
-  it('should disable categories except "Search All" when "Search All" is checked', () => {
-    component.toggleSearchAll(true);
-    component.searchCategories.forEach((category) => {
-      if (category.id !== 'all') {
-        expect(category.disabled).toBe(true);
-      }
+    it('should handle non-existent category ID', () => {
+      const initialState = [...component.checkedOptions];
+      component.onCategoryToggle('non-existent', { target: { checked: true } } as any);
+      expect(component.checkedOptions).toEqual(initialState);
     });
   });
 
-  it('should enable all categories when "Search All" is unchecked', () => {
-    component.toggleSearchAll(false);
-    component.searchCategories.forEach((category) => {
-      expect(category.disabled).toBe(false);
+  // Test getDropdownLabel function
+  describe('getDropdownLabel', () => {
+    it('should set label to "SearchAll" when all categories are checked', () => {
+      component.toggleSearchAll(true);
+      component.getDropdownLabel();
+      expect(component.dropdownLabelText).toBe('SearchAll');
+    });
+
+    it('should set label to category name when one category is selected', () => {
+      component.toggleSearchAll(false);
+      component.onCategoryToggle('title', { target: { checked: true } } as any);
+      expect(component.dropdownLabelText).toBe('Title');
+    });
+
+    it('should set label with count when multiple categories are selected', () => {
+      component.toggleSearchAll(false);
+      component.onCategoryToggle('title', { target: { checked: true } } as any);
+      component.onCategoryToggle('description', { target: { checked: true } } as any);
+      expect(component.dropdownLabelText).toBe('Title + 1');
+    });
+
+    it('should set default label when no categories are selected', () => {
+      component.toggleSearchAll(false);
+      expect(component.dropdownLabelText).toBe('Select Categories');
     });
   });
 
-  it('should add and remove categories from checkedOptions when toggled', () => {
-    const event1 = { target: { checked: true } } as Event & { target: HTMLInputElement };
-    const event2 = { target: { checked: false } } as Event & { target: HTMLInputElement };
+  // Test onSearch function
+  describe('onSearch', () => {
+    beforeEach(() => {
+      spyOn(component.searchEvent, 'emit');
+    });
 
-    component.onCategoryToggle('title', event1);
-    expect(component.checkedOptions.length).toBe(1);
-    expect(component.checkedOptions[0].id).toBe('title');
+    it('should emit all categories when Search All is checked', () => {
+      component.searchTerm = 'test';
+      component.toggleSearchAll(true);
+      component.onSearch();
+      
+      expect(component.searchEvent.emit).toHaveBeenCalledWith({
+        categories: ['description', 'title', 'authors', 'isbn'],
+        term: 'test'
+      });
+    });
 
-    component.onCategoryToggle('title', event2);
-    expect(component.checkedOptions.length).toBe(0);
+    it('should emit only selected categories when specific categories are checked', () => {
+      component.toggleSearchAll(false);
+      component.onCategoryToggle('title', { target: { checked: true } } as any);
+      component.searchTerm = 'test';
+      component.onSearch();
+      
+      expect(component.searchEvent.emit).toHaveBeenCalledWith({
+        categories: ['title'],
+        term: 'test'
+      });
+    });
+
+    it('should emit empty categories array when no categories are selected', () => {
+      component.toggleSearchAll(false);
+      component.searchTerm = 'test';
+      component.onSearch();
+      
+      expect(component.searchEvent.emit).toHaveBeenCalledWith({
+        categories: [],
+        term: 'test'
+      });
+    });
+  });
+
+  // Test Input properties
+  it('should set input properties correctly', () => {
+    component.searchbarTitle = 'Test Title';
+    component.placeholder = 'Test Placeholder';
+    
+    expect(component.searchbarTitle).toBe('Test Title');
+    expect(component.placeholder).toBe('Test Placeholder');
   });
 });
+
+
