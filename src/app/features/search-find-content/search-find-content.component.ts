@@ -57,15 +57,26 @@ export class SearchFindContentComponent implements OnInit {
   ngOnInit(): void {
     combineLatest([this.route.params, this.route.queryParams])
       .pipe(
-        map((results) => {
-          return { params: results[0], query: results[1] };
-        })
+        map((results) => ({ params: results[0], query: results[1] })),
       )
-      .subscribe((results:any) => {
-        console.log(results);
+      .subscribe((results: any) => {
         this.queryparam = results.query;
+  
+        if (this.queryparam.collectionCode) {
+          this.imageService.getCollections().subscribe((collections) => {
+            const selectedCollection = collections.find(
+              (c) => c.code === this.queryparam.collectionCode
+            );
+  
+            if (selectedCollection) {
+              this.imageService.setImage(selectedCollection.image);
+            }
+          });
+        }
       });
   }
+  
+  
   onSelect(item: { id: number; name: string }) {
     this.selectProjectTitle = item.name;
   }

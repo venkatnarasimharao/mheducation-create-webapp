@@ -13,11 +13,13 @@ export class ImageGalleryService {
 
   setImage(image: string): void {
     this.image = image;
+    localStorage.setItem('currentImage', image);
   }
-
-  getImage(): any{
-    return this.image;
+  
+  getImage(): any {
+    return this.image || localStorage.getItem('currentImage') || '';
   }
+  
 
   getCollections(): Observable<Collection[]> {
     return of(this.collections);
