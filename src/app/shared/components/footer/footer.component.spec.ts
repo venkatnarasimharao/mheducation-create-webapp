@@ -5,8 +5,9 @@ import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { TranslateLoader, TranslateModule, TranslateService } from "@ngx-translate/core";
 import { signal } from "@angular/core";
 import { MockTranslateLoader } from "../header/header.component.spec";
-import { HttpClientModule } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { of } from "rxjs";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 
 describe('FooterComponent', () => {
     let component: FooterComponent;
@@ -32,7 +33,6 @@ describe('FooterComponent', () => {
 
         await TestBed.configureTestingModule({
             imports: [
-                HttpClientModule,
                 TranslateModule.forRoot({
                     loader: {
                         provide: TranslateLoader,
@@ -42,6 +42,8 @@ describe('FooterComponent', () => {
                 FooterComponent,
             ],
             providers: [
+                provideHttpClient(),
+                provideHttpClientTesting(),
                 TranslateService,
                 { provide: NgbModal, useValue: modalService },
                 { provide: SharedstateService, useValue: mockSharedstateService },
