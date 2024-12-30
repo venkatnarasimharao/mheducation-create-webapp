@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-import { CommonModule } from '@angular/common';
 import { NgbDropdownToggleNoCaretDirective } from '../../shared/directives/dropdown-toggle-css.directive';
 import { RouterModule } from '@angular/router';
 
@@ -11,7 +10,6 @@ import { RouterModule } from '@angular/router';
   imports: [
     BreadcrumbComponent,
     NgbDropdownModule,
-    CommonModule,
     NgbDropdownToggleNoCaretDirective,
     RouterModule,
   ],
