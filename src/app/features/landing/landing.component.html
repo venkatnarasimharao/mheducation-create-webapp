@@ -69,7 +69,7 @@
             <ul class="row list-unstyled">
                 @for(collection of collectionsData; track $index){
                     <li class="col-lg-3 col-md-6 col-sm-6 mb-4">
-                        <hec-image-card [image]="collection.image" [name]="collection.name">
+                        <hec-image-card [collectionCode]="collection.code" [image]="collection.image" [name]="collection.name">
                             <span>{{ collection.name | translate }}</span>
                         </hec-image-card>
                     </li>

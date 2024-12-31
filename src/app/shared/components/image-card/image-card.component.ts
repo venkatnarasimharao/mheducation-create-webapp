@@ -13,7 +13,7 @@ import { ImageGalleryService } from '../../../core/services/image-gallery/image-
 export class ImageCardComponent implements OnInit {
   @Input() image!: string; 
   @Input() name!: string; 
-
+  @Input() collectionCode!: string;
   constructor(
     private readonly imageService: ImageGalleryService,
     private readonly router: Router
@@ -25,8 +25,7 @@ export class ImageCardComponent implements OnInit {
 
   viewDetails(image: string): void {
     if (this.image) {
-      this.imageService.setImage(this.image);
-      this.router.navigate(['/search-content'], { queryParams: { collectionCode: 'caseTopic' } });
+     this.router.navigate(['/search-content'], { queryParams: {collectionCode: this.collectionCode} });
     }
   }
 }

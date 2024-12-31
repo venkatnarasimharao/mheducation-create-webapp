@@ -24,4 +24,18 @@ describe('SearchFindContentComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should update selectProjectTitle when onSelect is called', () => {
+    const testItem = { id: 1, name: 'Project Test' };
+    component.onSelect(testItem);
+
+    expect(component.selectProjectTitle).toBe(testItem.name);
+  });
+
+  it('should update selectFormatTitle when onSelected is called', () => {
+    const testItem = { id: 1, name: 'Format Test' };
+    component.onSelected(testItem);
+
+    expect(component.selectFormatTitle).toBe(testItem.name);
+  });
 });

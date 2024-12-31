@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { ImageGalleryService } from './image-gallery.service';
 import { of } from 'rxjs';
 import { COLLECTION_CODES } from '../../../shared/constants/search-payload.config';
+import { Collection } from '../../../shared/models/search.model';
 
 describe('ImageGalleryService', () => {
   let service: ImageGalleryService;
@@ -15,26 +16,36 @@ describe('ImageGalleryService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should set and get the image correctly', () => {
-    const testImage = 'test-image.jpg';
+  it('should return the correct image details by collection code', () => {
+    const collectionCode = COLLECTION_CODES[0].code; // Use the first collection's code
+    const expectedResult = {
+      name: COLLECTION_CODES[0].name,
+      img: COLLECTION_CODES[0].image
+    };
 
-    service.setImage(testImage); // Set the image
-    const result = service.getImage(); // Get the image
+    const result = service.getImageByCode(collectionCode);
 
-    expect(result).toBe(testImage); // Verify the retrieved image matches the set image
+    expect(result).toEqual(expectedResult);
   });
 
-  it('should return collections correctly', (done) => {
-    service.getCollections().subscribe((collections) => {
-      expect(collections).toEqual(COLLECTION_CODES); // Verify the returned collections match the expected data
+  it('should return null for an invalid collection code', () => {
+    const invalidCode = 'INVALID_CODE';
+
+    const result = service.getImageByCode(invalidCode);
+
+    expect(result).toBeNull();
+  });
+
+  it('should return all collections correctly', (done) => {
+    service.getCollections().subscribe((collections: Collection[]) => {
+      expect(collections).toEqual(COLLECTION_CODES); // Verify returned collections match the expected data
       done();
     });
   });
 
-  it('should return grouped collections correctly', (done) => {
+  it('should group collections by category correctly', (done) => {
     service.getGroupedCollections$().subscribe((groupedCollections) => {
-      // Group the collections by category
-      const grouped = COLLECTION_CODES.reduce((acc: { [key: string]: any[] }, collection) => {
+      const grouped = COLLECTION_CODES.reduce((acc: { [key: string]: Collection[] }, collection: Collection) => {
         const category = collection.category;
         if (!acc[category]) {
           acc[category] = [];
@@ -45,10 +56,9 @@ describe('ImageGalleryService', () => {
 
       const expectedGroupedCollections = Object.keys(grouped).map((category) => ({
         category,
-        collections: grouped[category],
+        collections: grouped[category]
       }));
 
-      // Verify the grouped collections match the expected output
       expect(groupedCollections).toEqual(expectedGroupedCollections);
       done();
     });

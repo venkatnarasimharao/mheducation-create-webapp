@@ -11,15 +11,14 @@ export class ImageGalleryService {
   private image: string = '';
   private collections: Collection[] = COLLECTION_CODES;
 
-  setImage(image: string): void {
-    this.image = image;
-    localStorage.setItem('currentImage', image);
+  getImageByCode(collectionCode: string): { name: string; img: string } | null {
+    const collection = this.collections.find(
+      (item) => item.code === collectionCode);
+    return collection
+      ? { name: collection.name, img: collection.image }
+      : null;
   }
-  
-  getImage(): any {
-    return this.image || localStorage.getItem('currentImage') || '';
-  }
-  
+
 
   getCollections(): Observable<Collection[]> {
     return of(this.collections);
