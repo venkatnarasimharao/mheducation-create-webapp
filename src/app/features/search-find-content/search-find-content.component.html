@@ -5,10 +5,10 @@
       <div  class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-2"
        >
         <div class="d-flex flex-column align-items-start">
-          <span class="fw-bold mb-1">{{ selectProjectHeading }}</span>
+          <span class="fw-bold mb-1">{{ selectProjectHeading | translate}}</span>
           <div ngbDropdown class="d-inline-block" aria-labelledby="select-project-heading">
             <button type="button" ngbDropdownToggle noCaret class="btn btn-outline-dark text-dark bg-transparent w-100"  aria-label="Select a project">
-              {{ selectProjectTitle }}
+              {{ selectProjectTitle | translate}}
               <i class="bi bi-chevron-down ms-7"></i>
             </button>
             <div ngbDropdownMenu class="w-100" aria-labelledby="select-project-heading">
@@ -19,7 +19,7 @@
                 (click)="onSelect(item)"
                 
               >
-                {{ item.name }}
+                {{ item.name | translate}}
               </button>
               }
            
@@ -29,10 +29,10 @@
     
         <div class="d-flex gap-1 mt-2 mt-md-0 flex-wrap justify-content-center">
           <div class="d-flex flex-column align-items-start me-3">
-            <span class="fw-bold mb-1">{{ selectFormatHeading }}</span>
+            <span class="fw-bold mb-1">{{ selectFormatHeading | translate}}</span>
             <div ngbDropdown class="d-inline-block" aria-labelledby="select-format-heading">
               <button type="button" ngbDropdownToggle noCaret class="btn btn-outline-dark text-dark bg-transparent w-100" aria-label="Select a format">
-                {{ selectFormatTitle }}
+                {{ selectFormatTitle | translate}}
                 <i class="bi bi-chevron-down ms-7"></i>
               </button>
               <div ngbDropdownMenu class="w-100" aria-labelledby="select-format-heading">
@@ -42,7 +42,7 @@
                   class="dropdown-item"
                   (click)="onSelected(item)"
                 >
-                  {{ item.name }}
+                  {{ item.name | translate}}
                 </button>
                 }
               </div>
@@ -51,9 +51,9 @@
     
           <!-- Arrange Button -->
           <div class="d-flex flex-column align-items-start">
-            <span class="fw-bold mb-1">{{ selectArrangeTitle }}</span>
+            <span class="fw-bold mb-1">{{ selectArrangeTitle | translate}}</span>
             <button type="button" class="btn fw-bold custom-dark-blue" [routerLink]="['/arrange']" aria-label="Arrange items">
-              Arrange
+              {{'Arrange' | translate}}
               <i class="bi bi-chevron-right ms-5"></i>
             </button>
           </div>

@@ -3,7 +3,7 @@
     @for(list of collectionfilterData;track list){
       <div ngbAccordionItem class="border-0 border-bottom">
         <h2 ngbAccordionHeader>
-          <button  ngbAccordionButton class="fw-bold">{{ list.header }}</button>
+          <button  ngbAccordionButton class="fw-bold">{{list.header | translate}}</button>
         </h2>
         <div ngbAccordionCollapse>
           <div ngbAccordionBody>
@@ -21,7 +21,7 @@
                             (click)="onCheckBoxChange($event,item)"
                           />
                           <label class="form-check-label" for="{{ item.label }}">{{
-                            item.label
+                            item.label | translate
                           }}</label>
                         </div>
                         <span class="text-muted">{{ item.value }}</span>
