@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-import { CommonModule } from '@angular/common';
 import { NgbDropdownToggleNoCaretDirective } from '../../shared/directives/dropdown-toggle-css.directive';
 import { RouterModule } from '@angular/router';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
@@ -16,7 +15,6 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
   imports: [
     BreadcrumbComponent,
     NgbDropdownModule,
-    CommonModule,
     NgbDropdownToggleNoCaretDirective,
     RouterModule,
     PaginationComponent,
