@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-import { CommonModule } from '@angular/common';
 import { NgbDropdownToggleNoCaretDirective } from '../../shared/directives/dropdown-toggle-css.directive';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { combineLatest, map } from 'rxjs';
@@ -15,7 +14,6 @@ import { ImageCardComponent } from '../../shared/components/image-card/image-car
   imports: [
     BreadcrumbComponent,
     NgbDropdownModule,
-    CommonModule,
     NgbDropdownToggleNoCaretDirective,
     RouterModule,
     TranslateModule,
@@ -50,25 +48,22 @@ export class SearchFindContentComponent implements OnInit {
 
   collectionsData: { code: string; name: string; image: string; category: string }[] = [];
 
-  constructor(private route: ActivatedRoute, private readonly imageService: ImageGalleryService) {}
+  constructor(private route: ActivatedRoute, private readonly imageService: ImageGalleryService) { }
 
   ngOnInit(): void {
     combineLatest([this.route.params, this.route.queryParams])
-    
-  .pipe(
-    map((results) => ({ params: results[0], query: results[1] })),
-  )
-  .subscribe((results: any) => {
-    const queryparam = results.query;
-
-    if (queryparam.collectionCode) {
-
-      this.collectionDetails = this.imageService.getImageByCode(queryparam.collectionCode);
-    }
+      .pipe(
+        map((results) => ({ params: results[0], query: results[1] })),
+      )
+      .subscribe((results: any) => {
+        const queryparam = results.query;
+        if (queryparam.collectionCode) {
+          this.collectionDetails = this.imageService.getImageByCode(queryparam.collectionCode);
+        }
       });
   }
-  
-  
+
+
   onSelect(item: { id: number; name: string }) {
     this.selectProjectTitle = item.name;
   }

@@ -10,12 +10,6 @@ export interface Collection {
   category: string;
 }
 
-// interface Collection {
-//   code: string;
-//   name: string;
-//   image: string;
-// }
-
 export interface GroupedCollection {
   category: string;
   collections: Collection[];

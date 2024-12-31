@@ -9,6 +9,7 @@ describe('LandingComponent', () => {
   let component: LandingComponent;
   let fixture: ComponentFixture<LandingComponent>;
   let imageGalleryServiceMock: any;
+  let consoleLogSpy: jasmine.Spy;
 
   beforeEach(async () => {
     // Create a mock for ImageGalleryService
@@ -30,6 +31,7 @@ describe('LandingComponent', () => {
     fixture = TestBed.createComponent(LandingComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    consoleLogSpy = spyOn(console, 'log');
   });
 
   it('should create', () => {
@@ -49,5 +51,13 @@ describe('LandingComponent', () => {
     // Assert that console.error was called with the correct error
     expect(consoleErrorSpy).toHaveBeenCalledWith('Error loading collections data:', mockError);
     expect(component.collectionsData).toEqual([]); // Ensure collectionsData remains empty
+  });
+  it('should call handleSearch and log the event', () => {
+    const mockEvent = {
+      categories: ['category1', 'category2'],
+      term: 'search term'
+    };
+    component.handleSearch(mockEvent);
+    expect(consoleLogSpy).toHaveBeenCalledWith('Search Data:', mockEvent);
   });
 });

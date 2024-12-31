@@ -1,16 +1,11 @@
 <div>
-  <a class="d-block text-decoration-none border" href="javascript:void(0)" (click)="viewDetails(image)">
-    <img alt="Cards"
-      class="w-100 d-flex justify-content-center align-items-center" 
-      [src]="image" 
-      [alt]="name | translate" 
-    />
-    
+  <a class="d-block text-decoration-none border" href="javascript:void(0)" (click)="viewDetails()">
+    <img alt="Cards" class="w-100 d-flex justify-content-center align-items-center" [src]="image"
+      [alt]="name | translate" />
     @if(name){
-      <div>
-        <h6 class="mt-2 text-center">{{ name | translate }}</h6>
-      </div>
+    <div>
+      <h6 class="mt-2 text-center">{{ name | translate }}</h6>
+    </div>
     }
-   
   </a>
 </div>

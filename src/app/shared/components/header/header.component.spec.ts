@@ -6,11 +6,9 @@ import { MenuSidebarService } from '../../../core/services/menu-sidebar/menuSide
 import { Observable, of } from 'rxjs';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
-// Properly typed Mock Translate Loader
 export class MockTranslateLoader implements TranslateLoader {
   getTranslation(lang: string): Observable<any> {
     return of({
-      // Add any mock translations you need here
       'HEADER': {
         'TITLE': 'Mock Title'
       }
@@ -63,4 +61,5 @@ describe('HeaderComponent', () => {
     component.openMenu();
     expect(menuService.requestOpenMenu).toHaveBeenCalled();
   });
+
 });

@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { ImageGalleryService } from '../../../core/services/image-gallery/image-gallery.service';
 
 @Component({
   selector: 'hec-image-card',
@@ -11,21 +10,18 @@ import { ImageGalleryService } from '../../../core/services/image-gallery/image-
   styleUrls: ['./image-card.component.scss']
 })
 export class ImageCardComponent implements OnInit {
-  @Input() image!: string; 
-  @Input() name!: string; 
+  @Input() image!: string;
+  @Input() name!: string;
   @Input() collectionCode!: string;
   constructor(
-    private readonly imageService: ImageGalleryService,
     private readonly router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-   
+
   }
 
-  viewDetails(image: string): void {
-    if (this.image) {
-     this.router.navigate(['/search-content'], { queryParams: {collectionCode: this.collectionCode} });
-    }
+  viewDetails(): void {
+    this.router.navigate(['/search-content'], { queryParams: { collectionCode: this.collectionCode } });
   }
 }

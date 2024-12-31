@@ -35,7 +35,7 @@ describe('ImageCardComponent', () => {
     component.collectionCode = 'test-code';
     spyOn(router, 'navigate');
 
-    component.viewDetails(component.image);
+    component.viewDetails();
 
     expect(router.navigate).toHaveBeenCalledWith(['/search-content'], { queryParams: { collectionCode: 'test-code' } });
   });
@@ -45,7 +45,7 @@ describe('ImageCardComponent', () => {
     component.collectionCode = 'test-code';
     spyOn(router, 'navigate');
 
-    component.viewDetails(component.image);
+    component.viewDetails();
 
     expect(router.navigate).not.toHaveBeenCalled();
   });
