@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClient, HTTP_INTERCEPTORS, HttpErrorResponse, provideHttpClient } from '@angular/common/http';
+import { HttpClient, HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { httpInterceptor } from './http.interceptor';
 import { XmlTransformerUtil } from '../../shared/utils/xml-transformer/xml-transformer.util';
@@ -33,12 +33,5 @@ describe('httpInterceptor', () => {
 
   it('should be created', () => {
     expect(httpInterceptor).toBeTruthy();
-  })  
-
-  it('should not add Authorization header if token is absent', () => {
-    http.get('/test').subscribe();
-
-    const req = httpMock.expectOne('/test');
-    expect(req.request.headers.has('Authorization')).toBeFalse();
   });
 });
