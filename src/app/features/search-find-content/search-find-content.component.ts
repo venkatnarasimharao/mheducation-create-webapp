@@ -57,6 +57,7 @@ export class SearchFindContentComponent implements OnInit {
       )
       .subscribe((results: any) => {
         const queryparam = results.query;
+        this.collectionDetails = {};
         if (queryparam.collectionCode) {
           this.collectionDetails = this.imageService.getImageByCode(queryparam.collectionCode);
         }
