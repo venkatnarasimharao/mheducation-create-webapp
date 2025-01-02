@@ -5,17 +5,23 @@ import { Directive, ElementRef, HostListener, Input } from '@angular/core';
   standalone: true
 })
 export class FocusTrapDirective {
-  @Input('appTrapFocus') dropdownMenu!: HTMLElement;
+  @Input('hecFocusTrap') dropdownMenu!: HTMLElement;
+  @Input() focusableElementSelector: string = 'button';
 
-  constructor(private el: ElementRef) { }
+  constructor(private el: ElementRef) {}
 
   @HostListener('keydown', ['$event'])
-  trapFocus(event: KeyboardEvent): void {
+  focusTrap(event: KeyboardEvent): void {
     if (!this.dropdownMenu) return;
 
-    const items = this.dropdownMenu.querySelectorAll('button[ngbDropdownItem]');
-    const firstItem = items[0] as HTMLButtonElement;
-    const lastItem = items[items.length - 1] as HTMLButtonElement;
+    const items = this.dropdownMenu.querySelectorAll(this.focusableElementSelector);
+    if (!items.length) {
+      console.warn('No focusable items found inside the dropdown menu.');
+      return;
+    }
+
+    const firstItem = items[0] as HTMLElement | null;
+    const lastItem = items[items.length - 1] as HTMLElement | null;
 
     if (!firstItem || !lastItem) return;
 
