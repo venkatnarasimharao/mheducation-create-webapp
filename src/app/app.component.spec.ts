@@ -20,7 +20,7 @@ describe('AppComponent', () => {
           loader: {
             provide: TranslateLoader,
             useFactory: HttpLoaderFactory,
-            deps: [HttpClient]  // Provide the HttpClient to the loader factory
+            deps: [HttpClient]
           },
           defaultLanguage: 'en_US',
         }),
