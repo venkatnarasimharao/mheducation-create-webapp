@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
-import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { AuthService } from './../../../core/services/auth/auth.service';
+import { Component, OnInit } from '@angular/core';
+import { NgbDropdownModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDropdownToggleNoCaretDirective } from '../../directives/dropdown-toggle-css.directive';
 import { MenuSidebarService } from '../../../core/services/menu-sidebar/menuSidebarService.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { LoginComponent } from '../login/login.component';
 
 @Component({
   selector: 'header',
@@ -14,13 +16,30 @@ import { TranslateModule } from '@ngx-translate/core';
     class: 'row border-bottom',
   }
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   imageUrl: string = "https://www.mheducation.co.in/static/version1732692363/frontend/Cti/canada-theme/en_GB/images/logo.svg";
-  constructor(private menuService: MenuSidebarService
-  ) {
-  }
+  loggedInStatus: string = "LogIn"
 
+  constructor(private menuService: MenuSidebarService,
+    private AuthService: AuthService,
+    private modalService: NgbModal) {
+  }
+  ngOnInit(): void {
+    if (this.AuthService.isLoggedIn()) {
+      this.loggedInStatus = "LogOut"
+    }
+  }
   openMenu() {
     this.menuService.requestOpenMenu();
+  }
+  changeLoginStatus() {
+    if (this.loggedInStatus === "LogOut") {
+      this.AuthService.logout();
+      this.loggedInStatus = "LogIn";
+    }
+    else {
+      this.modalService.open(LoginComponent, { centered: false });
+      this.loggedInStatus = "LogOut";
+    }
   }
 }

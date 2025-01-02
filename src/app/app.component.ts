@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { HeaderComponent } from './shared/components/header/header.component';
+import { AuthService } from './core/services/auth/auth.service';
 
 
 @Component({
@@ -19,8 +20,10 @@ import { HeaderComponent } from './shared/components/header/header.component';
 })
 export class AppComponent {
 
-  constructor() { }
+  constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
+    this.authService.isLoggedIn();
   }
+
 }

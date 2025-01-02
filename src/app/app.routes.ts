@@ -1,4 +1,5 @@
-import { Routes } from '@angular/router';
+import { Routes, CanActivate } from '@angular/router';
+import { AuthGuard } from './guard/auth.guard';
 
 export const routes: Routes = [
   {
@@ -28,6 +29,7 @@ export const routes: Routes = [
       import('./features/arrange/arrange.component').then(
         (m) => m.ArrangeComponent
       ),
+    canActivate: [AuthGuard]
   },
   {
     path: 'personalize',
@@ -35,6 +37,7 @@ export const routes: Routes = [
       import('./features/personalize/personalize.component').then(
         (m) => m.PersonalizeComponent
       ),
+    canActivate: [AuthGuard]
   },
   {
     path: 'uploads',
@@ -42,6 +45,7 @@ export const routes: Routes = [
       import('./features/uploads/uploads.component').then(
         (m) => m.UploadsComponent
       ),
+    canActivate: [AuthGuard]
   },
   {
     path: 'favourites',
@@ -49,6 +53,7 @@ export const routes: Routes = [
       import('./features/favourites/favourites.component').then(
         (m) => m.FavouritesComponent
       ),
+    canActivate: [AuthGuard]
   },
   {
     path: 'help',

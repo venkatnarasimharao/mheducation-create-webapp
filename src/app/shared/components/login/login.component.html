@@ -1,0 +1,22 @@
+<div class="modal-header d-flex justify-content-between">
+    <h4 class="modal-title">Login</h4>
+    <button type="button" class="bg-transparent border-0 fs-1" aria-label="Close" (click)="activeModal.dismiss()">
+        <i class="bi bi-x-lg text-white"></i>
+    </button>
+</div>
+<div class="modal-body">
+    <form (ngSubmit)="onLogin()" #loginForm="ngForm">
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" id="username" name="username" class="form-control" [(ngModel)]="username" required />
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" id="password" name="password" class="form-control" [(ngModel)]="password" required />
+        </div>
+        <div class="d-flex justify-content-between align-items-center">
+            <button type="submit" class="btn btn-primary" [disabled]="!loginForm.valid">Login</button>
+            <button type="button" class="btn btn-secondary" (click)="onForgotPassword()">Forgot Password?</button>
+        </div>
+    </form>
+</div>
