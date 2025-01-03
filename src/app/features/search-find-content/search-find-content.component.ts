@@ -8,7 +8,7 @@ import { combineLatest, map } from 'rxjs';
 import { ImageGalleryService } from '../../core/services/image-gallery/image-gallery.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { ImageCardComponent } from '../../shared/components/image-card/image-card.component';
-
+import {Collection} from '../../shared/models/search.model';
 @Component({
   selector: 'hec-search-find-content',
   standalone: true,
@@ -48,7 +48,7 @@ export class SearchFindContentComponent implements OnInit {
   selectFormatHeading: string = 'Select Format';
   arrangeHeading: string = '86 pgs / $12.46 est';
 
-  collectionsData: { code: string; name: string; image: string; category: string }[] = [];
+  collectionsData: Collection[] = [];
 
   constructor(private route: ActivatedRoute, private readonly imageService: ImageGalleryService) {}
 

@@ -20,3 +20,9 @@ export interface GroupedCollection {
   category: string;
   collections: Collection[];
 }
+
+export interface InputCollection {
+  collectionCode?: string;
+  name: string;
+  image: string;
+}

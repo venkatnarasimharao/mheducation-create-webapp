@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ImageGalleryService } from '../../core/services/image-gallery/image-gallery.service';
 import { ImageCardComponent } from '../../shared/components/image-card/image-card.component';
-
+import {Collection} from '../../shared/models/search.model';
 @Component({
   selector: 'hec-landing',
   standalone: true,
@@ -12,7 +12,7 @@ import { ImageCardComponent } from '../../shared/components/image-card/image-car
   styleUrl: './landing.component.scss'
 })
 export class LandingComponent {
-collectionsData: { code: string; name: string; image: string; category: string }[] = [];
+  collectionsData: Collection[] = [];
 
   constructor(
     private readonly imageService: ImageGalleryService
