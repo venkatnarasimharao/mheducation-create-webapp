@@ -4,10 +4,17 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ImageGalleryService } from '../../core/services/image-gallery/image-gallery.service';
 import { ImageCardComponent } from '../../shared/components/image-card/image-card.component';
 import {Collection} from '../../shared/models/search.model';
+import { SearchbarComponent } from '../../shared/components/searchbar/searchbar.component';
+
 @Component({
   selector: 'hec-landing',
   standalone: true,
-  imports: [TranslateModule,RouterModule,ImageCardComponent],
+  imports: [
+    TranslateModule,
+    RouterModule,
+    ImageCardComponent,
+    SearchbarComponent
+  ],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.scss'
 })
@@ -16,10 +23,14 @@ export class LandingComponent {
 
   constructor(
     private readonly imageService: ImageGalleryService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadCollections();
+  }
+
+  handleSearch(event: { categories: string[]; term: string }) {
+    console.log('Search Data:', event);
   }
 
   private loadCollections(): void {

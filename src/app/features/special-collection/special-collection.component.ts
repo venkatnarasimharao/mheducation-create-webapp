@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { ImageCardComponent } from '../../shared/components/image-card/image-card.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { ImageGalleryService } from '../../core/services/image-gallery/image-gallery.service';
@@ -16,7 +16,6 @@ export class SpecialCollectionComponent implements OnInit {
   groupedCollections: GroupedCollection[] = [];
 
   constructor(
-    private readonly router: Router,
     private readonly imageService: ImageGalleryService
   ) {}
 

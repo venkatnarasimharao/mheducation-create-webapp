@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { COLLECTION_CODES } from '../../../shared/constants/search-payload.config';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import {Collection} from  '../../../shared/models/search.model';
+import {Collection, SearchCollectionInterface} from  '../../../shared/models/search.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,11 +11,11 @@ export class ImageGalleryService {
   private image: string = '';
   private collections: Collection[] = COLLECTION_CODES;
 
-  getImageByCode(collectionCode: string): { name: string; img: string } | null {
+  getImageByCode(collectionCode: string): SearchCollectionInterface | null {
     const collection = this.collections.find(
       (item) => item.code === collectionCode);
     return collection
-      ? { name: collection.name, img: collection.image }
+      ? { name: collection.name, image: collection.image }
       : null;
   }
 

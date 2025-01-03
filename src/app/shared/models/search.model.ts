@@ -10,19 +10,13 @@ export interface Collection {
   category: string;
 }
 
-// interface Collection {
-//   code: string;
-//   name: string;
-//   image: string;
-// }
-
 export interface GroupedCollection {
   category: string;
   collections: Collection[];
 }
 
-export interface InputCollection {
-  collectionCode?: string;
-  name: string;
+export interface SearchCollectionInterface {
+  code?: string;
   image: string;
+  name?: string;
 }

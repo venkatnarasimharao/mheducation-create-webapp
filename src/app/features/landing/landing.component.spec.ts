@@ -9,6 +9,7 @@ describe('LandingComponent', () => {
   let component: LandingComponent;
   let fixture: ComponentFixture<LandingComponent>;
   let imageGalleryServiceMock: any;
+  let consoleLogSpy: jasmine.Spy;
 
   beforeEach(async () => {
     // Create a mock for ImageGalleryService
@@ -30,6 +31,7 @@ describe('LandingComponent', () => {
     fixture = TestBed.createComponent(LandingComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    consoleLogSpy = spyOn(console, 'log');
   });
 
   it('should create', () => {
@@ -37,17 +39,23 @@ describe('LandingComponent', () => {
   });
 
   it('should handle error when loadCollections fails', () => {
-    const consoleErrorSpy = spyOn(console, 'error'); // Spy on console.error
+    const consoleErrorSpy = spyOn(console, 'error'); 
     const mockError = new Error('Test error');
 
-    // Simulate an error from the service
     imageGalleryServiceMock.getCollections.and.returnValue(throwError(() => mockError));
 
-    // Call ngOnInit to trigger loadCollections
     component.ngOnInit();
 
-    // Assert that console.error was called with the correct error
+  
     expect(consoleErrorSpy).toHaveBeenCalledWith('Error loading collections data:', mockError);
-    expect(component.collectionsData).toEqual([]); // Ensure collectionsData remains empty
+    expect(component.collectionsData).toEqual([]);
+  });
+  it('should call handleSearch and log the event', () => {
+    const mockEvent = {
+      categories: ['category1', 'category2'],
+      term: 'search term'
+    };
+    component.handleSearch(mockEvent);
+    expect(consoleLogSpy).toHaveBeenCalledWith('Search Data:', mockEvent);
   });
 });

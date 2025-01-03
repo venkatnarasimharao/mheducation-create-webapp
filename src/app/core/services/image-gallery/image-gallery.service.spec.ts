@@ -17,16 +17,17 @@ describe('ImageGalleryService', () => {
   });
 
   it('should return the correct image details by collection code', () => {
-    const collectionCode = COLLECTION_CODES[0].code; // Use the first collection's code
+    const collectionCode = COLLECTION_CODES[0].code;
     const expectedResult = {
       name: COLLECTION_CODES[0].name,
-      img: COLLECTION_CODES[0].image
+      image: COLLECTION_CODES[0].image
     };
-
+  
     const result = service.getImageByCode(collectionCode);
-
+  
     expect(result).toEqual(expectedResult);
   });
+  
 
   it('should return null for an invalid collection code', () => {
     const invalidCode = 'INVALID_CODE';

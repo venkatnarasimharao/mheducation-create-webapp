@@ -66,10 +66,9 @@
 
 
     <div class="col-12 col-md-4 col-sm-6">
-      @if(collectionDetails?.name){
+      @if(collectionDetails){
       <h4 class="fw-bold">Showing Results for {{ collectionDetails.name }} Collection</h4>
-      <hec-image-card [title]="collectionDetails.name" [image]="collectionDetails.img">
-      </hec-image-card>
+      <hec-image-card [cardData]="collectionDetails"></hec-image-card>
       }
     </div>
   </div>

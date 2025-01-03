@@ -8,7 +8,8 @@ import { combineLatest, map } from 'rxjs';
 import { ImageGalleryService } from '../../core/services/image-gallery/image-gallery.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { ImageCardComponent } from '../../shared/components/image-card/image-card.component';
-import {Collection} from '../../shared/models/search.model';
+import { SearchCollectionInterface } from '../../shared/models/search.model';
+
 @Component({
   selector: 'hec-search-find-content',
   standalone: true,
@@ -29,7 +30,7 @@ export class SearchFindContentComponent implements OnInit {
   selectProjectTitle: string = 'Test123';
   selectFormatTitle: string = 'Please Select';
   selectArrangeTitle: string = 'Arrange';
-  collectionDetails: any = {};
+  collectionDetails: SearchCollectionInterface| null = null;
   //dropdown items
   selectProjectItems: any[] = [
     { id: 1, name: 'Project 1' },
@@ -48,23 +49,20 @@ export class SearchFindContentComponent implements OnInit {
   selectFormatHeading: string = 'Select Format';
   arrangeHeading: string = '86 pgs / $12.46 est';
 
-  collectionsData: Collection[] = [];
-
   constructor(private route: ActivatedRoute, private readonly imageService: ImageGalleryService) {}
 
   ngOnInit(): void {
     combineLatest([this.route.params, this.route.queryParams])
-    
-  .pipe(
-    map((results) => ({ params: results[0], query: results[1] })),
-  )
-  .subscribe((results: any) => {
-    const queryparam = results.query;
-
-    if (queryparam.collectionCode) {
-
-      this.collectionDetails = this.imageService.getImageByCode(queryparam.collectionCode);
-    }
+      .pipe(
+        map((results) => ({ params: results[0], query: results[1] })),
+      )
+      .subscribe((results: any) => {
+        const queryparam = results.query;
+        
+   
+        if (queryparam.collectionCode) {
+           this.collectionDetails =  this.imageService.getImageByCode(queryparam.collectionCode);
+        }
       });
   }
   
