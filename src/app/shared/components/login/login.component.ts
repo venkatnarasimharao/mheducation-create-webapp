@@ -23,14 +23,15 @@ export class LoginComponent {
     private router: Router
   ) { }
 
-  onLogin(): void {
-    this.loginError = ''; // Reset any previous error messages
+  async onLogin() {
+    this.loginError = '';
 
-    const loginSuccess = this.authService.login(this.username, this.password);
+    const loginSuccess = await this.authService.login(this.username, this.password);
 
     if (!loginSuccess) {
-      // Show error if login failed
       this.loginError = 'Invalid username or password';
+      this.activeModal.close();
+      alert(this.loginError);
     }
     else {
       this.activeModal.close();

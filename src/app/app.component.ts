@@ -1,3 +1,4 @@
+import { ApiService } from './core/services/api/api.service';
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
@@ -20,7 +21,8 @@ import { AuthService } from './core/services/auth/auth.service';
 })
 export class AppComponent {
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService,
+  ) { }
 
   ngOnInit(): void {
     this.authService.isLoggedIn();

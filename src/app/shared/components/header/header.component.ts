@@ -25,6 +25,9 @@ export class HeaderComponent implements OnInit {
     private modalService: NgbModal) {
   }
   ngOnInit(): void {
+    this.AuthService.authStatus.subscribe((event: any) => {
+      this.loggedInStatus = event;
+    });
     if (this.AuthService.isLoggedIn()) {
       this.loggedInStatus = "LogOut"
     }
@@ -39,7 +42,6 @@ export class HeaderComponent implements OnInit {
     }
     else {
       this.modalService.open(LoginComponent, { centered: false });
-      this.loggedInStatus = "LogOut";
     }
   }
 }
