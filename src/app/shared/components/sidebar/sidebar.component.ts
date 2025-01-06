@@ -21,7 +21,7 @@ export class SidebarComponent {
     { label: 'Personalize', icon: 'bi-grid-1x2', path: 'personalize' },
     { label: 'Uploads', icon: 'bi-upload', path: 'uploads' },
     { label: 'Favourites', icon: 'bi-heart', path: 'favourites' },
-    { label: 'Help', icon: 'bi-question-circle', path: 'help' },
+    { label: 'Help', icon: 'bi-question-circle', path: 'https://mh.my.site.com/createhelp/s/', type: 'external'  },
   ];
   @ViewChild('menuContent', { static: true }) menuContent!: TemplateRef<any>;
 

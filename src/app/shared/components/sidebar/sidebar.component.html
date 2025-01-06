@@ -23,11 +23,26 @@
     <ul class="main-app-nav nav flex-column my-3 p-0">
       @for (menuItem of menuItems; track $index) {
       <li class="nav-item text-center">
-        <a [routerLink]="[menuItem.path]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+        @if(!menuItem.type || menuItem.type != 'external') 
+        {
+        <a 
+          [routerLink]="[menuItem.path]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
           class="nav-link d-flex align-items-center p-2">
           <i class="bi" [ngClass]="menuItem.icon"></i>
           <span>{{ menuItem.label | translate }}</span>
         </a>
+      }
+
+      @else(){
+      <a
+            [href]="menuItem.path"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="nav-link d-flex align-items-center p-2">
+            <i class="bi" [ngClass]="menuItem.icon"></i>
+            <span>{{ menuItem.label | translate }}</span>
+          </a>
+      }
       </li>
       }
     </ul>
