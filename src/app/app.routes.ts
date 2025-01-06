@@ -15,6 +15,7 @@ export const routes: Routes = [
       import(
         './features/search-find-content/search-find-content.component'
       ).then((m) => m.SearchFindContentComponent),
+    canActivate: [AuthGuard]
   },
   {
     path: 'projects',
@@ -22,6 +23,7 @@ export const routes: Routes = [
       import('./features/projects/projects.component').then(
         (m) => m.ProjectsComponent
       ),
+    canActivate: [AuthGuard]
   },
   {
     path: 'arrange',
