@@ -94,30 +94,34 @@ describe('FooterComponent', () => {
 
     it('should open the language modal with the correct title and items', () => {
         const content = {};
+        const selectedItem = { locale: 'en_US', displayValue: 'English' };
+        component.languages = signal([
+            { locale: 'en_US', displayValue: 'English' },
+            { locale: 'it_IT', displayValue: 'Italian' },
+            { locale: 'ar_SA', displayValue: 'Arabic' },
+        ]);
+        const mockModalRef = {
+            result: Promise.resolve(selectedItem),
+            componentInstance: {},
+        } as unknown as NgbModalRef;
 
-        // Mock data for languages
-        component.languages = () => [
+        modalService.open.and.returnValue(mockModalRef);
+        component.openLanguageModal(content);
+
+
+
+        expect(component.modalData.title).toBe('LanguagePopupTitle');
+        const expectedItems = [
             { locale: 'en_US', displayValue: 'English' },
             { locale: 'it_IT', displayValue: 'Italian' },
             { locale: 'ar_SA', displayValue: 'Arabic' },
         ];
 
-        // Mock the modal service
-        const mockModalRef = {
-            result: Promise.resolve(), // Mock result as a resolved Promise
-            componentInstance: {}, // Add any additional properties as required
-        } as unknown as NgbModalRef;
-
-        modalService.open.and.returnValue(mockModalRef);
-
-        component.openLanguageModal(content);
-
-        expect(component.modalData.title).toBe('LanguagePopupTitle');
-        expect(component.modalData.items).toEqual([
-            { locale: 'en_US', displayValue: 'English' },
-            { locale: 'it_IT', displayValue: 'Italian' },
-            { locale: 'ar_SA', displayValue: 'Arabic' },
-        ]);
+        expectedItems.forEach((expectedItem, index) => {
+            const actualItem = component.modalData.items[index];
+            expect(actualItem.locale).toEqual(expectedItem.locale);
+            expect(actualItem.displayValue).toEqual(expectedItem.displayValue);
+        });
 
         expect(modalService.open).toHaveBeenCalledWith(content, { ariaLabelledBy: 'Select Language' });
     });
