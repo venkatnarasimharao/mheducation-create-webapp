@@ -11,24 +11,58 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 })
 export class PaginationComponent {
   @Input() currentPage!: number;
-  @Input() totalPages!: number; // Total number of pages (e.g., 100)
-  @Input() maxSize!: number;
+@Input() totalPages!: number;
+@Input() maxSize!: number;
 
-  @Output() pageChange: EventEmitter<number> = new EventEmitter<number>();
+@Output() pageChange: EventEmitter<number> = new EventEmitter<number>();
 
-  translate: TranslateService = inject(TranslateService);
+translate: TranslateService = inject(TranslateService);
 
-  // Set the page size to 1 so each page corresponds to one "unit"
-  pageSize: number = 1;
+get pages(): (number | string)[] {
+  const pages: (number | string)[] = [];
+  const showEllipsisStart = this.currentPage > 3;
+  const showEllipsisEnd = this.currentPage < (this.totalPages - 2);
 
-  onPageChange(page: number) {
-    if (page >= 1 && page <= this.totalPages) {
-      this.currentPage = page;
-      this.pageChange.emit(page);
-    } else {
-      console.error(
-        `Invalid page number: ${page}. Must be between 1 and ${this.totalPages}.`
-      );
-    }
+  if (showEllipsisStart) {
+    pages.push(1);
+    pages.push('start-ellipsis'); // Changed to identify which ellipsis
   }
+
+  // Always show current page and adjacent pages
+  const startPage = Math.max(1, this.currentPage - 1);
+  const endPage = Math.min(this.totalPages, this.currentPage + 1);
+
+  for (let i = startPage; i <= endPage; i++) {
+    pages.push(i);
+  }
+
+  if (showEllipsisEnd) {
+    pages.push('end-ellipsis'); // Changed to identify which ellipsis
+    pages.push(this.totalPages);
+  }
+
+  return pages;
+}
+
+goToPage(page: number | string): void {
+  if (typeof page === 'number' && 
+      page >= 1 && 
+      page <= this.totalPages && 
+      page !== this.currentPage) {
+    this.currentPage = page;
+    this.pageChange.emit(page);
+  }
+}
+
+handleEllipsisClick(type: 'start' | 'end'): void {
+  if (type === 'start') {
+    // Show previous set of pages
+    const newPage = Math.max(1, this.currentPage - 3);
+    this.goToPage(newPage);
+  } else {
+    // Show next set of pages
+    const newPage = Math.min(this.totalPages, this.currentPage + 3);
+    this.goToPage(newPage);
+  }
+}
 }
