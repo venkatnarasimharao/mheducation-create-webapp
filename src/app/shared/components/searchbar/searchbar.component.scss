@@ -1,0 +1,10 @@
+$active-color: #06235B;
+.btn-primary{
+    background-color: $active-color; 
+}
+
+.btn:focus-visible,
+button:focus:not(:focus-visible) {
+    background-color: $active-color !important;
+}
+
