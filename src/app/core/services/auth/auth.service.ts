@@ -1,3 +1,4 @@
+import { CookieService } from 'ng2-cookies';
 import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from '../api/api.service'
@@ -11,8 +12,15 @@ export class AuthService {
   authStatus = new EventEmitter<string>();
 
   constructor(private router: Router,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private cookieService: CookieService
   ) { }
+  manageCookiesStorage(data: any) {
+    this.cookieService.set("paris_user_id", data.paris_user_id);
+    this.cookieService.set("user_email", data.user_email);
+    this.cookieService.set("userCountry", data.userCountry);
+    this.cookieService.set("jsessionid", data.jsessionid);
+  }
 
   async login(username: string, password: string): Promise<boolean> {
     try {
@@ -21,7 +29,9 @@ export class AuthService {
       if (response.body) {
         this.authStatus.emit("LogOut");
         this.islogin = true;
-        sessionStorage.setItem(this.AUTH_KEY, JSON.stringify(response.body));
+        console.log(response.body);
+        this.manageCookiesStorage(JSON.parse(response.body));
+        // sessionStorage.setItem(this.AUTH_KEY, JSON.stringify(response.body));
         return true;
       } else {
         return false;
@@ -34,7 +44,7 @@ export class AuthService {
 
 
   getAuthDetails(): any {
-    const authDetails = sessionStorage.getItem(this.AUTH_KEY);
+    const authDetails = this.cookieService.get('paris_user_id');
     return authDetails ? JSON.parse(authDetails) : null;
   }
 
@@ -45,7 +55,8 @@ export class AuthService {
     return this.islogin = (this.getAuthDetails() !== null); // If sessionStorage contains auth details, user is logged in
   }
   logout(): void {
-    sessionStorage.removeItem(this.AUTH_KEY);
+    this.apiService.userLogOut(this.cookieService.get('paris_user_id'));
+    this.cookieService.deleteAll();
     this.islogin = false;
     this.router.navigate(['/']); // Optionally, redirect to a public page
   }

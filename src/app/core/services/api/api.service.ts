@@ -49,6 +49,13 @@ export class ApiService {
       body: null
     });
   }
+  userLogOut(paris_user_id: string) {
+    console.log(`/users/${paris_user_id}/logout`);
+    return this.apiMethodService({
+      url: `/users/${paris_user_id}/logout`,
+      method: 'GET',
+    });
+  }
 
 
   getCollectionsFilterList() {
@@ -80,6 +87,7 @@ export class ApiService {
     if (!options['observe']) {
       options['observe'] = 'response';
     }
+    console.log(url, options, method);
 
     switch (method?.toUpperCase()) {
       case 'GET':
