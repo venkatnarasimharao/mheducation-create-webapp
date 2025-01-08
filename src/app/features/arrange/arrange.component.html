@@ -1,1 +1,184 @@
-<p>arrange works!</p>
+<div class="container-fluid ps-4">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-12">
+            <!-- Header -->
+            <div
+                class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3">
+                <div>
+                    <div class="d-flex flex-column flex-md-row mt-3">
+                        <div class="d-flex flex-column align-items-start">
+                            <label for="select-project" class="fw-bold mb-1" >Select Project</label>
+                            <div ngbDropdown class="d-inline-block">
+                                <button type="button" ngbDropdownToggle noCaret id="select-project"
+                                    class="btn btn-outline-dark text-dark bg-transparent w-100"
+                                    aria-haspopup="true">
+                                    {{ selectProjectTitle }}
+                                </button>
+                                <div ngbDropdownMenu class="w-100" role="menu" aria-labelledby="select-project">
+                                    @for(item of selectProjectItems; track item.name){
+                                    <button type="button" class="dropdown-item" role="menuitem"
+                                        (click)="onSelect(item)">
+                                        {{ item.name }}
+                                    </button>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#" class="text-decoration-none ms-0 ms-md-2" aria-label="Edit project details">
+                            Edit Project Details
+                        </a>
+                    </div>
+                    <p class="mb-0">Discipline Title: <span class="fw-bold">Business Math</span></p>
+                </div>
+                <button class="btn btn-outline-primary mt-3 mt-md-0" aria-label="Format Table of Contents">
+                    Format TOC <i class="bi bi-chevron-right"></i>
+                </button>
+            </div>
+            <hr class="mt-0">
+
+            <div class="row">
+                <!-- Upload and TOC -->
+                <div class="col-12 col-lg-8 mb-4">
+                    <button class="btn btn-secondary me-2 mb-2" aria-label="Upload content">
+                        <i class="bi bi-cloud-upload-fill me-2"></i>Upload Content<i class="bi bi-chevron-down ms-2"></i>
+                    </button>
+                    <button class="btn btn-secondary mb-2" aria-label="Download Table of Contents">
+                        Download TOC
+                    </button>
+
+                    <h6 class="mt-4" id="toc-help">
+                        <i class="bi bi-question-circle-fill text-primary" aria-hidden="true"></i>
+                        Organize Content for Your Table of Contents
+                    </h6>
+                    <ul class="list-unstyled d-flex flex-wrap align-items-center gap-3 mt-2" aria-labelledby="toc-help">
+                        <li class="dropdown position-relative">
+                            <button class="btn btn-link text-secondary dropdown-toggle" aria-disabled="true"
+                                disabled>
+                                Move to
+                            </button>
+                        </li>
+
+                        <li>
+                            <button class="btn btn-link text-secondary" aria-disabled="true" disabled>
+                                <i class="bi bi-text-indent-right"></i> Indent
+                            </button>
+                        </li>
+
+                        <li>
+                            <button class="btn btn-link text-secondary" aria-disabled="true" disabled>
+                                <i class="bi bi-text-indent-left"></i> Outdent
+                            </button>
+                        </li>
+
+                        <li>
+                            <button class="btn btn-link text-secondary" aria-disabled="true" disabled>
+                                <i class="bi bi-hr me-1"></i> Add Divider
+                            </button>
+                        </li>
+
+                        <!-- Delete -->
+                        <li>
+                            <button class="btn btn-link text-secondary" [disabled]="!isAnyCheckboxSelected"
+                                [attr.aria-disabled]="!isAnyCheckboxSelected"
+                                (click)="deleteSelectedItems()">
+                                <i class="bi bi-trash"></i> Delete
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Pricing Summary -->
+                <div class="col-12 col-lg-4 mb-4 border p-3">
+                    <h6 id="pricing-summary">Pricing Summary</h6>
+                    <label for="pricing-options" class="visually-hidden">Pricing Options</label>
+                    <select id="pricing-options" class="form-select mb-2" aria-labelledby="pricing-summary">
+                        <option>Print (Black & White)</option>
+                        <option>Print (Color)</option>
+                    </select>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>Total: <span aria-label="Total Price">$183.17</span></div>
+                        <a href="#" class="text-decoration-none" aria-label="More details about pricing">
+                            More Details <i class="bi bi-chevron-down"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TOC Management -->
+            <div cdkDropListGroup>
+                @for (section of sections; track section.id; let sectionIndex = $index) {
+                @if (section.title !== 'Supplements' || (section.title === 'Supplements' && section.items.length > 0)) {
+                <div class="d-flex justify-content-between align-items-center"
+                    [hidden]="section.title === 'Supplements' && (!section.items || section.items.length === 0)">
+                    <h3 class="fw-bolder" id="{{ section.id }}-header">{{ section.title }}</h3>
+                    <button type="button" class="btn btn-link p-0" (click)="toggleCollapse(section.id)"
+                        [attr.aria-expanded]="!isCollapsed[section.id]"
+                        [attr.aria-controls]="section.id + 'Table'" attr.aria-labelledby="{{ section.id }}-header">
+                        <i class="bi" [class.bi-chevron-down]="isCollapsed[section.id]"
+                            [class.bi-chevron-up]="!isCollapsed[section.id]"></i>
+                    </button>
+                </div>
+
+                <div [id]="section.id + 'Table'" [ngbCollapse]="isCollapsed[section.id]"
+                    role="region" [attr.aria-labelledby]="section.id + '-header'">
+                    <div cdkDropList [id]="section.id" [cdkDropListData]="section.items"
+                        [cdkDropListConnectedTo]="getConnectedDropLists()" (cdkDropListDropped)="drop($event)">
+                        <table class="table table-borderless mt-2">
+                            <thead class="table-bordered border-bottom">
+                                <tr>
+                                    <th scope="col" class="col-5">
+                                        <input type="checkbox" class="form-check-input me-1"
+                                            [(ngModel)]="section.selectAllChecked"
+                                            (change)="toggleAllCheckboxes(section)"
+                                            attr.aria-label="Select all items in {{ section.title }}" />
+                                        Product
+                                    </th>
+                                    <th scope="col" class="col-2">Format</th>
+                                    <th scope="col" class="col-1">Pages</th>
+                                    <th scope="col" class="col-1">Price</th>
+                                    <th scope="col" class="col-2"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (item of section.items; track item.name; let itemIndex = $index) {
+                                <tr cdkDrag role="row">
+                                    <td>
+                                        <input type="checkbox" class="form-check-input"
+                                            [(ngModel)]="item.checked"
+                                            (change)="checkIfAllSelected(section)"
+                                            attr.aria-label="Select {{ item.name }}" />
+                                        <a href="#" class="text-decoration-none text-primary">{{ item.name }}</a>
+                                    </td>
+                                    <td>{{ item.format }}</td>
+                                    <td>{{ item.pages }}</td>
+                                    <td>{{ item.price }}</td>
+                                    <td>
+                                        <!-- Up Button -->
+                                        <button class="btn btn-sm btn-outline-secondary me-1"
+                                            [disabled]="isFirstItem(sectionIndex, itemIndex)"
+                                            (click)="moveItemUp(sectionIndex, itemIndex)"
+                                            attr.aria-label="Move {{ item.name }} up">
+                                            ↑ Up
+                                        </button>
+
+                                        <!-- Down Button -->
+                                        <button class="btn btn-sm btn-outline-secondary"
+                                            [disabled]="isLastItem(sectionIndex, itemIndex)"
+                                            (click)="moveItemDown(sectionIndex, itemIndex)"
+                                            attr.aria-label="Move {{ item.name }} down">
+                                            ↓ Down
+                                        </button>
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <hr />
+                }}
+            </div>
+        </div>
+    </div>
+</div>
