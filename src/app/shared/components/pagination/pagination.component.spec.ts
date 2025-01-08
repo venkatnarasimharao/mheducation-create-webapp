@@ -19,11 +19,6 @@ describe('PaginationComponent', () => {
     fixture = TestBed.createComponent(PaginationComponent);
     component = fixture.componentInstance;
     
-    // Set default input values
-    component.currentPage = 1;
-    component.totalPages = 10;
-    component.maxSize = 5;
-    
     fixture.detectChanges();
   });
 

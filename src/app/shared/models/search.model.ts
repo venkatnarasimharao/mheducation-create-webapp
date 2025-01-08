@@ -8,7 +8,7 @@ export interface CheckboxItem {
     value: string;
   }
   
-  export interface AccordionItem {
+ export interface AccordionItem {
     id: string;
     header: string;
     collectionTypes: CheckboxItem[];
