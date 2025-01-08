@@ -1,0 +1,56 @@
+/* 
+    styles for alert
+*/
+
+.alert > p,
+.alert > ul {
+  margin-bottom: 0;
+}
+.alert::before {
+  height: auto;
+  left: 0;
+  padding: 8px;
+  position: absolute;
+  top: 50%;
+  width: 36px;
+  transform: translateY(-50%);
+  margin-top: 3px;
+}
+
+.alert-warning {
+  background-color: $yellow-60;
+  padding: 8px 8px 8px 40px;
+}
+
+.alert-error {
+  background-color: $salmon-40;
+  padding: 8px 8px 8px 40px;
+}
+
+.alert-info {
+  background-color: $blue-40;
+  padding: 8px 8px 8px 40px;
+}
+
+.alert-warning::before {
+  content: url("data:image/svg+xml;charset=utf8, %3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23185197' d='M12 1c6.075 0 11 4.925 11 11s-4.925 11-11 11S1 18.075 1 12 5.925 1 12 1zm0 1C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm1 3v10h-2V5h2zm-2 14v-2h2v2h-2z'/%3E%3C/svg%3E");
+  background-color: transparent;
+  border-radius: 0;
+}
+
+.alert-sucess::before {
+  content: url("data:image/svg+xml;charset=utf8, %3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23185197' d='M12 1c6.075 0 11 4.925 11 11s-4.925 11-11 11S1 18.075 1 12 5.925 1 12 1zm0 1C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm5 5.5L18.5 9l-8 8L6 12.5 7.5 11l3 3L17 7.5z'/%3E%3C/svg%3E");
+  background-color: transparent;
+  border-radius: 0;
+}
+.alert-error::before {
+  content: url("data:image/svg+xml;charset=utf8, %3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' d='M12 1c6.075 0 11 4.925 11 11s-4.925 11-11 11S1 18.075 1 12 5.925 1 12 1zm0 1C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.536 5.05l1.414 1.414L13.414 12l3.536 3.536-1.414 1.414L12 13.414 8.464 16.95 7.05 15.536 10.586 12 7.05 8.464 8.464 7.05 12 10.586l3.536-3.536z'/%3E%3C/svg%3E");
+  background-color: transparent;
+  border-radius: 0;
+}
+
+.alert-info::before {
+  content: url("data:image/svg+xml;charset=utf8, %3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23185197' d='M12 1c6.075 0 11 4.925 11 11s-4.925 11-11 11S1 18.075 1 12 5.925 1 12 1zm0 1C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm1 3v10h-2V5h2zm-2 14v-2h2v2h-2z'/%3E%3C/svg%3E");
+  background-color: transparent;
+  border-radius: 0;
+}
