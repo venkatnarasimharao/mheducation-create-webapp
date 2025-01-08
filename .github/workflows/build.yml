@@ -30,7 +30,7 @@ jobs:
 
       # Run tests with code coverage
       - name: Run tests and generate coverage
-        run: npm run test
+        run: npm run test:coverage
 
       # Upload coverage report
       - name: Upload coverage artifact
