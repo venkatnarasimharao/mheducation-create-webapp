@@ -1,0 +1,6 @@
+// remove error icon from invalid form controls
+.was-validated .form-control:invalid,
+.form-control.is-invalid {
+  background-image: none !important;
+  padding-right: 0.75rem !important;
+}

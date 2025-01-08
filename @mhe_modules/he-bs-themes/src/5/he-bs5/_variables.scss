@@ -1,0 +1,99 @@
+// brand palette
+$he-blue: #185197;
+$he-green: #238834;
+$he-green2: #0c6b1d;
+$he-red: #cd4d3f;
+$he-yellow: #ffcd00;
+$text-light: #fff;
+$message-info-background: #dde7f0;
+
+// set values for bs vars
+$primary: $he-blue;
+$success: $he-green2;
+$danger: $he-red;
+$warning: $he-yellow;
+$black: #000;
+$white: #fff;
+$primary-blue-100: $he-blue; // base color
+$primary-blue-40: #a3b9d5;
+$primary-blue-20: #d1dcea;
+$primary-blue-10: #e7edf4;
+$primary-blue-05: #f3f6fa;
+$dark-blue-100: #132f64;
+$yellow-40: #fff5cc;
+$yellow-60: #ffeb99;
+$yellow-80: #ffdc4d;
+$yellow-100: #ffcd00;
+$yellow-120: #d8ad00;
+$yellow-140: #ab8200;
+$yellow-160: #947100;
+
+$salmon-40: #fcdcd9;
+$salmon-60: #f9b9b2;
+$salmon-80: #f6968c;
+$salmon-100: #f15a4a;
+$salmon-120: #cd4d3f;
+$salmon-140: #9f3c31;
+$blue-40: #dae7f1;
+$blue-60: #a3c4db;
+$blue-80: #6da1c5;
+$blue-100: #3f7aa3;
+$blue-120: #326081;
+$blue-140: #2a506b;
+
+// font-weight
+$fw-light: 300;
+$fw-normal: 400;
+$fw-semi-bold: 600;
+$fw-bold: 700;
+
+// border
+$border-color-1: #dee2e6;
+$border-radius-1: 0.4rem;
+$border-color-2: rgba(0, 0, 0, 0.47);
+$border-color-3: #b6effb;
+
+// box shadow
+$primary-box-shadow-ally: 0 0 0 2px $primary;
+
+// $fonts
+$font-proxima-nova: 'proxima_novaregular';
+
+// font size
+$base-font-size: 16;
+$font-size-80: 10px;
+$font-size-90: 12px;
+$font-size-100: 14px;
+$font-size-110: 16px;
+$font-size-120: 18px;
+$font-size-130: 20px;
+$font-size-140: 22px;
+$font-size-150: 24px;
+$font-size-160: 28px;
+
+/**
+ * Provide a number as an argument
+ */
+@function pxToRem($value) {
+  $remValue: calc($value / $base-font-size) + rem;
+  @return $remValue;
+}
+
+// headings
+$h1-font-size: calc(pxToRem($base-font-size) * 1.75);
+$h2-font-size: calc(pxToRem($base-font-size) * 1.5);
+$h3-font-size: calc(pxToRem($base-font-size) * 1.25);
+$h4-font-size: calc(pxToRem($base-font-size) * 1.125);
+$h5-font-size: calc(pxToRem($base-font-size));
+$h6-font-size: calc(pxToRem($base-font-size));
+
+// buttons
+$btn-border-width: 2px;
+$outline-btn-hover-bg: #f3f6fa;
+
+//button-focus
+$btn-focus-box-shadow: #185197;
+
+// override bootstrap input border
+$input-border-color: $primary;
+$input-focus-box-shadow: $primary-box-shadow-ally;

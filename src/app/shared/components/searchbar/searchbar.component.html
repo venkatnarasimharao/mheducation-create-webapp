@@ -1,0 +1,57 @@
+<div class="p-md-4 w-100">
+    <!-- Header -->
+    <label class="fw-bold">{{ searchbarTitle | translate }}</label>
+  
+    <!-- Search Bar -->
+    <div class="input-group">
+      <!-- Dropdown -->
+      <div class="input-group-prepend">
+        <div ngbDropdown class="w-100">
+          <!-- Dropdown Button -->
+          <button
+            class="btn btn-outline-secondary w-100 rounded-end-0 d-flex align-items-center gap-1"
+            ngbDropdownToggle
+            type="button"
+          >
+            {{ dropdownLabelText | translate }}
+          </button>
+  
+          <!-- Dropdown Menu -->
+          <div ngbDropdownMenu class="w-100">
+            @for (category of searchCategories; track category.id) {
+              <div class="form-check d-flex gap-1">
+                <input
+                  type="checkbox"
+                  [(ngModel)]="category.checked"
+                  [checked]="category.checked"
+                  (change)="onCategoryToggle(category, $event)"
+                  class="form-check-input ms-1"
+                  [id]="category.id"
+                />
+                <label [for]="category.id">{{ category.label | translate }}</label>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+  
+      <!-- Input Field -->
+      <input
+        type="text"
+        class="form-control rounded-0"
+        [placeholder]="placeholder | translate"
+        [(ngModel)]="searchTerm"
+      />
+  
+      <!-- Search Button -->
+      <button
+        class="btn btn-primary btn-search px-4 d-flex justify-content-center gap-2 rounded-right"
+        type="button"
+        (click)="onSearch()"
+      >
+        <i class="bi bi-search"></i>
+        <span class="d-none d-sm-inline">{{ 'Search' | translate }}</span>
+      </button>
+    </div>
+  </div>
+  
