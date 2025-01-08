@@ -9,14 +9,9 @@ describe('BreadcrumbComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        BreadcrumbComponent
-      ],
-      providers: [
-        provideRouter([])
-      ]
-    })
-      .compileComponents();
+      imports: [BreadcrumbComponent],
+      providers: [provideRouter([])],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(BreadcrumbComponent);
     component = fixture.componentInstance;
@@ -26,4 +21,6 @@ describe('BreadcrumbComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+ 
 });

@@ -67,5 +67,18 @@
     <div class="col-12">
       <hec-breadcrumb></hec-breadcrumb>
     </div>
+
+    <!-- Pagination Section -->
+    <div class="d-flex flex-column vh-100">
+      <div class="mt-auto ms-auto mb-3 me-3">
+        <hec-pagination
+          [currentPage]="currentPageNumber"
+          [totalPages]="totalPagesCount"
+          [maxSize]="pagePerItem"
+          (pageChange)="onPageChange($event)">
+        </hec-pagination>
+      </div>
+    </div>
+    
   </div>
 </div>

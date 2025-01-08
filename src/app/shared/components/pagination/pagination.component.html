@@ -1,0 +1,47 @@
+<ul class="pagination justify-content-center">
+  <!-- Previous Button -->
+  <li
+    class="page-item"
+    [class.disabled]="currentPage === 1"
+    (click)="goToPage(currentPage - 1)"
+    role="button"
+    aria-label="Previous"
+  >
+    <button class="page-link" [tabindex]="currentPage === 1 ? -1 : 0">{{ 'Previous' | translate }}</button>
+  </li>
+
+  <!-- Page Numbers -->
+  @for (page of pages; track page) {
+    @if (page !== 'start-ellipsis' && page !== 'end-ellipsis') {
+      <li
+        class="page-item"
+        [class.active]="page === currentPage"
+        (click)="goToPage(page)"
+        role="button"
+        [attr.aria-label]="'Page ' + page"
+      >
+        <button class="page-link">{{ page }}</button>
+      </li>
+    } @else {
+      <li
+        class="page-item"
+        (click)="handleEllipsisClick(page === 'start-ellipsis' ? 'start' : 'end')"
+        role="button"
+        aria-label="More pages"
+      >
+        <button class="page-link">...</button>
+      </li>
+    }
+  }
+
+  <!-- Next Button -->
+  <li
+    class="page-item"
+    [class.disabled]="currentPage === totalPages"
+    (click)="goToPage(currentPage + 1)"
+    role="button"
+    aria-label="Next"
+  >
+    <button class="page-link" [tabindex]="currentPage === totalPages ? -1 : 0">{{ 'Next' | translate }}</button>
+  </li>
+</ul>
