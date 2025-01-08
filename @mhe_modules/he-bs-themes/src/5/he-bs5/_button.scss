@@ -1,0 +1,181 @@
+/*
+mixin for buttons 
+*/
+@mixin button-highlight(
+  $color,
+  $border-size: 2px,
+  $gap-size: 3px,
+  $border-color: $color
+) {
+  position: relative;
+
+  &::before {
+    border-radius: 0.6rem;
+    bottom: -$gap-size;
+    box-shadow: 0 0 0 $border-size $border-color;
+    content: '';
+    left: -$gap-size;
+    pointer-events: none;
+    position: absolute;
+    right: -$gap-size;
+    top: -$gap-size;
+  }
+}
+
+
+@mixin button-variant(
+  $color: null,
+  $disabled-color: null,
+  $background: null,
+  $highlighted-background: null,
+  $disabled-background: null,
+  $border: transparent,
+  $border-type: highlight,
+  $border-width: 2px,
+  $padding: null,
+  $height: null,
+  $border-radius: 0.5rem,
+  $font-size: $font-size-110
+) {
+  @if ($disabled-color == null) {
+    $disabled-color: $color;
+  }
+  @if ($highlighted-background == null) {
+    $highlighted-background: $background;
+  }
+  @if ($disabled-background == null) {
+    $disabled-background: $background;
+  }
+  background-color: $background;
+  border: 0;
+  border-radius: $border-radius;
+  color: $color;
+  display: inline-block;
+  font-size: $font-size;
+  height: $height;
+  margin: 0 1px;
+  padding: $padding;
+  transition: background-color 0.2s ease-in-out;
+
+  &:not([disabled]) {
+    &:hover {
+      background-color: $highlighted-background;
+      color: $color;
+      border-color: $color;
+    }
+
+    &:focus,&.focus {
+      background-color: $background;
+      color: $color;
+      border-color: $color;
+    }
+
+    &:active,&.active,
+    &:hover:focus,&:hover.focus,
+    &:hover:active,&:hover.active,
+    &:focus:active,&:focus.active,
+    &.focus:active,&.focus.active,
+    &:focus-visible,&.focus-visible {
+      background-color: $highlighted-background;
+      color: $color;
+      border-color: $color;
+    }
+
+    &:focus,&.focus,
+    &:active,&.active,
+    &:hover:focus,&:hover.focus,
+    &:hover:active,&:hover.active,
+    &:focus:active,&:focus.active,
+    &.focus:active,&.focus.active,
+    &:focus-visible,&.focus-visible {
+      @if ($border != transparent) {
+        @include button-highlight($border);
+      }
+      box-shadow: none;
+      color: $color;
+      outline: 0;
+      border-color: $color;
+    }
+  }
+
+  &:disabled,&.disabled {
+    background-color: $disabled-background;
+    color: $disabled-color;
+    border: 1px solid $disabled-background !important; // to override he-bs5 theme
+    cursor: not-allowed;
+    opacity: 0.65;
+    box-shadow: none;
+    pointer-events: auto;
+  }
+}
+
+// styles for button
+
+.btn-primary {
+  @include button-variant(
+    $background: $he-blue,
+    $color: $white,
+    $disabled-background: $primary-blue-40,
+    $highlighted-background: $dark-blue-100,
+    $border: $he-blue
+  );
+}
+
+.btn-secondary {
+  @include button-variant(
+    $background: transparent,
+    $color: $he-blue,
+    $disabled-background: transparent,
+    $highlighted-background: $primary-blue-05,
+    $disabled-color: $primary-blue-40,
+    $border: $he-blue
+  );
+  border: 1px solid $he-blue;
+}
+
+.btn-tertiary,
+.btn-icon {
+  @include button-variant(
+    $background: transparent,
+    $color: $he-blue,
+    $highlighted-background: $primary-blue-05,
+    $height: 3.6rem,
+    $padding: 0.6rem 0.8rem 0.8rem,
+    $disabled-color: $primary-blue-40,
+    $border: $he-blue
+  );
+  border: 1px solid transparent;
+  icon {
+    margin: 0;
+  }
+}
+.btn-tertiary {
+  padding: 0 1.6rem;
+}
+
+.btn-outline-primary {
+  position: relative !important;
+  border: 1px solid $primary !important;
+
+  &:hover {
+    background: $outline-btn-hover-bg !important;
+    color: $primary !important;
+  }
+
+  &:focus,
+  &:focus-visible {
+    border: 0;
+    box-shadow: none !important;
+    background: $outline-btn-hover-bg !important;
+    color: $primary !important;
+
+    &:before {
+      border-radius: 6px;
+      box-shadow: 0 0 0 2px $primary;
+      content: "";
+      inset: -3px;
+      pointer-events: none;
+      position: absolute;
+    }
+  }
+}
