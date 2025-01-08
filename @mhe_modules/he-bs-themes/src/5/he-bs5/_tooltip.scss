@@ -1,0 +1,38 @@
+/* 
+    styles for tooltip
+*/
+
+.tooltip-inner {
+  padding: 0.5rem 1rem;
+  color: $white;
+  text-align: left;
+  font-size: 1.2rem;
+  background-color: $he-blue;
+}
+
+.tooltip {
+  opacity: 1 !important;
+}
+
+.top {
+  .arrow {
+    border-top-color: $he-blue !important;
+  }
+}
+
+.bottom {
+  .arrow {
+    border-bottom-color: $he-blue !important;
+  }
+}
+
+.left {
+  .arrow {
+    border-left-color: $he-blue !important;
+  }
+}
+.right {
+  .arrow {
+    border-right-color: $he-blue !important;
+  }
+}

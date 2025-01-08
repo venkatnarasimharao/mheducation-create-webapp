@@ -1,0 +1,88 @@
+// modal override
+.modal-header {
+  background-color: $primary;
+  color: $text-light;
+  padding: 1.6rem;
+
+  button {
+    color: $text-light;
+  }
+
+  .btn-close {
+    color: #fff;
+    filter: invert(1) grayscale(100%) brightness(200%);
+    background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e")
+      center/1em auto no-repeat;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0.5;
+    opacity: 1;
+
+    &:hover {
+      filter: invert(1) grayscale(100%) brightness(200%);
+      color: #fff;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 1px $black;
+    }
+  }
+}
+
+.modal-title {
+  color: $white;
+  font-size: 1.6rem;
+  line-height: 1;
+  font-weight: $fw-semi-bold;
+}
+
+.modal-footer {
+  justify-content: flex-start !important;
+  padding-left: 1.2rem;
+}
+
+.modal-footer .btn + .btn {
+  margin-left: 0.8rem;
+}
+
+.modal-body .form-control {
+  height: 36px;
+  border: 1px solid $he-blue;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  color: $black;
+  background-color: transparent;
+  font-size: 1.4rem;
+}
+
+.modal-body .dropdown-toggle {
+  background-color: transparent;
+  border-radius: 5px;
+  color: $he-blue;
+  display: inline-block;
+  font-size: 16px;
+  height: 36px;
+  margin: 0 1px;
+  padding: 0 16px;
+  transition: background-color 0.2s ease-in-out;
+  border: 1px solid $he-blue;
+}
+
+.modal-body .dropdown-toggle:hover {
+  color: $he-blue;
+  background-color: $outline-btn-hover-bg;
+}
+
+.modal-body .dropdown-toggle div {
+  text-align: left;
+}
+
+.modal-body h3 {
+  font-weight: $fw-semi-bold;
+}
+
+.modal-body .ahe-ui-radio {
+  padding: 8px 8px 8px 12px;
+}
