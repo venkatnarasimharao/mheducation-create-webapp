@@ -50,13 +50,7 @@ export const routes: Routes = [
         (m) => m.FavouritesComponent
       ),
   },
-  {
-    path: 'help',
-    loadComponent: () =>
-      import('./features/help/help.component').then(
-        (m) => m.HelpComponent
-      ),
-  },
+
   {
     path: '',
     redirectTo: 'home',
