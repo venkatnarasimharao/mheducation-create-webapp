@@ -1,7 +1,7 @@
  <!-- accordion with checkboxes -->
  <div ngbAccordion [closeOthers]="false">
     @for(list of collectionfilterData;track list){
-      <div ngbAccordionItem class="border-0 border-bottom">
+      <div ngbAccordionItem class="border-0 border-bottom" [collapsed]="false">
         <h2 ngbAccordionHeader>
           <button  ngbAccordionButton class="fw-bold">{{list.header | translate}}</button>
         </h2>
