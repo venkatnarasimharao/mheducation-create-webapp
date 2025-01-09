@@ -40,8 +40,6 @@ export class ApiService {
       'Authorization': `Basic ${base64String}`,
       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
     });
-
-
     return this.apiMethodService({
       url: '/createonline/loginUser.do',
       method: 'POST',
@@ -50,7 +48,6 @@ export class ApiService {
     });
   }
   userLogOut(paris_user_id: string) {
-    console.log(`/users/${paris_user_id}/logout`);
     return this.apiMethodService({
       url: `/users/${paris_user_id}/logout`,
       method: 'GET',

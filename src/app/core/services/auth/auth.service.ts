@@ -1,15 +1,16 @@
-import { CookieService } from 'ng2-cookies';
-import { EventEmitter, Injectable } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
+import { EventEmitter, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from '../api/api.service'
+import { BehaviorSubject, catchError, Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly AUTH_KEY = 'authDetails';
-  private islogin: boolean = false;
   authStatus = new EventEmitter<string>();
+  private loginStatusSubject = new BehaviorSubject<'pending' | 'success' | 'failed'>('pending');
+  loginStatus$ = this.loginStatusSubject.asObservable();
 
   constructor(private router: Router,
     private apiService: ApiService,
@@ -22,42 +23,35 @@ export class AuthService {
     this.cookieService.set("jsessionid", data.jsessionid);
   }
 
-  async login(username: string, password: string): Promise<boolean> {
-    try {
-      const payload = { username, password };
-      const response = await this.apiService.userLogin(payload).toPromise();
-      if (response.body) {
+
+  login(username: string, password: string): void {
+    const payload = { username, password };
+    this.loginStatusSubject.next('pending');
+    this.apiService.userLogin(payload).subscribe((response) => {
+      if (response.status === 200) {
         this.authStatus.emit("LogOut");
-        this.islogin = true;
-        console.log(response.body);
         this.manageCookiesStorage(JSON.parse(response.body));
-        // sessionStorage.setItem(this.AUTH_KEY, JSON.stringify(response.body));
-        return true;
-      } else {
-        return false;
+        this.loginStatusSubject.next('success');
       }
-    } catch (error) {
-      return false;
-    }
+      else {
+        this.loginStatusSubject.next('failed');
+      }
+
+    },
+      () => {
+        this.loginStatusSubject.next('failed');
+      })
   }
 
-
-
-  getAuthDetails(): any {
-    const authDetails = this.cookieService.get('paris_user_id');
-    return authDetails ? JSON.parse(authDetails) : null;
+  public isAnonymous(): boolean {
+    const paris_user_id = this.cookieService.get('paris_user_id');
+    return paris_user_id ? true : false;
   }
 
-  isLoggedIn(): boolean {
-    if (this.islogin) {
-      return true;
-    }
-    return this.islogin = (this.getAuthDetails() !== null); // If sessionStorage contains auth details, user is logged in
-  }
   logout(): void {
-    this.apiService.userLogOut(this.cookieService.get('paris_user_id'));
-    this.cookieService.deleteAll();
-    this.islogin = false;
-    this.router.navigate(['/']); // Optionally, redirect to a public page
+    this.apiService.userLogOut(this.cookieService.get('paris_user_id')).subscribe((data) => {
+      this.cookieService.deleteAll();
+      this.router.navigate(['/']);
+    });
   }
 }
