@@ -28,7 +28,7 @@ export class AuthService {
     const payload = { username, password };
     this.loginStatusSubject.next('pending');
     this.apiService.userLogin(payload).subscribe((response) => {
-      if (response.status === 200) {
+      if (response.ok) {
         this.authStatus.emit("LogOut");
         this.manageCookiesStorage(JSON.parse(response.body));
         this.loginStatusSubject.next('success');
@@ -36,9 +36,8 @@ export class AuthService {
       else {
         this.loginStatusSubject.next('failed');
       }
-
     },
-      () => {
+      (err: any) => {
         this.loginStatusSubject.next('failed');
       })
   }
@@ -52,6 +51,8 @@ export class AuthService {
     this.apiService.userLogOut(this.cookieService.get('paris_user_id')).subscribe((data) => {
       this.cookieService.deleteAll();
       this.router.navigate(['/']);
+      this.authStatus.emit("LogIn");
+
     });
   }
 }

@@ -38,7 +38,6 @@ export class HeaderComponent implements OnInit {
   changeLoginStatus() {
     if (this.loggedInStatus === "LogOut") {
       this.AuthService.logout();
-      this.loggedInStatus = "LogIn";
     }
     else {
       this.modalService.open(LoginComponent, { centered: false });

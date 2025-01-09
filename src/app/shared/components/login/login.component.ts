@@ -34,14 +34,12 @@ export class LoginComponent {
       if (status === 'pending') {
         this.loaderActive = true;
       } else if (status === 'success') {
+        this.loaderActive = false;
         this.activeModal.close();
         this.router.navigate([this.redirectUrl]);
       } else if (status === 'failed') {
-        this.loginError = {
-          message: 'Invalid username or password',
-          type: 'warning'
-        };
-
+        this.loaderActive = false;
+        this.loginError = 'Invalid username or password';
       }
     });
 

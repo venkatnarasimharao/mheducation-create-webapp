@@ -8,3 +8,8 @@ a:focus,
 .hec-cursor-pointer {
     cursor: pointer;
 }
+
+.no-focus-outline:focus {
+    // outline: none;
+    // box-shadow: none;
+}

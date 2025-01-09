@@ -33,7 +33,7 @@ export class ApiService {
     })
   }
 
-  userLogin(payload: { username: string, password: string }) {
+  userLogin(payload: { username: string, password: string }): Observable<any> {
     const { username, password } = payload;
     const base64String = btoa(`${username}:${password}`);
     const headers = new HttpHeaders({
@@ -84,7 +84,6 @@ export class ApiService {
     if (!options['observe']) {
       options['observe'] = 'response';
     }
-    console.log(url, options, method);
 
     switch (method?.toUpperCase()) {
       case 'GET':

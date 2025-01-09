@@ -6,26 +6,35 @@
 </div>
 <div class="modal-body">
     <form (ngSubmit)="onLogin()" #loginForm="ngForm">
-        <div *ngIf="loginError">
-            <hec-ng-alert [alert]="loginError"></hec-ng-alert>
-        </div>
         <div class="mb-3">
             <label for="username" class="form-label">Username</label>
-            <input type="text" id="username" name="username" class="form-control" [(ngModel)]="username" required />
+            <input type="text" id="username" name="username" class="form-control no-focus-outline"
+                [(ngModel)]="username" required />
         </div>
         <div class="mb-3">
             <label for="password" class="form-label">Password</label>
-            <input type="{{passwordFieldType}}" id="password" name="password" class="form-control"
-                [(ngModel)]="password" required />
-            <i class="bi" [ngClass]="passwordFieldType === 'password' ? 'bi-eye':'bi-eye-slash'"
-                (click)="togglePasswordVisibility()"
-                style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
-            </i>
+            <div class="form-control d-flex align-items-center p-0">
+                <input type="{{passwordFieldType}}" id="password" name="password"
+                    class="form-control border-0 no-focus-outline" [(ngModel)]="password" required />
+                <button type="button" class="bg-transparent border-0" (click)="togglePasswordVisibility()"
+                    aria-label="Toggle password visibility">
+                    <i class="bi" [ngClass]="passwordFieldType === 'password' ? 'bi-eye' : 'bi-eye-slash'"></i>
+                </button>
+            </div>
         </div>
+        @if(!loginError) {
+        <div class="text-danger d-flex align-items-center">
+            <div class="align-items-center">*{{loginError}}</div>
+        </div>
+        }
         <div class="d-flex justify-content-between align-items-center">
             <div>
-                <button type="submit" class="btn btn-primary position-relative" [disabled]="!loginForm.valid">Login
-                    <div *ngIf="loaderActive" class="loader position-absolute"></div>
+                <button type="submit" class="btn btn-primary position-relative" [disabled]="!loginForm.valid">LogIn
+                    @if(loaderActive){
+                    <div class="loader position-absolute">
+                    </div>
+                    }
+
                 </button>
 
                 <a href="https://accounts-qalv.mheducation.com/registration/create?app=createqa.mheducation.com&redirectUrl=https:%2F%2Fcreateqa.mheducation.com%2Fcreateonline"
