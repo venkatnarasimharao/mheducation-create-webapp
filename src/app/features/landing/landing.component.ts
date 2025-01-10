@@ -1,19 +1,46 @@
-import { Component, inject } from '@angular/core';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { ImageGalleryService } from '../../core/services/image-gallery/image-gallery.service';
+import { ImageCardComponent } from '../../shared/components/image-card/image-card.component';
+import {Collection} from '../../shared/models/search.model';
 import { SearchbarComponent } from '../../shared/components/searchbar/searchbar.component';
 
 @Component({
   selector: 'hec-landing',
   standalone: true,
-  imports: [TranslateModule, SearchbarComponent],
+  imports: [
+    TranslateModule,
+    RouterModule,
+    ImageCardComponent,
+    SearchbarComponent
+  ],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.scss'
 })
 export class LandingComponent {
-  translate :TranslateService =inject(TranslateService);
+  collectionsData: Collection[] = [];
+
+  constructor(
+    private readonly imageService: ImageGalleryService
+  ) { }
+
+  ngOnInit(): void {
+    this.loadCollections();
+  }
 
   handleSearch(event: { categories: string[]; term: string }) {
     console.log('Search Data:', event);
   }
- 
+
+  private loadCollections(): void {
+    this.imageService.getCollections().subscribe({
+      next: (data) => {
+        this.collectionsData = data.slice(0, 16);;
+      },
+      error: (err) => {
+        console.error('Error loading collections data:', err);
+      }
+    });
+  }
 }
