@@ -1,6 +1,6 @@
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Component, computed } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { CommonModule } from '@angular/common';
@@ -14,8 +14,10 @@ import { NgAlertComponent } from '../ng-alert/ng-alert.component';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  username: string = '';
-  password: string = '';
+  form = {
+    username: '',
+    password: ''
+  };
   loginError: any = '';
   redirectUrl: string = '';
   loaderActive: boolean = false;
@@ -27,8 +29,8 @@ export class LoginComponent {
     private router: Router
   ) { }
 
-  onLogin() {
-    this.authService.login(this.username, this.password);
+  onSubmit(f: NgForm) {
+    this.authService.login(this.form.username, this.form.password);
     this.authService.loginStatus$.subscribe((status) => {
 
       if (status === 'pending') {
@@ -39,7 +41,7 @@ export class LoginComponent {
         this.router.navigate([this.redirectUrl]);
       } else if (status === 'failed') {
         this.loaderActive = false;
-        this.loginError = 'Invalid username or password';
+        this.loginError = this.authService.getLoginErrorMessage();
       }
     });
 

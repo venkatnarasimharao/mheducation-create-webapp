@@ -5,36 +5,49 @@
     </button>
 </div>
 <div class="modal-body">
-    <form (ngSubmit)="onLogin()" #loginForm="ngForm">
-        <div class="mb-3">
-            <label for="username" class="form-label">Username</label>
-            <input type="text" id="username" name="username" class="form-control no-focus-outline"
-                [(ngModel)]="username" required />
+    <form name="form" #f="ngForm" (ngSubmit)="f.form.valid && onSubmit(f)" novalidate>
+        <div class="form-group mb-3">
+            <label for="form.username" class="form-label">Username</label>
+            <input type="text" class="form-control fs-3 no-focus-outline" autocomplete="off" name="username"
+                [(ngModel)]="form.username" required #username="ngModel"
+                [ngClass]="{ 'is-invalid': f.submitted && username.errors }" />
+            <div *ngIf="f.submitted && username.errors" class="invalid-feedback">
+                @if(username.errors['required']){
+                <div>Username is required</div>
+                }
+            </div>
         </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <div class="form-control d-flex align-items-center p-0">
-                <input type="{{passwordFieldType}}" id="password" name="password"
-                    class="form-control border-0 no-focus-outline" [(ngModel)]="password" required />
+        <div class="form-group mb-3">
+            <label for="form.password" class="form-label">Password</label>
+            <div class="d-flex form-control align-items-center justify-content-between"
+                [ngClass]="{ 'is-invalid': f.submitted && password.errors }">
+                <input type="{{passwordFieldType}}" class=" no-focus-outline border-0 fs-3" name="password"
+                    [(ngModel)]="form.password" required #password="ngModel" />
                 <button type="button" class="bg-transparent border-0" (click)="togglePasswordVisibility()"
                     aria-label="Toggle password visibility">
                     <i class="bi" [ngClass]="passwordFieldType === 'password' ? 'bi-eye' : 'bi-eye-slash'"></i>
                 </button>
             </div>
+            <div *ngIf="f.submitted && password.errors" class="invalid-feedback">
+                @if(password.errors['required']){
+                <div>Password is required</div>
+                }
+
+            </div>
         </div>
-        @if(!loginError) {
+        @if(loginError) {
         <div class="text-danger d-flex align-items-center">
             <div class="align-items-center">*{{loginError}}</div>
         </div>
         }
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <button type="submit" class="btn btn-primary position-relative" [disabled]="!loginForm.valid">LogIn
+        <div class="d-flex justify-content-between">
+            <div class="d-flex align-items-center">
+                <button type="submit" class="btn btn-primary d-flex align-items-center justify-content-center"
+                    [disabled]="loaderActive">
+                    <span>LogIn</span>
                     @if(loaderActive){
-                    <div class="loader position-absolute">
-                    </div>
+                    <div class="hec-loader-btn"></div>
                     }
-
                 </button>
 
                 <a href="https://accounts-qalv.mheducation.com/registration/create?app=createqa.mheducation.com&redirectUrl=https:%2F%2Fcreateqa.mheducation.com%2Fcreateonline"

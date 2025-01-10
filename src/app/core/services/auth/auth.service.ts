@@ -11,6 +11,7 @@ export class AuthService {
   authStatus = new EventEmitter<string>();
   private loginStatusSubject = new BehaviorSubject<'pending' | 'success' | 'failed'>('pending');
   loginStatus$ = this.loginStatusSubject.asObservable();
+  loginError: any = '';
 
   constructor(private router: Router,
     private apiService: ApiService,
@@ -24,7 +25,7 @@ export class AuthService {
   }
 
 
-  login(username: string, password: string): void {
+  login(username: string, password: any): void {
     const payload = { username, password };
     this.loginStatusSubject.next('pending');
     this.apiService.userLogin(payload).subscribe((response) => {
@@ -38,6 +39,7 @@ export class AuthService {
       }
     },
       (err: any) => {
+        this.loginError = JSON.parse(err.error).message;
         this.loginStatusSubject.next('failed');
       })
   }
@@ -45,6 +47,9 @@ export class AuthService {
   public isAnonymous(): boolean {
     const paris_user_id = this.cookieService.get('paris_user_id');
     return paris_user_id ? true : false;
+  }
+  public getLoginErrorMessage(): string {
+    return this.loginError;
   }
 
   logout(): void {
