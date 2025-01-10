@@ -57,9 +57,12 @@ export const routes: Routes = [
         (m) => m.HelpComponent
       ),
   },
+
   {
-    path: '',
-    redirectTo: 'home',
-    pathMatch: 'full'
+    path: 'special-collection',
+    loadComponent: () =>
+      import('./features/special-collection/special-collection.component').then(
+        (m) => m.SpecialCollectionComponent
+      ),
   },
 ];
