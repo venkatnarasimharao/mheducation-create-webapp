@@ -1,0 +1,29 @@
+a, .list-group-item {
+    border: 1px solid transparent;
+    box-sizing: border-box;
+    color: $primary;
+    cursor: pointer;
+    margin: 0;
+    padding: 0 0.3rem;
+    text-decoration: none;
+
+    &:hover {
+      border-bottom: 1px solid $primary;
+      text-decoration: none;
+      transition: color 0.35s ease;
+    }
+
+    &:focus {
+      border: none;
+      border-radius: 0.4rem;
+      box-shadow: 0 0 0 2px $primary;
+      outline: none;
+      text-decoration: none;
+      transition: color 0.35s ease;
+    }
+    &:disabled,
+    &.disabled {
+      pointer-events: none;
+      opacity: 0.5;
+    }
+}

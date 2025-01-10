@@ -1,0 +1,72 @@
+{
+  "_args": [
+    [
+      "@mhe/he-bs-themes@1.0.4",
+      "/Users/Amit.Kumar2@mheducation.com/Downloads/connect-instructor-ui"
+    ]
+  ],
+  "_from": "@mhe/he-bs-themes@1.0.4",
+  "_id": "@mhe/he-bs-themes@1.0.4",
+  "_inBundle": false,
+  "_integrity": "sha1-hdNq21pqeU9F2s8LzL1g8dqkhvs=",
+  "_location": "/@mhe/he-bs-themes",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "@mhe/he-bs-themes@1.0.4",
+    "name": "@mhe/he-bs-themes",
+    "escapedName": "@mhe%2fhe-bs-themes",
+    "scope": "@mhe",
+    "rawSpec": "1.0.4",
+    "saveSpec": null,
+    "fetchSpec": "1.0.4"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://repo.mhe.io/artifactory/api/npm/npm/@mhe/he-bs-themes/-/@mhe/he-bs-themes-1.0.4.tgz",
+  "_spec": "1.0.4",
+  "_where": "/Users/Amit.Kumar2@mheducation.com/Downloads/connect-instructor-ui",
+  "author": "",
+  "bugs": {
+    "url": "https://github.mheducation.com/MHEducation/he-bs-themes/issues"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "description": "Bootstrap themes for McGraw Hill Higher Education UI applications.",
+  "devDependencies": {
+    "@commitlint/cli": "17.1.2",
+    "@commitlint/config-conventional": "17.1.0",
+    "@semantic-release/changelog": "6.0.1",
+    "@semantic-release/git": "10.0.1",
+    "@types/conventional-commits-parser": "3.0.2",
+    "bootstrap": "^5.2.3",
+    "conventional-changelog-angular": "^5.0.13",
+    "conventional-commits-parser": "^3.2.4",
+    "cz-conventional-changelog": "^3.3.0",
+    "node-sass": "^8.0.0",
+    "semantic-release": "19.0.5",
+    "webpack": "^5.75.0"
+  },
+  "homepage": "https://github.mheducation.com/MHEducation/he-bs-themes#readme",
+  "license": "ISC",
+  "main": "index.js",
+  "name": "@mhe/he-bs-themes",
+  "publishConfig": {
+    "registry": "https://repo.mhe.io/artifactory/api/npm/npm/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.mheducation.com:MHEducation/he-bs-themes.git"
+  },
+  "scripts": {
+    "build:demo": "node-sass ./demo/scss -o ./demo/css",
+    "ci-release": "semantic-release",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.0.4"
+}

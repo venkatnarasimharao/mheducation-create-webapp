@@ -1,0 +1,15 @@
+.form-switch {
+    .form-check-input {
+      margin-right: -2em !important;
+  
+      &:focus {
+        outline: $he-blue auto 1px !important;
+        outline-offset: 4px;
+        box-shadow: none;
+      }
+    }
+  
+    .form-check-label {
+      font-weight: $fw-bold;
+    }
+}
