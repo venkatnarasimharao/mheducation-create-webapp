@@ -2,70 +2,74 @@
   <div class="row">
     <div class="col-12 border-0 border-bottom pb-3 my-2">
 
-      <div  class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-2"
-       >
+
+
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-2">
         <div class="d-flex flex-column align-items-start">
           <span class="fw-bold mb-1">{{ selectProjectHeading }}</span>
           <div ngbDropdown class="d-inline-block" aria-labelledby="select-project-heading">
-            <button type="button" ngbDropdownToggle noCaret class="btn btn-outline-dark text-dark bg-transparent w-100"  aria-label="Select a project">
+            <button type="button" ngbDropdownToggle noCaret class="btn btn-outline-dark text-dark bg-transparent w-100"
+              aria-label="Select a project">
               {{ selectProjectTitle }}
               <i class="bi bi-chevron-down ms-7"></i>
             </button>
             <div ngbDropdownMenu class="w-100" aria-labelledby="select-project-heading">
               @for(item of selectProjectItems; track item.name){
-                <button
-                type="button"
-                class="dropdown-item"
-                (click)="onSelect(item)"
-                
-              >
+              <button type="button" class="dropdown-item" (click)="onSelect(item)">
                 {{ item.name }}
               </button>
               }
-           
+
             </div>
           </div>
         </div>
-    
+
         <div class="d-flex gap-1 mt-2 mt-md-0 flex-wrap justify-content-center">
           <div class="d-flex flex-column align-items-start me-3">
             <span class="fw-bold mb-1">{{ selectFormatHeading }}</span>
             <div ngbDropdown class="d-inline-block" aria-labelledby="select-format-heading">
-              <button type="button" ngbDropdownToggle noCaret class="btn btn-outline-dark text-dark bg-transparent w-100" aria-label="Select a format">
+              <button type="button" ngbDropdownToggle noCaret
+                class="btn btn-outline-dark text-dark bg-transparent w-100" aria-label="Select a format">
                 {{ selectFormatTitle }}
                 <i class="bi bi-chevron-down ms-7"></i>
               </button>
               <div ngbDropdownMenu class="w-100" aria-labelledby="select-format-heading">
                 @for(item of selectFormatItems; track item.name){
-                  <button
-                  type="button"
-                  class="dropdown-item"
-                  (click)="onSelected(item)"
-                >
+                <button type="button" class="dropdown-item" (click)="onSelected(item)">
                   {{ item.name }}
                 </button>
                 }
               </div>
             </div>
           </div>
-    
+
           <!-- Arrange Button -->
           <div class="d-flex flex-column align-items-start">
             <span class="fw-bold mb-1">{{ selectArrangeTitle }}</span>
-            <button type="button" class="btn fw-bold custom-dark-blue" [routerLink]="['/arrange']" aria-label="Arrange items">
+            <button type="button" class="btn fw-bold custom-dark-blue" [routerLink]="['/arrange']"
+              aria-label="Arrange items">
               Arrange
               <i class="bi bi-chevron-right ms-5"></i>
             </button>
           </div>
         </div>
       </div>
-     
-     
+
+
     </div>
 
     <!-- Breadcrumb Section -->
     <div class="col-12">
       <hec-breadcrumb></hec-breadcrumb>
+    </div>
+
+
+
+    <div class="col-12 col-md-4 col-sm-6">
+      @if(collectionDetails){
+      <h4 class="fw-bold">Showing Results for {{ collectionDetails.name }} Collection</h4>
+      <hec-image-card [cardData]="collectionDetails"></hec-image-card>
+      }
     </div>
   </div>
 </div>
