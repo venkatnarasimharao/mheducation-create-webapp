@@ -9,6 +9,8 @@ import {
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbCollapseModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ApiService } from '../../core/services/api/api.service';
+import { catchError, finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'hec-arrange',
@@ -39,12 +41,12 @@ export class ArrangeComponent {
     { id: 2, name: 'Project 2' },
     { id: 3, name: 'Project 3' },
   ];
-
-  selectFormatItems: any[] = [
-    { id: 1, name: 'Format 1' },
-    { id: 2, name: 'Format 2' },
-    { id: 3, name: 'Format 3' },
-  ];
+  
+  isLoading: boolean = false;
+  error: string | null = null;
+  userId: string = '30141477';
+  projectId: string = '1d0d1b85-aae4-267d-b373-4127c6d37a55';
+  
   sections = [
     {
       id: 'introMaterial',
@@ -159,9 +161,54 @@ export class ArrangeComponent {
     },
   ];
 
+  // sections: any[] = [];
+  constructor(private ApiService: ApiService) {
+  }
+
   ngOnInit(): void {
     this.updateItemStates();
+    this.loadProjectData();
   }
+
+  loadProjectData(): void {
+    this.isLoading = true;
+    this.error = null;
+  
+    this.ApiService.getProjectData(this.userId, this.projectId)
+      .subscribe((data) => {
+        console.log(data, 'getProjectData')
+        if (data) {
+          this.sections = this.transformApiData(data);
+          console.log('Successfully loaded project data:', data);
+          this.updateItemStates();
+        }
+      });
+  }
+
+  private transformApiData(apiData: any): any[] {
+    try {
+      return apiData.sections.map((section: any) => ({
+        id: section.id,
+        title: section.title,
+        selectAllChecked: false,
+        items: section.items.map((item: any) => ({
+          name: item.name,
+          format: item.format,
+          pages: item.pages,
+          price: item.price,
+          checked: false,
+          disableUp: false,
+          disableDown: false,
+          indentLevel: item.indentLevel || 1,
+          displayNumber: item.displayNumber || '',
+        })),
+      }));
+    } catch (error) {
+      console.error('Error transforming API data:', error);
+      return [];
+    }
+  }
+  
 
   getAllItems() {
     return this.sections.flatMap((section) => section.items);
@@ -184,7 +231,7 @@ export class ArrangeComponent {
 
   checkIfAnySelected() {
     this.isAnyCheckboxSelected = this.sections.some((section) =>
-      section.items.some((item) => item.checked)
+      section.items.some((item:{ checked: boolean }) => item.checked)
     );
     console.log(
       'isAnyCheckboxSelected: checked triggered',
@@ -200,7 +247,7 @@ export class ArrangeComponent {
 
   deleteSelectedItems() {
     this.sections.forEach((section) => {
-      section.items = section.items.filter((item) => !item.checked);
+      section.items = section.items.filter((item:{ checked: boolean }) => !item.checked);
     });
     this.checkIfAnySelected();
   }
@@ -276,13 +323,14 @@ export class ArrangeComponent {
   }
 
   updateItemStates(): void {
-    this.sections.forEach((section) => {
-      section.items.forEach((item, index) => {
+    this.sections.forEach((section: { items: { disableUp: boolean; disableDown: boolean }[] }) => {
+      section.items.forEach((item: { disableUp: boolean; disableDown: boolean }, index: number) => {
         item.disableUp = index === 0;
         item.disableDown = index === section.items.length - 1;
       });
     });
   }
+  
 
   onSelect(item: { id: number; name: string }) {
     this.selectProjectTitle = item.name;

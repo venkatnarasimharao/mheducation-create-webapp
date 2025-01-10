@@ -7,6 +7,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { httpInterceptor } from './core/interceptors/http.interceptor';
 import { ApiService } from './core/services/api/api.service';
 import { SharedstateService } from './core/services/shared-state/sharedstate.service';
+import { CookieService } from 'ngx-cookie-service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -31,6 +32,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     ApiService,
     SharedstateService,
+    CookieService
   ]
 };
 
