@@ -44,4 +44,3 @@ Thumbs.db
 
 # Exclude the @mhe folder from being ignored
 !/node_modules/@mhe*
-.early.coverage

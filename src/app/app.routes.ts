@@ -14,8 +14,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import(
         './features/search-find-content/search-find-content.component'
-      ).then((m) => m.SearchFindContentComponent),
-    canActivate: [AuthGuard]
+      ).then((m) => m.SearchFindContentComponent)
   },
   {
     path: 'projects',
