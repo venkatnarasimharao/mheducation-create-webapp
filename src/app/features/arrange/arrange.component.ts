@@ -162,7 +162,7 @@ export class ArrangeComponent {
   ];
 
   // sections: any[] = [];
-  constructor(private ApiService: ApiService) {
+  constructor(private apiService: ApiService) {
   }
 
   ngOnInit(): void {
@@ -174,7 +174,7 @@ export class ArrangeComponent {
     this.isLoading = true;
     this.error = null;
   
-    this.ApiService.getProjectData(this.userId, this.projectId)
+    this.apiService.getProjectData(this.userId, this.projectId)
       .subscribe((data) => {
         console.log(data, 'getProjectData')
         if (data) {
