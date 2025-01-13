@@ -1,15 +1,15 @@
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Component, computed } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth/auth.service';
-import { CommonModule } from '@angular/common';
 import { NgAlertComponent } from '../ng-alert/ng-alert.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'hec-login',
   standalone: true,
-  imports: [FormsModule, CommonModule, NgAlertComponent],
+  imports: [FormsModule, NgAlertComponent, CommonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -30,6 +30,9 @@ export class LoginComponent {
   ) { }
 
   onSubmit(f: NgForm) {
+    if (!f.valid) {
+      return;
+    }
     this.authService.login(this.form.username, this.form.password);
     this.authService.loginStatus$.subscribe((status) => {
 
@@ -53,5 +56,6 @@ export class LoginComponent {
 
   onForgotPassword() {
     // logic for the forgot Password
+    this.loginError = "not integrated at this time";
   }
 }

@@ -8,9 +8,8 @@
     <form name="form" #f="ngForm" (ngSubmit)="f.form.valid && onSubmit(f)" novalidate>
         <div class="form-group mb-3">
             <label for="form.username" class="form-label">Username</label>
-            <input type="text" class="form-control fs-3 no-focus-outline" autocomplete="off" name="username"
-                [(ngModel)]="form.username" required #username="ngModel"
-                [ngClass]="{ 'is-invalid': f.submitted && username.errors }" />
+            <input type="text" class="form-control fs-3" autocomplete="off" name="username" [(ngModel)]="form.username"
+                required #username="ngModel" [ngClass]="{ 'is-invalid': f.submitted && username.errors }" />
             <div *ngIf="f.submitted && username.errors" class="invalid-feedback">
                 @if(username.errors['required']){
                 <div>Username is required</div>
@@ -21,7 +20,7 @@
             <label for="form.password" class="form-label">Password</label>
             <div class="d-flex form-control align-items-center justify-content-between"
                 [ngClass]="{ 'is-invalid': f.submitted && password.errors }">
-                <input type="{{passwordFieldType}}" class=" no-focus-outline border-0 fs-3" name="password"
+                <input type="{{passwordFieldType}}" class=" no-focus-outline border-0 fs-3 w-100" name="password"
                     [(ngModel)]="form.password" required #password="ngModel" />
                 <button type="button" class="bg-transparent border-0" (click)="togglePasswordVisibility()"
                     aria-label="Toggle password visibility">
@@ -51,7 +50,7 @@
                 </button>
 
                 <a href="https://accounts-qalv.mheducation.com/registration/create?app=createqa.mheducation.com&redirectUrl=https:%2F%2Fcreateqa.mheducation.com%2Fcreateonline"
-                    target="_blank" class="">Sign Up</a>
+                    target="_blank" class="m-2">Sign Up</a>
             </div>
             <button type="button" class="btn btn-secondary" (click)="onForgotPassword()">Forgot Password?</button>
         </div>

@@ -1,70 +1,64 @@
 import { TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthGuard } from './auth.guard';
+import { Router } from '@angular/router';
 import { AuthService } from '../core/services/auth/auth.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { LoginComponent } from '../shared/components/login/login.component';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
+class MockAuthService {
+  isAnonymous() {
+    return true;
+  }
+}
+
+class MockNgbModal {
+  open(content: any, options?: any) {
+    return { componentInstance: { redirectUrl: '' } };
+  }
+}
+
 describe('AuthGuard', () => {
-  let authGuard: AuthGuard;
-  let authServiceSpy: jasmine.SpyObj<AuthService>;
-  let routerSpy: jasmine.SpyObj<Router>;
-  let modalServiceSpy: jasmine.SpyObj<NgbModal>;
+  let guard: AuthGuard;
+  let authService: AuthService;
+  let modalService: NgbModal;
+  let router: Router;
 
   beforeEach(() => {
-    // Create spies for the dependencies
-    authServiceSpy = jasmine.createSpyObj('AuthService', ['isLoggedIn']);
-    routerSpy = jasmine.createSpyObj('Router', ['navigate']);
-    modalServiceSpy = jasmine.createSpyObj('NgbModal', ['open']);
-
-    // Configure the testing module
     TestBed.configureTestingModule({
+      imports: [],
       providers: [
         AuthGuard,
-        { provide: AuthService, useValue: authServiceSpy },
-        { provide: Router, useValue: routerSpy },
-        { provide: NgbModal, useValue: modalServiceSpy },
-      ],
+        { provide: AuthService, useClass: MockAuthService },
+        { provide: NgbModal, useClass: MockNgbModal }
+      ]
     });
-
-    // Inject the guard
-    authGuard = TestBed.inject(AuthGuard);
+    guard = TestBed.inject(AuthGuard);
+    authService = TestBed.inject(AuthService);
+    modalService = TestBed.inject(NgbModal);
+    router = TestBed.inject(Router);
   });
 
-  it('should allow navigation if user is logged in', () => {
-    // Mock the return value of AuthService.isLoggedIn()
-    authServiceSpy.isLoggedIn.and.returnValue(true);
-
-    const route = {} as ActivatedRouteSnapshot;
-    const state = {} as RouterStateSnapshot;
-
-    // Call the guard's canActivate method
-    const result = authGuard.canActivate(route, state);
-
-    expect(result).toBeTrue();
-    expect(authServiceSpy.isLoggedIn).toHaveBeenCalled();
+  it('should be created', () => {
+    expect(guard).toBeTruthy();
   });
 
-  it('should block navigation and open login modal if user is not logged in', () => {
-    // Mock the return value of AuthService.isLoggedIn()
-    authServiceSpy.isLoggedIn.and.returnValue(false);
-
+  it('should allow navigation if user is not anonymous', () => {
+    spyOn(authService, 'isAnonymous').and.returnValue(false);
     const route = {} as ActivatedRouteSnapshot;
-    const state = { url: '/test-url' } as RouterStateSnapshot;
+    const state = { url: '/some-path' } as RouterStateSnapshot;
+    const canActivate = guard.canActivate(route, state);
+    expect(canActivate).toBe(true);
+  });
 
-    // Mock the modal's behavior
-    const mockModalRef = { componentInstance: {} };
-    modalServiceSpy.open.and.returnValue(mockModalRef as any);
-
-    // Call the guard's canActivate method
-    const result = authGuard.canActivate(route, state);
-
-    expect(result).toBeFalse();
-    expect(authServiceSpy.isLoggedIn).toHaveBeenCalled();
-    expect(modalServiceSpy.open).toHaveBeenCalledWith(
-      jasmine.any(Function), // Ensure it opens the login component
-      { centered: false }
-    );
-    // expect(mockModalRef.componentInstance.redirectUrl).toBe('/test-url');
+  it('should block navigation and open the login modal if user is anonymous', () => {
+    spyOn(authService, 'isAnonymous').and.returnValue(true);
+    spyOn(modalService, 'open').and.callThrough();
+    const route = {} as ActivatedRouteSnapshot;
+    const state = { url: '/some-path' } as RouterStateSnapshot;
+    const canActivate = guard.canActivate(route, state);
+    expect(canActivate).toBe(false);
+    expect(modalService.open).toHaveBeenCalledWith(LoginComponent, { centered: false });
+    const modalInstance = modalService.open(LoginComponent, { centered: false }).componentInstance;
   });
 });

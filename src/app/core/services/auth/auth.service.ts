@@ -23,30 +23,29 @@ export class AuthService {
     this.cookieService.set("userCountry", data.userCountry);
     this.cookieService.set("jsessionid", data.jsessionid);
   }
-
-
   login(username: string, password: any): void {
     const payload = { username, password };
     this.loginStatusSubject.next('pending');
-    this.apiService.userLogin(payload).subscribe((response) => {
-      if (response.ok) {
-        this.authStatus.emit("LogOut");
-        this.manageCookiesStorage(JSON.parse(response.body));
-        this.loginStatusSubject.next('success');
-      }
-      else {
-        this.loginStatusSubject.next('failed');
-      }
-    },
-      (err: any) => {
+
+    this.apiService.userLogin(payload).subscribe({
+      next: (response) => {
+        if (response.ok) {
+          this.authStatus.emit("LogOut");
+          this.manageCookiesStorage(JSON.parse(response.body));
+          this.loginStatusSubject.next('success');
+        } else {
+          this.loginStatusSubject.next('failed');
+        }
+      },
+      error: (err: any) => {
         this.loginError = JSON.parse(err.error).message;
         this.loginStatusSubject.next('failed');
-      })
+      }
+    });
   }
-
   public isAnonymous(): boolean {
     const paris_user_id = this.cookieService.get('paris_user_id');
-    return paris_user_id ? true : false;
+    return paris_user_id ? false : true;
   }
   public getLoginErrorMessage(): string {
     return this.loginError;
