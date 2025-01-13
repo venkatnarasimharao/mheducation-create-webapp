@@ -7,9 +7,10 @@
 <div class="modal-body">
     <form name="form" #f="ngForm" (ngSubmit)="f.form.valid && onSubmit(f)" novalidate>
         <div class="form-group mb-3">
-            <label for="form.username" class="form-label">Username</label>
-            <input type="text" class="form-control fs-3" autocomplete="off" name="username" [(ngModel)]="form.username"
-                required #username="ngModel" [ngClass]="{ 'is-invalid': f.submitted && username.errors }" />
+            <label for="username" class="form-label">Username</label>
+            <input id="username" type="text" class="form-control fs-3" autocomplete="off" name="username"
+                [(ngModel)]="form.username" required #username="ngModel"
+                [ngClass]="{ 'is-invalid': f.submitted && username.errors }" aria-label="Username" />
             <div *ngIf="f.submitted && username.errors" class="invalid-feedback">
                 @if(username.errors['required']){
                 <div>Username is required</div>
@@ -17,11 +18,11 @@
             </div>
         </div>
         <div class="form-group mb-3">
-            <label for="form.password" class="form-label">Password</label>
+            <label for="password" class="form-label">Password</label>
             <div class="d-flex form-control align-items-center justify-content-between"
                 [ngClass]="{ 'is-invalid': f.submitted && password.errors }">
-                <input type="{{passwordFieldType}}" class=" no-focus-outline border-0 fs-3 w-100" name="password"
-                    [(ngModel)]="form.password" required #password="ngModel" />
+                <input id="password" type="{{passwordFieldType}}" class=" no-focus-outline border-0 fs-3 w-100"
+                    name="password" [(ngModel)]="form.password" required #password="ngModel" aria-label="Password" />
                 <button type="button" class="bg-transparent border-0" (click)="togglePasswordVisibility()"
                     aria-label="Toggle password visibility">
                     <i class="bi" [ngClass]="passwordFieldType === 'password' ? 'bi-eye' : 'bi-eye-slash'"></i>
