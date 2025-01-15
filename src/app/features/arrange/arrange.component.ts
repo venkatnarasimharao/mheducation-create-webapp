@@ -263,36 +263,6 @@ export class ArrangeComponent {
     return globalIndex === allItems.length - 1;
   }
 
-  moveItemUp(sectionIndex: number, itemIndex: number): void {
-    const section = this.sections[sectionIndex];
-    if (itemIndex > 0) {
-      [section.items[itemIndex - 1], section.items[itemIndex]] = [
-        section.items[itemIndex],
-        section.items[itemIndex - 1],
-      ];
-    } else if (sectionIndex > 0) {
-      const previousSection = this.sections[sectionIndex - 1];
-      const itemToMove = section.items[itemIndex];
-      section.items.splice(itemIndex, 1);
-      previousSection.items.push(itemToMove);
-    }
-  }
-
-  moveItemDown(sectionIndex: number, itemIndex: number): void {
-    const section = this.sections[sectionIndex];
-    if (itemIndex < section.items.length - 1) {
-      [section.items[itemIndex + 1], section.items[itemIndex]] = [
-        section.items[itemIndex],
-        section.items[itemIndex + 1],
-      ];
-    } else if (sectionIndex < this.sections.length - 1) {
-      const nextSection = this.sections[sectionIndex + 1];
-      const itemToMove = section.items[itemIndex];
-      section.items.splice(itemIndex, 1);
-      nextSection.items.unshift(itemToMove);
-    }
-  }
-
   getGlobalIndex(sectionIndex: number, itemIndex: number): number {
     const priorItemsCount = this.sections
       .slice(0, sectionIndex)

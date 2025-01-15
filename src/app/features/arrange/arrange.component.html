@@ -8,11 +8,10 @@
                 <div>
                     <div class="d-flex flex-column flex-md-row mt-3">
                         <div class="d-flex flex-column align-items-start">
-                            <label for="select-project" class="fw-bold mb-1" >Select Project</label>
+                            <label for="select-project" class="fw-bold mb-1">Select Project</label>
                             <div ngbDropdown class="d-inline-block">
                                 <button type="button" ngbDropdownToggle noCaret id="select-project"
-                                    class="btn btn-outline-dark text-dark bg-transparent w-100"
-                                    aria-haspopup="true">
+                                    class="btn btn-outline-dark text-dark bg-transparent w-100" aria-haspopup="true">
                                     {{ selectProjectTitle }}
                                 </button>
                                 <div ngbDropdownMenu class="w-100" role="menu" aria-labelledby="select-project">
@@ -41,7 +40,8 @@
                 <!-- Upload and TOC -->
                 <div class="col-12 col-lg-8 mb-4">
                     <button class="btn btn-secondary me-2 mb-2" aria-label="Upload content">
-                        <i class="bi bi-cloud-upload-fill me-2"></i>Upload Content<i class="bi bi-chevron-down ms-2"></i>
+                        <i class="bi bi-cloud-upload-fill me-2"></i>Upload Content<i
+                            class="bi bi-chevron-down ms-2"></i>
                     </button>
                     <button class="btn btn-secondary mb-2" aria-label="Download Table of Contents">
                         Download TOC
@@ -53,8 +53,7 @@
                     </h6>
                     <ul class="list-unstyled d-flex flex-wrap align-items-center gap-3 mt-2" aria-labelledby="toc-help">
                         <li class="dropdown position-relative">
-                            <button class="btn btn-link text-secondary dropdown-toggle" aria-disabled="true"
-                                disabled>
+                            <button class="btn btn-link text-secondary dropdown-toggle" aria-disabled="true" disabled>
                                 Move to
                             </button>
                         </li>
@@ -80,8 +79,7 @@
                         <!-- Delete -->
                         <li>
                             <button class="btn btn-link text-secondary" [disabled]="!isAnyCheckboxSelected"
-                                [attr.aria-disabled]="!isAnyCheckboxSelected"
-                                (click)="deleteSelectedItems()">
+                                [attr.aria-disabled]="!isAnyCheckboxSelected" (click)="deleteSelectedItems()">
                                 <i class="bi bi-trash"></i> Delete
                             </button>
                         </li>
@@ -113,15 +111,18 @@
                     [hidden]="section.title === 'Supplements' && (!section.items || section.items.length === 0)">
                     <h3 class="fw-bolder h4" id="{{ section.id }}-header">{{ section.title }}</h3>
                     <button type="button" class="btn btn-link p-0" (click)="toggleCollapse(section.id)"
-                        [attr.aria-expanded]="!isCollapsed[section.id]"
-                        [attr.aria-controls]="section.id + 'Table'" attr.aria-labelledby="{{ section.id }}-header">
+                        [attr.aria-expanded]="!isCollapsed[section.id]" [attr.aria-controls]="section.id + 'Table'"
+                        attr.aria-labelledby="{{ section.id }}-header"
+                        [attr.title]="isCollapsed[section.id] ? 'Expand section' : 'Collapse section'"
+                        [attr.aria-label]="isCollapsed[section.id] ? 'Expand section' : 'Collapse section'">
                         <i class="bi" [class.bi-chevron-down]="isCollapsed[section.id]"
-                            [class.bi-chevron-up]="!isCollapsed[section.id]"></i>
+                            [class.bi-chevron-up]="!isCollapsed[section.id]">
+                        </i>
                     </button>
                 </div>
-            
-                <div [id]="section.id + 'Table'" [ngbCollapse]="isCollapsed[section.id]"
-                    role="region" [attr.aria-labelledby]="section.id + '-header'">
+
+                <div [id]="section.id + 'Table'" [ngbCollapse]="isCollapsed[section.id]" role="region"
+                    [attr.aria-labelledby]="section.id + '-header'">
                     <div cdkDropList [id]="section.id" [cdkDropListData]="section.items"
                         [cdkDropListConnectedTo]="getConnectedDropLists()" (cdkDropListDropped)="drop($event)"
                         class="table-responsive">
@@ -129,54 +130,41 @@
                             <table class="table table-borderless mt-2">
                                 <thead class="table-bordered border-bottom">
                                     <tr>
-                                        <th scope="col" class="col-12 col-sm-5">
+                                        <th scope="col" class="col-12 col-sm-1">
                                             <input type="checkbox" class="form-check-input me-1"
                                                 [(ngModel)]="section.selectAllChecked"
                                                 (change)="toggleAllCheckboxes(section)"
                                                 attr.aria-label="Select all items in {{ section.title }}" />
-                                            <span class="d-none d-sm-inline">Product</span>
+
                                         </th>
-                                        <th scope="col" class="col-6 col-sm-2 d-none d-sm-table-cell">Format</th>
+                                        <th> <span class="d-none d-sm-inline">Product</span></th>
                                         <th scope="col" class="col-3 col-sm-1 d-none d-sm-table-cell">Pages</th>
                                         <th scope="col" class="col-3 col-sm-1">Price</th>
-                                        <th scope="col" class="col-12 col-sm-3 text-end text-sm-start">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @for (item of section.items; track item.name; let itemIndex = $index) {
                                     <tr cdkDrag role="row">
                                         <td class="text-break">
-                                            <input type="checkbox" class="form-check-input me-1"
-                                                [(ngModel)]="item.checked"
-                                                (change)="checkIfAllSelected(section)"
+                                            <input type="checkbox" class="form-check-input me-3"
+                                                [(ngModel)]="item.checked" (change)="checkIfAllSelected(section)"
                                                 attr.aria-label="Select {{ item.name }}" />
+
+                                            <span class="me-3"><i class="bi bi-plus-square"></i></span>
+                                            <span class=""><i class="bi bi-arrows-expand"></i></span>
+                                        
+
+                                        </td>
+                                        <td>
                                             <a href="#" class="text-decoration-none text-primary">{{ item.name }}</a>
-                                            <!-- Mobile-only information -->
+
+                                                <!-- Mobile-only information -->
                                             <div class="d-sm-none small text-muted mt-1">
                                                 {{ item.format }} • {{ item.pages }} pages
                                             </div>
                                         </td>
-                                        <td class="d-none d-sm-table-cell">{{ item.format }}</td>
                                         <td class="d-none d-sm-table-cell">{{ item.pages }}</td>
                                         <td>{{ item.price }}</td>
-                                        <td class="text-end text-sm-start">
-                                            <div class="btn-group btn-group-sm">
-                                                <button class="btn btn-outline-secondary"
-                                                    [disabled]="isFirstItem(sectionIndex, itemIndex)"
-                                                    (click)="moveItemUp(sectionIndex, itemIndex)"
-                                                    attr.aria-label="Move {{ item.name }} up">
-                                                    <i class="bi bi-arrow-up d-sm-none"></i>
-                                                    <span class="d-none d-sm-inline">↑ Up</span>
-                                                </button>
-                                                <button class="btn btn-outline-secondary"
-                                                    [disabled]="isLastItem(sectionIndex, itemIndex)"
-                                                    (click)="moveItemDown(sectionIndex, itemIndex)"
-                                                    attr.aria-label="Move {{ item.name }} down">
-                                                    <i class="bi bi-arrow-down d-sm-none"></i>
-                                                    <span class="d-none d-sm-inline">↓ Down</span>
-                                                </button>
-                                            </div>
-                                        </td>
                                     </tr>
                                     }
                                 </tbody>
