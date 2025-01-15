@@ -23,7 +23,7 @@
                 [ngClass]="{ 'is-invalid': f.submitted && password.errors }">
                 <input id="password" type="{{passwordFieldType}}" class=" no-focus-outline border-0 fs-3 w-100"
                     name="password" [(ngModel)]="form.password" required #password="ngModel" aria-label="Password" />
-                <button type="button" class="bg-transparent border-0" (click)="togglePasswordVisibility()"
+                <button type="button" class="bg-transparent border-0 p-0" (click)="togglePasswordVisibility()"
                     aria-label="Toggle password visibility">
                     <i class="bi" [ngClass]="passwordFieldType === 'password' ? 'bi-eye' : 'bi-eye-slash'"></i>
                 </button>

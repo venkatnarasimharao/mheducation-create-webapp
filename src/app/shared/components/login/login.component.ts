@@ -30,15 +30,14 @@ export class LoginComponent {
   ) { }
 
   onSubmit(f: NgForm) {
+    this.loaderActive = true;
     if (!f.valid) {
       return;
     }
     this.authService.login(this.form.username, this.form.password);
     this.authService.loginStatus$.subscribe((status) => {
 
-      if (status === 'pending') {
-        this.loaderActive = true;
-      } else if (status === 'success') {
+      if (status === 'success') {
         this.loaderActive = false;
         this.activeModal.close();
         this.router.navigate([this.redirectUrl]);
