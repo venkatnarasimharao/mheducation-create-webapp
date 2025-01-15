@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'hec-searchbar',
@@ -19,6 +21,8 @@ export class SearchbarComponent {
   }>();
 
   translate: TranslateService = inject(TranslateService);
+
+  constructor(private router: Router) {}
 
   searchCategories = [
     { label: 'SearchAll', checked: true, id: 'all',},
@@ -101,6 +105,9 @@ export class SearchbarComponent {
 
   // Emit search event
   onSearch() {
+    this.router.navigate(['/search-content']);
+
+
     let selectedCategories: string[];
 
     const searchAll = this.searchCategories.find((cat) => cat.id === 'all');
