@@ -15,9 +15,15 @@ app.use(bodyParser.raw({
 app.use(express.json({ limit: '12mb', parameterLimit: '12mb' }));
 app.use(express.urlencoded({ extended: false, limit: '12mb' }));
 
+const corsOptions = {
+    origin: 'http://localhost:8081',
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
+    credentials: true,
+};
 // Enable CORS
 app.use(cors());
-app.options('*', cors());
+app.options('*', cors(corsOptions));
 
 app.get('/', (req, res) => {
     console.log('In Default API');
@@ -44,7 +50,7 @@ app.all('/proxy/createonline/*', async (req, res) => {
             res.set('Content-Type', 'application/xml');
             res.send(response.data);
         } else if (req.method === 'GET') {
-            const response = await axios.get(externalApiUrl, (req.headers ? { headers: req.headers } : null));
+            const response = await axios.get(externalApiUrl, { headers: `Cookie:JSESSIONID_CRT=ZQ9pdA4rmP2wa86SfrarKWHHGlHrgTO6NWYDwPYyqYLXanl9LJWN!-1589815393` });
             res.set('Content-Type', 'application/xml');
             res.send(response.data);
         }
