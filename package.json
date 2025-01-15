@@ -4,10 +4,11 @@
   "scripts": {
     "ng": "ng",
     "start": "concurrently \"npm run start-server\" \"npm run start-ui\"",
+    "start:stage": "ng serve --configuration stage",
     "start-ui": "ng serve",
     "start-server": "cd mhe_server && npm run start",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development",
+    "watch": "ng build --watch --configuration dev",
     "test": "ng test --browsers=ChromeHeadless --watch=true --code-coverage",
     "test:coverage": "ng test --browsers=ChromeHeadless --watch=false --code-coverage"
   },

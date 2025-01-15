@@ -79,13 +79,13 @@ export class ApiService {
   }
 
   getProjectData(userId: string, projectId: string): Observable<any> {
-    const cookie = this.cookieService.get('JSESSIONID');
+    const cookie = this.cookieService.get('jsessionid');
     const headers = new HttpHeaders({
       'Cookie': `JSESSIONID_CRT=${cookie}`
     });
  
     return this.apiMethodService({
-      url: `/p/users/1000507376/projects/d5f69362-163a-9f6c-e9de-86a3002f7010;jsessionid=cvhQwGY7aVZIP01IWdaYyawOV6Q-RJ-EQjIYuQ9pO4EVAWFy8R8d^!-1589815393^!1736521573947`,
+      url: `/p/users/1000507376/projects/d5f69362-163a-9f6c-e9de-86a3002f7010`,
       options: { headers },
       method: 'GET',
       body: null
