@@ -3,8 +3,11 @@ import { HeaderComponent } from './header.component';
 import { provideRouter } from '@angular/router';
 import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
 import { MenuSidebarService } from '../../../core/services/menu-sidebar/menuSidebarService.service';
-import { Observable, of } from 'rxjs';
-import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { Observable, of, Subject } from 'rxjs';
+import { NgbDropdownModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { AuthService } from '../../../core/services/auth/auth.service';
+import { LoginComponent } from '../login/login.component';
 
 export class MockTranslateLoader implements TranslateLoader {
   getTranslation(lang: string): Observable<any> {
@@ -16,11 +19,25 @@ export class MockTranslateLoader implements TranslateLoader {
   }
 }
 
+class MockAuthService {
+  authStatus = new Subject<string>();
+  isAnonymous(): boolean {
+    return true;
+  }
+  logout() {
+    // Mock logout implementation
+  }
+}
+
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
+  let mockAuthService: MockAuthService;
+  let modalService: NgbModal;
 
   beforeEach(async () => {
+    mockAuthService = new MockAuthService();
+
     await TestBed.configureTestingModule({
       imports: [
         HeaderComponent,
@@ -36,14 +53,18 @@ describe('HeaderComponent', () => {
       ],
       providers: [
         provideRouter([]),
-        MenuSidebarService
+        MenuSidebarService,
+        provideHttpClientTesting(),
+        { provide: AuthService, useValue: mockAuthService }, // Mock AuthService
+        NgbModal,
       ]
-    })
-      .compileComponents();
+    }).compileComponents();
 
     const translate = TestBed.inject(TranslateService);
     translate.setDefaultLang('en_US');
     translate.use('en_US');
+
+    modalService = TestBed.inject(NgbModal);
 
     fixture = TestBed.createComponent(HeaderComponent);
     component = fixture.componentInstance;
@@ -62,4 +83,32 @@ describe('HeaderComponent', () => {
     expect(menuService.requestOpenMenu).toHaveBeenCalled();
   });
 
+  it('should set loggedInStatus to "LogOut" when user is not anonymous in ngOnInit', () => {
+    spyOn(mockAuthService, 'isAnonymous').and.returnValue(false);
+    mockAuthService.authStatus.next('LogOut');
+
+    component.ngOnInit();
+    expect(component.loggedInStatus).toBe('LogOut');
+  });
+
+  it('should set loggedInStatus to the emitted value from AuthService.authStatus', () => {
+    mockAuthService.authStatus.next('LogIn');
+    expect(component.loggedInStatus).toBe('LogIn');
+  });
+
+  it('should call AuthService.logout when loggedInStatus is "LogOut" and changeLoginStatus is called', () => {
+    spyOn(mockAuthService, 'logout');
+    component.loggedInStatus = 'LogOut';
+
+    component.changeLoginStatus();
+    expect(mockAuthService.logout).toHaveBeenCalled();
+  });
+
+  it('should open the login modal when loggedInStatus is not "LogOut" and changeLoginStatus is called', () => {
+    spyOn(modalService, 'open');
+    component.loggedInStatus = 'LogIn';
+
+    component.changeLoginStatus();
+    expect(modalService.open).toHaveBeenCalledWith(LoginComponent, { centered: false });
+  });
 });
