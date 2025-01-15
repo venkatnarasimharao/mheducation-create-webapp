@@ -3,7 +3,7 @@ export const USER_SEARCH_CONFIG = {
         "start": "1",
         "query": "",
         "textTypes": {
-            "textType": "all"
+            "textType": ""
         },
         "textNamespace": "",
         "textConstraints": {

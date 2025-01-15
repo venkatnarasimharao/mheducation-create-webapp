@@ -13,8 +13,8 @@ export class ApiService {
     private http: HttpClient,
   ) { }
 
-  getSearchListing() {
-    const finalPay = USER_SEARCH_CONFIG
+  getSearchListing(finalPayload: any) {
+    const finalPay = JSON.parse(JSON.stringify(finalPayload));
     let languages: any = sessionStorage.getItem('languages');
     if (languages) {
       languages = JSON.parse(languages);
@@ -24,7 +24,7 @@ export class ApiService {
         _selected: "false" // item.enabled._text === "true" ? "true" : 
       }))
     }
-    finalPay.search.textTypes.textType = 'all' // title | all | ["title","authors", "isbn", "description"];
+    // finalPay.search.textTypes.textType = '' // title | all | ["title","authors", "isbn", "description"];
     return this.apiMethodService({
       url: `/p/users/anonymous/search`,
       method: 'POST',

@@ -70,10 +70,22 @@
 
 
     <!-- filter accordion  -->
-     <div>
-       <div class="col-4 mt-5">
-        <hec-filter-accordion [collectionfilterData]="collectionfilter"></hec-filter-accordion>
-     </div>
+       <!-- Filter Accordion and Search Results Section -->
+    <div class="col-12 mt-5">
+      <div class="row">
+        <!-- Filter Accordion -->
+        <div class="col-md-3">
+          <hec-filter-accordion [collectionfilterData]="collectionfilter"></hec-filter-accordion>
+        </div>
+
+        <!-- Search Results -->
+        <div class="col-md-8">
+          <hec-search-results></hec-search-results>
+        </div>
+      </div>
+    </div>
+
+    
      
     <!-- Pagination Section -->
       <div class="d-flex flex-column vh-100">
@@ -82,7 +94,7 @@
           </hec-pagination>
         </div>
       </div>
-     </div>
+  
      
 
    

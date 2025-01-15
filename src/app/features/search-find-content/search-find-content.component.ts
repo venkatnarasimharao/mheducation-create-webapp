@@ -7,6 +7,7 @@ import { PaginationComponent } from '../../shared/components/pagination/paginati
 import { FilterAccordionComponent } from '../../shared/components/filter-accordion/filter-accordion.component';
 import { AccordionItem } from '../../shared/models/search.model';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { SearchResultsComponent } from '../../shared/components/search-results/search-results.component';
 
 
 @Component({
@@ -19,7 +20,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
     RouterModule,
     PaginationComponent,
     FilterAccordionComponent,
-    TranslateModule
+    TranslateModule,
+    SearchResultsComponent
   ],
   templateUrl: './search-find-content.component.html',
   styleUrl: './search-find-content.component.scss',
