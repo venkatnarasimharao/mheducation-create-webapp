@@ -1,0 +1,14 @@
+<ngb-alert *ngIf="alert" [type]="alert.type">
+    @if (alert.type === 'success') {
+    <i class="fas fa-check-circle"></i>
+    }
+    @if (alert.type === 'danger') {
+    <i class="fas fa-exclamation-circle"></i>
+    }
+    @if (alert.type === 'info') {
+    <i class="fas fa-info-circle"></i>
+    }
+    @if (alert.type === 'warning') {
+    <i class="fas fa-exclamation-triangle"></i>
+    }
+    {{ alert.message }}</ngb-alert>

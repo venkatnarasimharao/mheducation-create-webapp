@@ -39,7 +39,7 @@ describe('ApiService', () => {
 
   xit('should call userLogin and return response', () => {
     const mockResponse = { message: 'Login successful' };
-    service.userLogin({username:'', password:''}).subscribe(response => {
+    service.userLogin({ username: '', password: '' }).subscribe(response => {
       expect(response.body).toEqual(JSON.stringify(mockResponse));
     });
     const req = httpMock.expectOne(`${environment.apiUrl}/loginUser.do`);

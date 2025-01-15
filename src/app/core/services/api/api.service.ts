@@ -33,7 +33,7 @@ export class ApiService {
     })
   }
 
-  userLogin(payload: { username: string, password: string }) {
+  userLogin(payload: { username: string, password: string }): Observable<any> {
     const { username, password } = payload;
     const base64String = btoa(`${username}:${password}`);
     const headers = new HttpHeaders({
@@ -43,8 +43,14 @@ export class ApiService {
     return this.apiMethodService({
       url: '/createonline/loginUser.do',
       method: 'POST',
-      headers: headers,
+      options: { headers },
       body: null
+    });
+  }
+  userLogOut(paris_user_id: string) {
+    return this.apiMethodService({
+      url: `/users/${paris_user_id}/logout`,
+      method: 'GET',
     });
   }
 
