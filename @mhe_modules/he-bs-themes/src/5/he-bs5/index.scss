@@ -1,0 +1,14 @@
+// Import bootstrap scss in the consuming application after this file has been imported
+// More info: https://getbootstrap.com/docs/5.2/customize/overview/
+
+// Remember, order matters!
+@import "variables";
+@import "fonts";
+@import "headings";
+@import "forms";
+@import "button";
+@import "modal";
+@import "link";
+@import "tooltip";
+@import "toggle";
+@import "alert";
