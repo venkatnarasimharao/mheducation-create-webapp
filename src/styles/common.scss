@@ -8,3 +8,28 @@ a:focus,
 .hec-cursor-pointer {
     cursor: pointer;
 }
+
+.no-focus-outline:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.hec-loader-btn {
+    position: absolute;
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-top: 4px solid white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}

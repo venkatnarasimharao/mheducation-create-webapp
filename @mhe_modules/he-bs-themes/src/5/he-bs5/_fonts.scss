@@ -1,0 +1,67 @@
+// Proxima Nova
+$font-proxima-nova-url: 'https://dle-cdn.mheducation.com/mhe/fonts/proxima-nova/';
+$font-proxima-nova-extra-condensed: 'proxima_novacondensed';
+$font-proxima-nova-extra-condensed-url: 'https://dle-cdn.mheducation.com/mhe/fonts/proxima-nova-extra-condensed/';
+// Webfont: ProximaNova
+@font-face {
+  font-family: $font-proxima-nova;
+  font-style: normal;
+  font-weight: normal;
+  font-display: swap;
+  src: url('#{$font-proxima-nova-url}proxima-nova-regular.woff') format('woff'); // Pretty Modern Browsers
+}
+
+// Webfont: ProximaNova-LightIt
+@font-face {
+  font-family: $font-proxima-nova;
+  font-style: italic;
+  font-weight: 300;
+  font-display: swap;
+  src: url('#{$font-proxima-nova-url}proxima-nova-light-it.woff') format('woff'); // Pretty Modern Browsers
+}
+
+// Webfont: ProximaNova-Light
+@font-face {
+  font-family: $font-proxima-nova;
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('#{$font-proxima-nova-url}proxima-nova-light.woff') format('woff'); // Pretty Modern Browsers
+}
+
+// Webfont: ProximaNova-Semibold
+@font-face {
+  font-family: $font-proxima-nova;
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('#{$font-proxima-nova-url}proxima-nova-semibold.woff') format('woff'); // Pretty Modern Browsers
+}
+
+// Webfont: ProximaNova-BoldIt
+@font-face {
+  font-family: $font-proxima-nova;
+  font-style: italic;
+  font-weight: bold;
+  font-display: swap;
+  src: url('#{$font-proxima-nova-url}proxima-nova-bold-it.woff') format('woff'); // Pretty Modern Browsers
+}
+
+// Webfont: ProximaNova-Bold
+@font-face {
+  font-family: 'proxima_novaregular_bold';
+  font-style: normal;
+  font-weight: bold;
+  font-display: swap;
+  src: url('#{$font-proxima-nova-url}proxima-nova-bold.woff') format('woff'); // Pretty Modern Browsers
+}
+
+// Webfont: ProximaNova-Extra-Condensed-Regular
+@font-face {
+  font-family: $font-proxima-nova-extra-condensed;
+  font-style: normal;
+  font-weight: normal;
+  font-display: swap;
+  src: url('#{$font-proxima-nova-extra-condensed-url}proxima-nova-extra-condensed-regular.woff')
+  format('woff');
+}

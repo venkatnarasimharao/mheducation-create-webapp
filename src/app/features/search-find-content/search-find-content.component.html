@@ -2,8 +2,9 @@
   <div class="row">
     <div class="col-12 border-0 border-bottom pb-3 my-2">
 
-      <div  class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-2"
-       >
+
+
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-2">
         <div class="d-flex flex-column align-items-start">
           <span class="fw-bold mb-1">{{ selectProjectHeading | translate}}</span>
           <div ngbDropdown class="d-inline-block" aria-labelledby="select-project-heading">
@@ -22,11 +23,11 @@
                 {{ item.name | translate}}
               </button>
               }
-           
+
             </div>
           </div>
         </div>
-    
+
         <div class="d-flex gap-1 mt-2 mt-md-0 flex-wrap justify-content-center">
           <div class="d-flex flex-column align-items-start me-3">
             <span class="fw-bold mb-1">{{ selectFormatHeading | translate}}</span>
@@ -48,7 +49,7 @@
               </div>
             </div>
           </div>
-    
+
           <!-- Arrange Button -->
           <div class="d-flex flex-column align-items-start">
             <span class="fw-bold mb-1">{{ selectArrangeTitle | translate}}</span>
@@ -59,8 +60,8 @@
           </div>
         </div>
       </div>
-     
-     
+
+
     </div>
 
     <!-- Breadcrumb Section -->
@@ -99,5 +100,12 @@
 
    
     
+
+    <div class="col-12 col-md-4 col-sm-6">
+      @if(collectionDetails){
+      <h4 class="fw-bold">Showing Results for {{ collectionDetails.name }} Collection</h4>
+      <hec-image-card [cardData]="collectionDetails"></hec-image-card>
+      }
+    </div>
   </div>
 </div>

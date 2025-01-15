@@ -33,19 +33,34 @@ export class ApiService {
     })
   }
 
-  userLogin() {
+  userLogin(payload: { username: string, password: string }): Observable<any> {
+    const { username, password } = payload;
+    const base64String = btoa(`${username}:${password}`);
+    const headers = new HttpHeaders({
+      'Authorization': `Basic ${base64String}`,
+      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+    });
     return this.apiMethodService({
-      url: '/loginUser.do', method: 'POST', headers: {
-        headers: new HttpHeaders({
-          'Authorization': 'Basic S2FydGhpa2luczFAbWhlcWEuY29tOlB3ZEAxMjM0',
-        })
-      }
+      url: '/createonline/loginUser.do',
+      method: 'POST',
+      options: { headers },
+      body: null
+    });
+  }
+  userLogOut(paris_user_id: string) {
+    return this.apiMethodService({
+      url: `/users/${paris_user_id}/logout`,
+      method: 'GET',
     });
   }
 
 
-  getCollectionsList() {
+  getCollectionsFilterList() {
     return this.apiMethodService({ url: '/p/collectionsfilter', method: 'GET' })
+  }
+
+  getCollectionsList() {
+    return this.apiMethodService({ url: '/p/sites/create.mheducation.com/80/createonline?nocacheTimestamp=1734610727137&taxonomyfacets=true&locale=en_US', method: 'GET' })
   }
 
   getTaxonomyfacetsList() {

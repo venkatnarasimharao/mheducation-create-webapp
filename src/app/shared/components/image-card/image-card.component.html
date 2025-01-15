@@ -1,0 +1,11 @@
+<div>
+  <a class="d-block text-decoration-none border" href="javascript:void(0)" (click)="viewDetails()">
+    <img alt="Cards" class="w-100 d-flex justify-content-center align-items-center" [src]="cardData.image"
+      [alt]="cardData.name" />
+    @if(cardData.name){
+      <div>
+        <h6 class="mt-2 text-center text-dark">{{ cardData.name | translate }}</h6>
+      </div>
+    }
+  </a>
+</div>
