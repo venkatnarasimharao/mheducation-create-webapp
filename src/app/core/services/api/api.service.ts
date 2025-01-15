@@ -8,6 +8,9 @@ import { environment } from '../../../../environments/environment';
   providedIn: 'root'
 })
 export class ApiService {
+  subscribe(arg0: () => void) {
+    throw new Error('Method not implemented.');
+  }
 
   constructor(
     private http: HttpClient,
@@ -74,6 +77,40 @@ export class ApiService {
   getLanguagePropsList() {
     const languageCode = 'en_US'
     return this.apiMethodService({ url: `/locale/${languageCode}/props.json`, method: 'GET' });
+  }
+
+  getBookDetails() {
+    const assetId = "9b0c36ca-a185-3030-9604-78a96198afee";
+    const url = `/p/assets/${assetId}`;
+    const params = {
+      type: "metadata",
+      recursive: true,
+      getrootancestor: true,
+      relationships: true,
+      supplements: false,
+      nocacheTimestamp: Date.now(),
+    };
+    return this.apiMethodService({
+      url,
+      method: "GET_PARMS",
+      params,
+    });
+
+  }
+  getBookPageView() {
+    // https://createqa.mheducation.com/createonline/users/1000507376/preview/321660fb-ec46-32a6-8e05-f088b0331fb4/1?nocacheTimestamp=1736928511658
+    const userId = "1000507376";  // Example user ID
+    const assetId = "321660fb-ec46-32a6-8e05-f088b0331fb4";
+    const pageNumber = 1;
+    const url = `/users/${userId}/preview/${assetId}/${pageNumber}`;
+    const params = {
+      nocacheTimestamp: Date.now(),
+    };
+    return this.apiMethodService({
+      url,
+      method: "GET_PARMS",
+      params,
+    });
   }
 
   apiMethodService<T>({ url, method, body, params = {}, options = {} }: any): Observable<any> {

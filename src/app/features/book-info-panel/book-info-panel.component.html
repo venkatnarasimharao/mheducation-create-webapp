@@ -1,0 +1,112 @@
+<!-- <div class="d-flex">
+    <div><img src={{bookImage}} /></div>
+    <div>
+        <div>{{bookTitle}}</div>
+        <div>{{content}}</div>
+    </div>
+</div>
+<button (click)="handleSign()" class="text-light bg-primary">Sign In to Add</button> -->
+
+
+<div class="card mx-auto mt-4 border-0" style="max-width: 600px;">
+    <div class="row g-0">
+        <!-- Book Image -->
+        <div class="col-md-4 d-flex align-items-center">
+            <img [src]="bookImage" alt="Book Image" class="img-fluid rounded-start" />
+        </div>
+        <!-- Book Details -->
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">{{ bookTitle }}</h5>
+                <p class="card-text">{{ content }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sign In Button -->
+<div class="text-center mt-3">
+    <button (click)="handleSign()" class="btn btn-primary">
+        Sign In to Add
+    </button>
+</div>
+
+<div class="container mt-4">
+    <!-- Tabs Navigation -->
+    <ul class="nav nav-tabs justify-content-between bg-primary text-white p-1 rounded">
+        <li class="nav-item">
+            <button class="nav-link active bg-white text-dark fw-bold" data-bs-toggle="tab" data-bs-target="#contents"
+                type="button" role="tab" aria-controls="contents" aria-selected="true">
+                Contents
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link text-white" data-bs-toggle="tab" data-bs-target="#details" type="button" role="tab"
+                aria-controls="details" aria-selected="false">
+                Details
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link text-white" data-bs-toggle="tab" data-bs-target="#search" type="button" role="tab"
+                aria-controls="search" aria-selected="false">
+                Search
+            </button>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content border rounded-bottom">
+        <!-- Contents Tab -->
+        <div class="tab-pane fade show active" id="contents" role="tabpanel" aria-labelledby="contents-tab">
+            <ul class="list-group list-group-flush">
+                <!-- Front Matter -->
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>Front Matter</span>
+                    <i class="bi bi-chevron-right"></i>
+                </li>
+                <!-- Back Matter -->
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>Back Matter</span>
+                    <i class="bi bi-chevron-down"></i>
+                </li>
+                <!-- Appendices -->
+                <li class="list-group-item d-flex justify-content-between">
+                    Appendix A: Significant Figures and Rounding
+                    <span class="badge bg-secondary">2pp</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    Appendix B: Making Graphs
+                    <span class="badge bg-secondary">2pp</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    Appendix C: Simple Statistics
+                    <span class="badge bg-secondary">6pp</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    Appendix D: Writing Reports and Scientific Papers
+                    <span class="badge bg-secondary">4pp</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    Photo Credits
+                    <span class="badge bg-secondary">2pp</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    Endpapers
+                    <span class="badge bg-secondary">2pp</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Details Tab -->
+        <div class="tab-pane fade show active" id="details" role="tabpanel" aria-labelledby="details-tab">
+            <div class="p-3">Details content goes here.</div>
+        </div>
+
+        <!-- Search Tab -->
+        <div class="tab-pane fade" id="search" role="tabpanel" aria-labelledby="search-tab">
+            <div class="p-3">
+                <input type="text" class="form-control" placeholder="Search here..." />
+            </div>
+        </div>
+    </div>
+</div>

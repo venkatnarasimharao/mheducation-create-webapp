@@ -1,9 +1,6 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-12 border-0 border-bottom pb-3 my-2">
-
-
-
       <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-2">
         <div class="d-flex flex-column align-items-start">
           <span class="fw-bold mb-1">{{ selectProjectHeading }}</span>
@@ -54,8 +51,6 @@
           </div>
         </div>
       </div>
-
-
     </div>
 
     <!-- Breadcrumb Section -->
@@ -63,7 +58,7 @@
       <hec-breadcrumb></hec-breadcrumb>
     </div>
 
-
+    <button [routerLink]="['/preview']">open book preview</button>
 
     <div class="col-12 col-md-4 col-sm-6">
       @if(collectionDetails){
