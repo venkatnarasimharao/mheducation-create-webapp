@@ -11,7 +11,6 @@ class MockRouter {
 
 class MockApiService {
     userLogin = jasmine.createSpy('userLogin').and.returnValue(of({ ok: true, body: '{"paris_user_id": "123", "user_email": "test@example.com", "profile": {"userCountry": "US" }, "jsessionid": "abc123"}' }));
-    // userLogin = jasmine.createSpy('userLogin').and.returnValue(of({ ok: true, body: '{"paris_user_id": "123", "user_email": "test@example.com", "jsessionid": "abc123", "profile": {"userCountry": "US", "roles": "user", firstName: "kar", "lastName": "nan"}}' }));
     userLogOut = jasmine.createSpy('userLogOut').and.returnValue(of({}));
 }
 
