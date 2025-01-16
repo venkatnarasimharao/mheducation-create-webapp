@@ -18,10 +18,14 @@ export class AuthService {
     private cookieService: CookieService
   ) { }
   manageCookiesStorage(data: any) {
+    const { profile } = data
     this.cookieService.set("paris_user_id", data.paris_user_id);
     this.cookieService.set("user_email", data.user_email);
-    this.cookieService.set("userCountry", data.userCountry);
     this.cookieService.set("jsessionid", data.jsessionid);
+    this.cookieService.set("userCountry", profile.userCountry);
+    this.cookieService.set("userRoles", profile.roles);
+    this.cookieService.set("userFirstName", profile.firstName);
+    this.cookieService.set("userLastName", profile.lastName);
   }
   login(username: string, password: any): void {
     const payload = { username, password };

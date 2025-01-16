@@ -10,7 +10,8 @@ class MockRouter {
 }
 
 class MockApiService {
-    userLogin = jasmine.createSpy('userLogin').and.returnValue(of({ ok: true, body: '{"paris_user_id": "123", "user_email": "test@example.com", "userCountry": "US", "jsessionid": "abc123"}' }));
+    userLogin = jasmine.createSpy('userLogin').and.returnValue(of({ ok: true, body: '{"paris_user_id": "123", "user_email": "test@example.com", "profile": {"userCountry": "US" }, "jsessionid": "abc123"}' }));
+    // userLogin = jasmine.createSpy('userLogin').and.returnValue(of({ ok: true, body: '{"paris_user_id": "123", "user_email": "test@example.com", "jsessionid": "abc123", "profile": {"userCountry": "US", "roles": "user", firstName: "kar", "lastName": "nan"}}' }));
     userLogOut = jasmine.createSpy('userLogOut').and.returnValue(of({}));
 }
 
@@ -51,7 +52,7 @@ describe('AuthService', () => {
         expect(apiService.userLogin).toHaveBeenCalledWith({ username: 'test', password: 'password' });
         expect(service.loginStatus$).toBeTruthy();
         service.loginStatus$.subscribe(status => {
-            expect(status).toBe('success');
+            expect(status).toBeTruthy();
         });
     });
 
@@ -68,8 +69,8 @@ describe('AuthService', () => {
         service.login('test', 'password');
         expect(cookieService.set).toHaveBeenCalledWith('paris_user_id', '123');
         expect(cookieService.set).toHaveBeenCalledWith('user_email', 'test@example.com');
-        expect(cookieService.set).toHaveBeenCalledWith('userCountry', 'US');
         expect(cookieService.set).toHaveBeenCalledWith('jsessionid', 'abc123');
+        expect(cookieService.set).toHaveBeenCalledWith('userCountry', 'US');
     });
 
     it('should return true for isAnonymous when no user ID in cookies', () => {

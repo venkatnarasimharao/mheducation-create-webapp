@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { LoginComponent } from '../shared/components/login/login.component';
-import { AuthService } from '../core/services/auth/auth.service';
+import { LoginComponent } from '../../shared/components/login/login.component';
+import { AuthService } from '../services/auth/auth.service';
 
 @Injectable({
   providedIn: 'root',
