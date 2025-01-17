@@ -58,7 +58,7 @@
       <hec-breadcrumb></hec-breadcrumb>
     </div>
 
-    <button [routerLink]="['/preview']">open book preview</button>
+    <button (click)="openBookDetails()">open book preview</button>
 
     <div class="col-12 col-md-4 col-sm-6">
       @if(collectionDetails){

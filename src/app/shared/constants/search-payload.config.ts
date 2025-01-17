@@ -351,7 +351,17 @@ export const BOOK_COVER_IMAGES = {
         "display": "true"
     }
 }
-
+export const search_inside_config = {
+    "search": {
+        "token": "",
+        "guid": "",
+        "query": "",
+        "elements": [
+            "meta",
+            "content"
+        ]
+    }
+}
 
 export const COLLECTION_CODES = [
     { code: "mlp_logo_1", name: "MACNEIL LEHRER Production", image: "assets/images_wide/mlp_logo.png", category: "Media" },
@@ -390,6 +400,5 @@ export const COLLECTION_CODES = [
     { code: "US_HIS_8", name: "AMERICAN HISTORY", image: "assets/images_wide/SR_american_his_doc.png", category: "History" },
     { code: "DR_PUB_8", name: "DARDEN BUSINESS PUBLISHING", image: "assets/images_wide/SR_darden.png", category: "Business" },
     { code: "CS_COLL_8", name: "CASE CENTER COLLECTIONS", image: "assets/images_wide/SR_ecch.png", category: "Business" }
-  ];
-  
-  
+];
+

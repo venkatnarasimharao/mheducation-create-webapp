@@ -1,26 +1,47 @@
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { LoginComponent } from '../../shared/components/login/login.component';
 import { ApiService } from './../../core/services/api/api.service';
 import { AuthService } from './../../core/services/auth/auth.service';
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'hec-book-page-viewer',
   standalone: true,
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './book-page-viewer.component.html',
   styleUrl: './book-page-viewer.component.scss'
 })
 export class BookPageViewerComponent implements OnInit {
   isAnonymous: boolean = true;
-  bookData: any = {}; // Placeholder for book data
+  bookData: any = {};
+  pageNumber: number = 0;
+
   constructor(private AuthService: AuthService,
     private ApiService: ApiService,
+    private modalService: NgbModal
   ) { }
   ngOnInit(): void {
-    this.isAnonymous = this.AuthService.isAnonymous(); // Fetch user authentication status on initialization
-    this.fetchBookData(); // Abstracted API call into a method for reusability
+    this.isAnonymous = this.AuthService.isAnonymous();
+    // if (!this.isAnonymous) {
+    this.fetchBookPageView();
+    // }
+  }
+  handleSign() {
+    const modalRef = this.modalService.open(LoginComponent, { centered: false });
+    modalRef.result.then(() => {
+      this.isAnonymous = this.AuthService.isAnonymous();
+      console.log(this.isAnonymous);
+      // if (!this.isAnonymous) {
+      //   this.fetchBookPageView();
+      // }
+    });
+  }
+  setPageNumber() {
+
   }
 
-  private fetchBookData(): void {
+  private fetchBookPageView(): void {
     this.ApiService.getBookPageView().subscribe(
       (response: any) => {
         try {

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BOOK_COVER_IMAGES, USER_SEARCH_CONFIG } from '../../../shared/constants/search-payload.config';
 import { environment } from '../../../../environments/environment';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,7 @@ export class ApiService {
 
   constructor(
     private http: HttpClient,
+    private cookieService: CookieService
   ) { }
 
   getSearchListing() {
@@ -79,8 +81,8 @@ export class ApiService {
     return this.apiMethodService({ url: `/locale/${languageCode}/props.json`, method: 'GET' });
   }
 
-  getBookDetails() {
-    const assetId = "9b0c36ca-a185-3030-9604-78a96198afee";
+  getBookDetails(assetId: string) {
+    // const assetId = "99c9fd84-bc04-37a0-ab66-4a43927a421e";
     const url = `/p/assets/${assetId}`;
     const params = {
       type: "metadata",
@@ -100,17 +102,34 @@ export class ApiService {
   getBookPageView() {
     // https://createqa.mheducation.com/createonline/users/1000507376/preview/321660fb-ec46-32a6-8e05-f088b0331fb4/1?nocacheTimestamp=1736928511658
     const userId = "1000507376";  // Example user ID
-    const assetId = "321660fb-ec46-32a6-8e05-f088b0331fb4";
+    const assetId = "99c9fd84-bc04-37a0-ab66-4a43927a421e";
     const pageNumber = 1;
     const url = `/users/${userId}/preview/${assetId}/${pageNumber}`;
     const params = {
       nocacheTimestamp: Date.now(),
     };
+    const headers = new HttpHeaders({
+      // 'Cookie': `ERIGHTS= ${this.cookieService.get("ERIGHTS")}`,
+      'Cookie': `ERIGHTS= 10005073761737127231174f7187b8ce5794e19a26999a4858d9be8; JSESSIONID_CRT=cGx0xhLo70DBJ0fZln_rDf5pAt_NaEl74LpI_r6E2rDJRuIE68eL!-1589815393`
+    });
+    headers.keys().forEach(key => {
+      console.log("key", headers.get(key));
+    });
     return this.apiMethodService({
-      url,
+      url: "/users/1000507376/preview/8f206714-062a-3f5a-ac3c-dfdc76b337d0/5?nocacheTimestamp=1737130826332",
       method: "GET_PARMS",
       params,
+      Options: { headers }
     });
+  }
+  getSearchInsideList(payload: any) {
+    console.log(payload);
+    return this.apiMethodService({
+      url: `/p/users/anonymous/searchinside`,
+      method: 'POST',
+      body: payload,
+      options: { responseType: 'text' }
+    })
   }
 
   apiMethodService<T>({ url, method, body, params = {}, options = {} }: any): Observable<any> {

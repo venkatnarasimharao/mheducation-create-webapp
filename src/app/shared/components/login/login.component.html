@@ -8,9 +8,9 @@
     <form name="form" #f="ngForm" (ngSubmit)="f.form.valid && onSubmit(f)" novalidate>
         <div class="form-group mb-3">
             <label for="username" class="form-label">Username</label>
-            <input id="username" type="text" class="form-control fs-3" autocomplete="off" name="username"
-                [(ngModel)]="form.username" required #username="ngModel"
-                [ngClass]="{ 'is-invalid': f.submitted && username.errors }" aria-label="Username" />
+            <input id="username" type="text" class="form-control fs-3" name="username" [(ngModel)]="form.username"
+                required #username="ngModel" [ngClass]="{ 'is-invalid': f.submitted && username.errors }"
+                aria-label="Username" />
             <div *ngIf="f.submitted && username.errors" class="invalid-feedback">
                 @if(username.errors['required']){
                 <div>Username is required</div>

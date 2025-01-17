@@ -1,8 +1,28 @@
-<div class="container text-center align-items-center">
+<div class="container text-center align-items-center h-100">
     @if(isAnonymous){
-    <div>
+    <div class="container">
         <div>To read this content, you'll need to sign in first.</div>
-        <button>Sign In / Register Now</button>
+        <button (click)="handleSign()">Sign In / Register Now</button>
+    </div>
+    }
+    @if(!isAnonymous){
+    <div class="">
+        <div class="d-flex align-items-center justify-content-center">
+            <button class="border-0 bg-transparent"><i class="bi bi-caret-left-fill fs-1"></i></button>
+            <img alt="Book Image" class="img-fluid rounded" />
+
+            <button class="border-0 bg-transparent"><i class="bi bi-caret-right-fill fs-1"></i></button>
+        </div>
+        <form #searchForm="ngForm" (ngSubmit)="setPageNumber()">
+            <div class="p-2 d-flex justify-content-between">
+                <!-- Search input -->
+                <input type="number" class="form-control" placeholder="Enter Page Number" [(ngModel)]="pageNumber"
+                    name="pageNumber" minimum=0 required />
+
+                <!-- Search button -->
+                <button type="submit" class="btn btn-primary" [disabled]="!searchForm.valid">Go</button>
+            </div>
+        </form>
     </div>
     }
 

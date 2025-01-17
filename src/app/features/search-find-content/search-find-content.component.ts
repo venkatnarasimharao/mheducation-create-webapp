@@ -1,9 +1,10 @@
+import { ApiService } from './../../core/services/api/api.service';
 import { Component, OnInit } from '@angular/core';
 import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { NgbDropdownToggleNoCaretDirective } from '../../shared/directives/dropdown-toggle-css.directive';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { combineLatest, map } from 'rxjs';
 import { ImageGalleryService } from '../../core/services/image-gallery/image-gallery.service';
 import { TranslateModule } from '@ngx-translate/core';
@@ -30,7 +31,7 @@ export class SearchFindContentComponent implements OnInit {
   selectProjectTitle: string = 'Test123';
   selectFormatTitle: string = 'Please Select';
   selectArrangeTitle: string = 'Arrange';
-  collectionDetails: SearchCollectionInterface| null = null;
+  collectionDetails: SearchCollectionInterface | null = null;
   //dropdown items
   selectProjectItems: any[] = [
     { id: 1, name: 'Project 1' },
@@ -49,7 +50,10 @@ export class SearchFindContentComponent implements OnInit {
   selectFormatHeading: string = 'Select Format';
   arrangeHeading: string = '86 pgs / $12.46 est';
 
-  constructor(private route: ActivatedRoute, private readonly imageService: ImageGalleryService) {}
+  constructor(private route: ActivatedRoute, private readonly imageService: ImageGalleryService,
+    private ApiService: ApiService,
+    private router: Router,
+  ) { }
 
   ngOnInit(): void {
     combineLatest([this.route.params, this.route.queryParams])
@@ -58,20 +62,23 @@ export class SearchFindContentComponent implements OnInit {
       )
       .subscribe((results: any) => {
         const queryparam = results.query;
-        
-   
+
+
         if (queryparam.collectionCode) {
-           this.collectionDetails =  this.imageService.getImageByCode(queryparam.collectionCode);
+          this.collectionDetails = this.imageService.getImageByCode(queryparam.collectionCode);
         }
       });
   }
-  
-  
+
+
   onSelect(item: { id: number; name: string }) {
     this.selectProjectTitle = item.name;
   }
 
   onSelected(item: { id: number; name: string }) {
     this.selectFormatTitle = item.name;
+  }
+  openBookDetails() {
+    this.router.navigate(['/preview'], { queryParams: { guid: "99c9fd84-bc04-37a0-ab66-4a43927a421e" } });
   }
 }
