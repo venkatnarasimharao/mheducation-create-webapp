@@ -47,11 +47,11 @@ export class BookPageViewerComponent implements OnInit {
     this.ApiService.getBookPageView().subscribe(
       (response: any) => {
         console.log(response, 'getBookPageView');
-        if (response.type === 'image/jpeg' || response.type === 'image/png') {
-          const blobUrl = URL.createObjectURL(response);
+        if (response.body?.type === 'image/jpeg' || response.body?.type === 'image/png') {
+          const blobUrl = URL.createObjectURL(response.body);
           this.imageUrl = blobUrl;
         } else {
-          console.error('Invalid image type:', response?.type);
+          console.error('Invalid image type:', response.body?.type);
         }
       },
       (error: any) => {

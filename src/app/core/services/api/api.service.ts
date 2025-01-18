@@ -100,25 +100,17 @@ export class ApiService {
 
   }
   getBookPageView() {
-    // https://createqa.mheducation.com/createonline/users/1000507376/preview/321660fb-ec46-32a6-8e05-f088b0331fb4/1?nocacheTimestamp=1736928511658
     const userId = "1000507376";  // Example user ID
     const assetId = "99c9fd84-bc04-37a0-ab66-4a43927a421e";
     const pageNumber = 1;
     const url = `/users/${userId}/preview/${assetId}/${pageNumber}`;
-    // const headers = new HttpHeaders({
-    //   'jcookie': `JSESSIONID_CRT=-Sd6Dcvp7pmYbQ7LMppVramnav-Lx2PkO6HlrcXJ4GpxrEZz4uwS!-1589815393`,
-    //   'X-Response-Type': 'arraybuffer',
-    // });
+    const headers = new HttpHeaders({
+      'jcookie': `JSESSIONID_CRT=-Sd6Dcvp7pmYbQ7LMppVramnav-Lx2PkO6HlrcXJ4GpxrEZz4uwS!-1589815393`,
+      'X-Response-Type': 'arraybuffer',
+    });
     const params = {
       nocacheTimestamp: Date.now(),
     };
-    const headers = new HttpHeaders({
-      // 'Cookie': `ERIGHTS= ${this.cookieService.get("ERIGHTS")}`,
-      'Cookie': `ERIGHTS= 10005073761737127231174f7187b8ce5794e19a26999a4858d9be8; JSESSIONID_CRT=cGx0xhLo70DBJ0fZln_rDf5pAt_NaEl74LpI_r6E2rDJRuIE68eL!-1589815393`
-    });
-    headers.keys().forEach(key => {
-      console.log("key", headers.get(key));
-    });
     return this.apiMethodService({
       url,
       method: "GET_IMAGE",
@@ -151,7 +143,7 @@ export class ApiService {
       case 'GET_PARMS':
         return this.http.get(url, { params: params, ...options });
       case 'GET_IMAGE':
-        return this.http.get(url, { responseType: 'blob', ...options });
+        return this.http.get(url, { params: params, responseType: 'blob', ...options });
       case 'PUT':
         return this.http.put(url, body, options);
       case 'PUT_PARAMS':
