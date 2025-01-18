@@ -8,7 +8,7 @@ import { NgbAccordionModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { BookPageViewerComponent } from '../book-page-viewer/book-page-viewer.component';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { map } from 'rxjs/operators';
 @Component({
   selector: 'hec-book-info-panel',
   standalone: true,
@@ -30,6 +30,8 @@ export class BookInfoPanelComponent implements OnInit {
   bookDataLoader: boolean = false;
   isFav: boolean = false;
   isDataFetched: boolean = false;
+  bookInsideData: any = [];
+  expanded: { [key: number]: boolean } = {};
 
   constructor(private apiService: ApiService,
     private modalService: NgbModal,
@@ -66,22 +68,23 @@ export class BookInfoPanelComponent implements OnInit {
     );
   }
   setBookCardData() {
-    this.bookTitle = this.bookData.title;
-    this.bookSummary = "@ " + this.bookData.year + " | " + this.bookData.authors + " | " + this.bookData.source;
-    this.bookImage = `https://createqa.mheducation.com/covers/${this.bookData.coreIsbn}.jpeg`;
+    this.bookTitle = this.bookData?.title;
+    this.bookSummary = "@ " + this.bookData?.year + " | " + this.bookData?.authors + " | " + this.bookData?.source;
+    this.bookImage = `https://createqa.mheducation.com/covers/${this.bookData.isbn}.jpeg`;
   }
 
   groupTocList(items: any): void {
-
+    let previousPart = "";
     items.forEach((item: any) => {
 
-      if (item.title === "Front Matter" || item.title === "Back Matter" || item.pagecount === "0") {
-        if (!this.tocList[item.title]) {
-          this.tocList[item.title] = [];
+      if (item.type === "Part") {
+        previousPart = item.title;
+        if (!this.tocList[previousPart]) {
+          this.tocList[previousPart] = [];
         }
         const results = Array.isArray(item?.toc?.result) ? item.toc.result : [];
         if (!Array.isArray(item?.toc?.result)) {
-          this.tocList[item.title].push({
+          this.tocList[previousPart].push({
             title: item?.toc?.result?.title,
             pageCount: item?.toc?.result?.pagecount,
             originalNumber: item?.toc?.result?.originalnumber
@@ -91,16 +94,29 @@ export class BookInfoPanelComponent implements OnInit {
           const filteredResults = results.map((tocItem: any) => ({
             title: tocItem?.title,
             pageCount: tocItem?.pagecount,
+            orignalNumber: tocItem.originalnumber
           }));
           console.log(filteredResults);
-          this.tocList[item.title].push(...filteredResults);
+          this.tocList[previousPart].push(...filteredResults);
         }
       }
       else {
-        this.tocList["Front Matter"].push({ title: item.title, pageCount: item.pagecount, originalNumber: item.originalnumber });
+
+        if (previousPart != "") {
+          this.tocList[previousPart].push({ title: item.title, pageCount: item.pagecount, originalNumber: item.originalnumber });
+        }
+        else {
+          console.log("filteredResults");
+          // if (!this.tocList["individual"]) {
+          //   this.tocList["individual"] = [];
+          // }
+          this.tocList["individual"].push({ title: item.title, pageCount: item.pagecount, originalNumber: item.originalnumber });
+        }
+
       }
 
     });
+    console.log(this.tocList);
   }
 
   handleSign() {
@@ -127,20 +143,59 @@ export class BookInfoPanelComponent implements OnInit {
   isActive(tab: string): boolean {
     return this.currentTab === tab;
   }
-  handleSearchInside(): void {
+  handleSearchInside(token: number): void {
     const payload = JSON.parse(JSON.stringify(search_inside_config));
     payload.search.query = this.searchInsideQuery;
-    payload.search.token = "1";
+    payload.search.token = token;
     payload.search.guid = "99c9fd84-bc04-37a0-ab66-4a43927a421e";
-    this.apiService.getSearchInsideList(payload).subscribe(
-      (response: any) => {
-        this.bookData = JSON.parse(response.body).result;
-        console.log('Book inside data fetched successfully:', this.bookData);
-      },
-      (error: any) => {
-        console.error('Error inside fetching book data:', error);
-      }
-    );
+
+
+    //   this.apiService.getSearchInsideList(payload)
+    //     .pipe(
+    //       map((response: any) => {
+    //         const parsedResponse = JSON.parse(response.body);
+    //         // Process the 'result' data here if needed
+    //         const formattedResult = parsedResponse.result.map((item: any) => {
+    //           if (item.content) {
+    //             console.log(item.content);
+    //             if (typeof item.content.para === 'string') {
+    //               // Handle plain strings
+    //               console.log(item.content.para)
+    //               return item;
+    //             } else if (item.content.para?.__text && item.content.para.match) {
+    //               // Replace \n with .match in bold
+    //               const boldMatch = Array.isArray(item.content.para.match) ? item.content.para.match[0] : item.content.para.match;
+    //               return item.content.para.__text.replace(/\n/g, ` <b>${boldMatch}</b> `);
+    //             } else if (item.content.para?.__text) {
+    //               // If only __text is present
+    //               return item.__text;
+    //             }
+    //             return '';
+    //           }
+    //         }).filter((line: string) => line.trim() !== ''); // Remove empty lines
+
+    //         return formattedResult;
+    //       })
+    //     )
+    //     .subscribe(
+    //       (bookInsideData: any) => {
+    //         this.bookInsideData = bookInsideData;
+    //         console.log('Book inside data fetched successfully:', this.bookInsideData);
+    //       },
+    //       (error: any) => {
+    //         console.error('Error inside fetching book data:', error);
+    //       }
+    //     );
+
+    // 
+    this.apiService.getSearchInsideList(payload).subscribe((res) => {
+      const parsedResponse = JSON.parse(res.body).result;
+      console.log(parsedResponse[0].meta)
+      parsedResponse.map((item: any) => {
+        this.bookInsideData.push({ title: item.meta.sub.title, desc: item.content });
+      })
+      console.log('Book inside data fetched successfully:', this.bookInsideData);
+    })
   }
   openRelatedBook(index: number) {
     this.isDataFetched = false;
@@ -151,6 +206,20 @@ export class BookInfoPanelComponent implements OnInit {
     this.isFav = !this.isFav;
   }
   setPageNumber() {
+
+  }
+  toggleExpand(index: number) {
+    this.expanded[index] = !this.expanded[index];
+  }
+  onScroll(event: any) {
+    console.log(event);
+    const element = event.target;
+    console.log(element);
+
+    // Check if the user scrolled to the bottom
+    if (element.scrollHeight - element.scrollTop === element.clientHeight) {
+      this.handleSearchInside(this.bookInsideData.length); // Fetch more data
+    }
 
   }
 }

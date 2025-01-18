@@ -1,15 +1,16 @@
-<div class="container text-center align-items-center h-100">
+<div class="text-center">
     @if(isAnonymous){
-    <div class="container">
+    <div class="">
         <div>To read this content, you'll need to sign in first.</div>
         <button (click)="handleSign()">Sign In / Register Now</button>
     </div>
     }
     @if(!isAnonymous){
     <div class="">
+
         <div class="d-flex align-items-center justify-content-center">
             <button class="border-0 bg-transparent"><i class="bi bi-caret-left-fill fs-1"></i></button>
-            <img alt="Book Image" class="img-fluid rounded" />
+            <img src={{bookData}} alt=" Book Image" class="img-fluid rounded" />
 
             <button class="border-0 bg-transparent"><i class="bi bi-caret-right-fill fs-1"></i></button>
         </div>

@@ -8,9 +8,6 @@ import { BehaviorSubject, catchError, Observable, of } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthService {
-  getBookPageView() {
-    throw new Error('Method not implemented.');
-  }
   authStatus = new EventEmitter<string>();
   private loginStatusSubject = new BehaviorSubject<'pending' | 'success' | 'failed'>('pending');
   loginStatus$ = this.loginStatusSubject.asObservable();

@@ -9,9 +9,6 @@ import { CookieService } from 'ngx-cookie-service';
   providedIn: 'root'
 })
 export class ApiService {
-  subscribe(arg0: () => void) {
-    throw new Error('Method not implemented.');
-  }
 
   constructor(
     private http: HttpClient,

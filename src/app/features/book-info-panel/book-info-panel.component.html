@@ -36,7 +36,7 @@
             </button>
             }
         </div>
-        <div class="container mt-4 border" style="height: 600px; overflow-y: auto;">
+        <div class="container mt-4 border-0">
             <ul class="nav nav-tabs justify-content-between bg-primary text-white p-1 rounded">
                 <li class="nav-item">
                     <button class="nav-link" [class.active]="isActive('contents')"
@@ -66,7 +66,7 @@
             <div class="tab-content rounded-bottom">
                 <!-- Contents Tab -->
                 @if(currentTab === 'contents'){
-                <div ngbAccordion #accordion="ngbAccordion">
+                <div class="scrollable-container" ngbAccordion #accordion="ngbAccordion">
                     <div *ngFor="let entry of tocList | keyvalue; let i = index" [ngbAccordionItem]="'panel-' + i">
                         <h2 ngbAccordionHeader>
                             <button ngbAccordionButton>{{ entry.key }}</button>
@@ -87,7 +87,7 @@
                 <hr />
                 }
                 @if(currentTab ==="details"){
-                <div class="mb-2" id="details" role="tabpanel" aria-labelledby="details-tab">
+                <div class="mb-2 scrollable-container" id="details" role="tabpanel" aria-labelledby="details-tab">
                     <h5>Abstract</h5>
                     <div class="p-1">{{bookDescription}}</div>
                     <hr />
@@ -104,8 +104,9 @@
                 </div>
                 }
                 @if(currentTab ==="search"){
-                <div class="" id="search" role="tabpanel" aria-labelledby="search-tab">
-                    <form #searchForm="ngForm" (ngSubmit)="handleSearchInside()">
+                <div class="scrollable-container" (scroll)="onScroll($event)" id="search" role="tabpanel"
+                    aria-labelledby="search-tab">
+                    <form #searchForm="ngForm" (ngSubmit)="handleSearchInside(1)">
                         <div class="p-2 d-flex justify-content-between">
                             <!-- Search input -->
                             <input type="text" class="form-control" placeholder="Search here..."
@@ -115,13 +116,39 @@
                             <button type="submit" class="btn btn-primary" [disabled]="!searchForm.valid">Go</button>
                         </div>
                     </form>
+                    @if(bookInsideData.length > 0){
                     <p>Result for {{searchInsideQuery}}</p>
+                    }
+
+                    <!-- @for(item of bookInsideData;track $index ){
+                    <h5>{{item.title}}</h5>
+                    <div>{{item.desc}}</div>
                     <hr />
+                    } -->
+
+                    <div *ngFor="let item of bookInsideData; let index = index;">
+                        <h5>{{ item.title }}</h5>
+                        <div>
+                            <span *ngIf="!expanded[index]">
+                                {{ item.desc | slice: 0:100 }}<span *ngIf="item.desc.length > 100">...</span>
+                            </span>
+                            <span *ngIf="expanded[index]">
+                                {{ item.desc }}
+                            </span>
+                            <button class="bg-transparent text-primary border-0" *ngIf="item.desc.length > 100"
+                                (click)="toggleExpand(index)">
+                                {{ expanded[index] ? 'Show Less' : 'Show More' }}
+                            </button>
+                        </div>
+                        <hr />
+                    </div>
+
+
                 </div>
                 }
             </div>
         </div>
     </div>
-    <hec-book-page-viewer class="book-page-viewer flex-grow-1"></hec-book-page-viewer>
+    <hec-book-page-viewer class="book-page-viewer flex-grow-1" style="height: 100%;;"></hec-book-page-viewer>
 </div>
 }

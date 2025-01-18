@@ -356,10 +356,7 @@ export const search_inside_config = {
         "token": "",
         "guid": "",
         "query": "",
-        "elements": [
-            "meta",
-            "content"
-        ]
+        "elements": "meta,content"
     }
 }
 

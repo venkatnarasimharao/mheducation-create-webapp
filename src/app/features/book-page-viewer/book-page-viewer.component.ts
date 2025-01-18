@@ -32,9 +32,9 @@ export class BookPageViewerComponent implements OnInit {
     modalRef.result.then(() => {
       this.isAnonymous = this.AuthService.isAnonymous();
       console.log(this.isAnonymous);
-      // if (!this.isAnonymous) {
-      //   this.fetchBookPageView();
-      // }
+      if (!this.isAnonymous) {
+        this.fetchBookPageView();
+      }
     });
   }
   setPageNumber() {
@@ -42,6 +42,7 @@ export class BookPageViewerComponent implements OnInit {
   }
 
   private fetchBookPageView(): void {
+    this.bookData = `https://createqa.mheducation.com/createonline/users/1000507376/preview/321660fb-ec46-32a6-8e05-f088b0331fb4/1?nocacheTimestamp=${Date.now()}`
     this.ApiService.getBookPageView().subscribe(
       (response: any) => {
         try {
