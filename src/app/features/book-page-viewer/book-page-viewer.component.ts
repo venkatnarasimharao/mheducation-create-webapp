@@ -11,24 +11,25 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BookPageViewerComponent implements OnInit {
   isAnonymous: boolean = true;
+  imageUrl: any;
   bookData: any = {}; // Placeholder for book data
   constructor(private AuthService: AuthService,
     private ApiService: ApiService,
   ) { }
   ngOnInit(): void {
-    this.isAnonymous = this.AuthService.isAnonymous(); // Fetch user authentication status on initialization
-    this.fetchBookData(); // Abstracted API call into a method for reusability
+    this.isAnonymous = this.AuthService.isAnonymous();
+    this.fetchBookData();
   }
 
   private fetchBookData(): void {
     this.ApiService.getBookPageView().subscribe(
       (response: any) => {
-        try {
-          // Parse API response safely
-          // this.bookData = response.body ? JSON.parse(response.body) : {};
-          console.log('Book Page View fetched successfully:', response); // Debugging
-        } catch (error) {
-          console.error('Error parsing book data:', error); // Handle JSON parsing errors
+        console.log(response, 'getBookPageView');
+        if (response.type === 'image/jpeg' || response.type === 'image/png') {
+          const blobUrl = URL.createObjectURL(response);
+          this.imageUrl = blobUrl;
+        } else {
+          console.error('Invalid image type:', response?.type);
         }
       },
       (error: any) => {

@@ -103,19 +103,24 @@ export class ApiService {
     const assetId = "321660fb-ec46-32a6-8e05-f088b0331fb4";
     const pageNumber = 1;
     const url = `/users/${userId}/preview/${assetId}/${pageNumber}`;
+    const headers = new HttpHeaders({
+      'jcookie': `JSESSIONID_CRT=-Sd6Dcvp7pmYbQ7LMppVramnav-Lx2PkO6HlrcXJ4GpxrEZz4uwS!-1589815393`,
+      'X-Response-Type': 'arraybuffer',
+    });
     const params = {
       nocacheTimestamp: Date.now(),
     };
     return this.apiMethodService({
       url,
-      method: "GET_PARMS",
+      method: "GET_IMAGE",
+      options: { headers },
       params,
     });
   }
 
   apiMethodService<T>({ url, method, body, params = {}, options = {} }: any): Observable<any> {
     url = environment.apiUrl + url;
-    if (!options['responseType']) {
+    if (!options['responseType'] && method !== 'GET_IMAGE') {
       options['responseType'] = 'text';
     }
     if (!options['observe']) {
@@ -128,7 +133,7 @@ export class ApiService {
       case 'GET_PARMS':
         return this.http.get(url, { params: params, ...options });
       case 'GET_IMAGE':
-        return this.http.get(url, { responseType: 'blob' as 'json', ...options });
+        return this.http.get(url, { responseType: 'blob', ...options });
       case 'PUT':
         return this.http.put(url, body, options);
       case 'PUT_PARAMS':
