@@ -74,8 +74,8 @@ export const routes: Routes = [
   {
     path: 'preview',
     loadComponent: () =>
-      import('./features/preview/preview.component').then(
-        (m) => m.PreviewComponent
+      import('./features/book-info-panel/book-info-panel.component').then(
+        (m) => m.BookInfoPanelComponent
       ),
   }
 ];

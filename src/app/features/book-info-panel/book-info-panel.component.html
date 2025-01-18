@@ -1,112 +1,127 @@
-<!-- <div class="d-flex">
-    <div><img src={{bookImage}} /></div>
-    <div>
-        <div>{{bookTitle}}</div>
-        <div>{{content}}</div>
-    </div>
+@if(bookDataLoader){
+<div class="d-flex align-items-center justify-content-center" style="width: 100%; height: 100%;">
+    <div class="hec-loader-content"></div>
 </div>
-<button (click)="handleSign()" class="text-light bg-primary">Sign In to Add</button> -->
+}
+@if(isDataFetched){
+<div class="d-flex">
+    <div class="book-info-panel col-12 col-md-auto m-4">
+        <div class="card mx-auto mt-4 border-0 p-3 shadow-sm" style="max-width: 600px;">
+            <div class="d-flex justify-content-between align-items-center">
+                <!-- Book Image -->
+                <div class="flex-shrink-0 mb-3 mb-md-0">
+                    <img [src]="bookImage" alt="Book Image" class="img-fluid rounded" style="width: 150px;" />
+                </div>
+                <!-- Book Details -->
+                <div class="ms-md-4 text-center text-md-start">
 
-
-<div class="card mx-auto mt-4 border-0" style="max-width: 600px;">
-    <div class="row g-0">
-        <!-- Book Image -->
-        <div class="col-md-4 d-flex align-items-center">
-            <img [src]="bookImage" alt="Book Image" class="img-fluid rounded-start" />
-        </div>
-        <!-- Book Details -->
-        <div class="col-md-8">
-            <div class="card-body">
-                <h5 class="card-title">{{ bookTitle }}</h5>
-                <p class="card-text">{{ content }}</p>
+                    <h5 class="card-title mb-2">@if(!isAnonymous){
+                        <button (click)="addToFav()" class="bg-transparent border-0"> <i class="bi bi-star fs-3"
+                                [ngClass]="{ 'text-warning': isFav }"></i></button>
+                        } {{ bookTitle }}
+                    </h5>
+                    <p class="card-text mb-0">{{ bookSummary }}</p>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-
-<!-- Sign In Button -->
-<div class="text-center mt-3">
-    <button (click)="handleSign()" class="btn btn-primary">
-        Sign In to Add
-    </button>
-</div>
-
-<div class="container mt-4">
-    <!-- Tabs Navigation -->
-    <ul class="nav nav-tabs justify-content-between bg-primary text-white p-1 rounded">
-        <li class="nav-item">
-            <button class="nav-link active bg-white text-dark fw-bold" data-bs-toggle="tab" data-bs-target="#contents"
-                type="button" role="tab" aria-controls="contents" aria-selected="true">
-                Contents
+        <div class="text-center mt-3">
+            @if(isAnonymous){
+            <button (click)="handleSign()" class="btn btn-primary">
+                Sign In to Add
             </button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link text-white" data-bs-toggle="tab" data-bs-target="#details" type="button" role="tab"
-                aria-controls="details" aria-selected="false">
-                Details
+            }
+            @if(!isAnonymous){
+            <button class="btn btn-primary" (click)="handleAddToFavourite()">
+                + Add Whole Book
             </button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link text-white" data-bs-toggle="tab" data-bs-target="#search" type="button" role="tab"
-                aria-controls="search" aria-selected="false">
-                Search
-            </button>
-        </li>
-    </ul>
+            }
+        </div>
+        <div class="container mt-4 border" style="height: 600px; overflow-y: auto;">
+            <ul class="nav nav-tabs justify-content-between bg-primary text-white p-1 rounded">
+                <li class="nav-item">
+                    <button class="nav-link" [class.active]="isActive('contents')"
+                        [class.bg-white]="isActive('contents')" [class.text-dark]="isActive('contents')"
+                        [class.text-white]="!isActive('contents')" [class.fw-bold]="isActive('contents')"
+                        (click)="setActiveTab('contents')" type="button" role="tab">
+                        Contents
+                    </button>
+                </li>
+                <li class="nav-item ">
+                    <button class="nav-link" [class.active]="isActive('details')" [class.bg-white]="isActive('details')"
+                        [class.text-dark]="isActive('details')" [class.text-white]="!isActive('details')"
+                        (click)="setActiveTab('details')" type="button" role="tab">
+                        Details
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" [class.active]="isActive('search')" [class.bg-white]="isActive('search')"
+                        [class.text-dark]="isActive('search')" [class.text-white]="!isActive('search')"
+                        (click)="setActiveTab('search')" type="button" role="tab">
+                        Search
+                    </button>
 
-    <!-- Tab Content -->
-    <div class="tab-content border rounded-bottom">
-        <!-- Contents Tab -->
-        <div class="tab-pane fade show active" id="contents" role="tabpanel" aria-labelledby="contents-tab">
-            <ul class="list-group list-group-flush">
-                <!-- Front Matter -->
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span>Front Matter</span>
-                    <i class="bi bi-chevron-right"></i>
-                </li>
-                <!-- Back Matter -->
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span>Back Matter</span>
-                    <i class="bi bi-chevron-down"></i>
-                </li>
-                <!-- Appendices -->
-                <li class="list-group-item d-flex justify-content-between">
-                    Appendix A: Significant Figures and Rounding
-                    <span class="badge bg-secondary">2pp</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between">
-                    Appendix B: Making Graphs
-                    <span class="badge bg-secondary">2pp</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between">
-                    Appendix C: Simple Statistics
-                    <span class="badge bg-secondary">6pp</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between">
-                    Appendix D: Writing Reports and Scientific Papers
-                    <span class="badge bg-secondary">4pp</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between">
-                    Photo Credits
-                    <span class="badge bg-secondary">2pp</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between">
-                    Endpapers
-                    <span class="badge bg-secondary">2pp</span>
                 </li>
             </ul>
-        </div>
+            <!-- Tab Content -->
+            <div class="tab-content rounded-bottom">
+                <!-- Contents Tab -->
+                @if(currentTab === 'contents'){
+                <div ngbAccordion #accordion="ngbAccordion">
+                    <div *ngFor="let entry of tocList | keyvalue; let i = index" [ngbAccordionItem]="'panel-' + i">
+                        <h2 ngbAccordionHeader>
+                            <button ngbAccordionButton>{{ entry.key }}</button>
+                        </h2>
+                        <div ngbAccordionCollapse>
+                            <div ngbAccordionBody>
+                                <ul class="list-group">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center"
+                                        *ngFor="let item of entry.value">
+                                        <span>{{item?.originalNumber }} {{ item?.title }}</span>
+                                        <span class="badge bg-primary rounded-pill">{{ item?.pageCount }}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                }
+                @if(currentTab ==="details"){
+                <div class="mb-2" id="details" role="tabpanel" aria-labelledby="details-tab">
+                    <h5>Abstract</h5>
+                    <div class="p-1">{{bookDescription}}</div>
+                    <hr />
+                    <h5>Previous and Alternate Editions:</h5>
+                    @for(relatedBook of relatedBookList; track $index){
+                    <li class="text-primary" (click)="openRelatedBook($index)">
+                        <a href="javascript:void(0)">{{relatedBook?.['@attributes']?.title}}
+                        </a>
+                    </li>
+                    }
 
-        <!-- Details Tab -->
-        <div class="tab-pane fade show active" id="details" role="tabpanel" aria-labelledby="details-tab">
-            <div class="p-3">Details content goes here.</div>
-        </div>
 
-        <!-- Search Tab -->
-        <div class="tab-pane fade" id="search" role="tabpanel" aria-labelledby="search-tab">
-            <div class="p-3">
-                <input type="text" class="form-control" placeholder="Search here..." />
+                    <hr />
+                </div>
+                }
+                @if(currentTab ==="search"){
+                <div class="" id="search" role="tabpanel" aria-labelledby="search-tab">
+                    <form #searchForm="ngForm" (ngSubmit)="handleSearchInside()">
+                        <div class="p-2 d-flex justify-content-between">
+                            <!-- Search input -->
+                            <input type="text" class="form-control" placeholder="Search here..."
+                                [(ngModel)]="searchInsideQuery" name="searchQuery" required />
+
+                            <!-- Search button -->
+                            <button type="submit" class="btn btn-primary" [disabled]="!searchForm.valid">Go</button>
+                        </div>
+                    </form>
+                    <p>Result for {{searchInsideQuery}}</p>
+                    <hr />
+                </div>
+                }
             </div>
         </div>
     </div>
+    <hec-book-page-viewer class="book-page-viewer flex-grow-1"></hec-book-page-viewer>
 </div>
+}
