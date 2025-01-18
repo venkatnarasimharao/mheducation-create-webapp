@@ -26,28 +26,38 @@ app.get('/', (req, res) => {
 
 app.all('/proxy/createonline/*', async (req, res) => {
     try {
+        let response = ``
         const dynamicEndpoint = req.originalUrl.replace('/proxy', '');
-
         const externalApiBaseUrl = 'https://createqa.mheducation.com';
 
         const externalApiUrl = externalApiBaseUrl + dynamicEndpoint;
-        console.log(req.headers, 'External API URL:', externalApiUrl);
+        console.log(req.headers, 'External API URL:', externalApiUrl, 'check this out', req.query);
         if (req.headers?.host) {
             delete req.headers.host
         }
 
+        const axiosOptions = {
+            headers: req.headers ? {
+                // TODO issue in lowercase jcookie
+                Cookie: req.headers['jcookie'],
+                ...req.headers
+            } : null
+        }
+
+        if (req.headers['x-response-type']) {
+            axiosOptions.responseType = req.headers['x-response-type'];
+        }
+
         if (req.method === 'POST') {
             const xmlData = req.body;
-            const response = await axios.post(externalApiUrl, xmlData, (req.headers ? { headers: req.headers } : null));
+            response = await axios.post(externalApiUrl, xmlData, axiosOptions);
             console.log(response, 'Raw XML Payload:', xmlData);
-
-            res.set('Content-Type', 'application/xml');
-            res.send(response.data);
         } else if (req.method === 'GET') {
-            const response = await axios.get(externalApiUrl, (req.headers ? { headers: req.headers } : null));
-            res.set('Content-Type', 'application/xml');
-            res.send(response.data);
+            response = await axios.get(externalApiUrl, axiosOptions);
         }
+        const contentType = response.headers['content-type'] || 'application/xml';
+        res.set('Content-Type', contentType);
+        res.send(response.data);
     } catch (error) {
         console.log('Error while hitting the external API:', error.response);
         res.status(error.status || 500).json({ error: error.message, message: extractErrorMessage(error?.response?.data) });

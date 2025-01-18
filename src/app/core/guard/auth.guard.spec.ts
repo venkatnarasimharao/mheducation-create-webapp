@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { AuthGuard } from './auth.guard';
 import { Router } from '@angular/router';
-import { AuthService } from '../core/services/auth/auth.service';
+import { AuthService } from '../services/auth/auth.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { LoginComponent } from '../shared/components/login/login.component';
+import { LoginComponent } from '../../shared/components/login/login.component';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
 class MockAuthService {
