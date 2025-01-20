@@ -26,12 +26,13 @@ export class BookInfoPanelComponent implements OnInit {
   relatedBookList: any;
   bookDescription: any;
   searchInsideQuery: string = "";
-  tocList: { [key: string]: { title: string; pageCount: string, originalNumber: number }[] } = {};
+  tocList: { [key: string]: { title: string; pageCount: string, originalNumber: number, guid: string }[] } = {};
   bookDataLoader: boolean = false;
   isFav: boolean = false;
   isDataFetched: boolean = false;
   bookInsideData: any = [];
   expanded: { [key: number]: boolean } = {};
+  currentChapter: any;
 
   constructor(private apiService: ApiService,
     private modalService: NgbModal,
@@ -46,6 +47,7 @@ export class BookInfoPanelComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.fetchBookData(params['guid']);
     });
+    // set current Chapter
   }
 
   private fetchBookData(guid: string): void {
@@ -59,6 +61,8 @@ export class BookInfoPanelComponent implements OnInit {
         this.loadDetailsTabData();
         this.groupTocList(this.bookData?.toc?.result);
         console.log('Book data fetched successfully:', this.bookData);
+        this.currentChapter = this.tocList['Front Matter'][0];
+        console.log(this.currentChapter, "currentChapter");
       },
       (error: any) => {
         this.bookDataLoader = false;
@@ -71,6 +75,10 @@ export class BookInfoPanelComponent implements OnInit {
     this.bookTitle = this.bookData?.title;
     this.bookSummary = "@ " + this.bookData?.year + " | " + this.bookData?.authors + " | " + this.bookData?.source;
     this.bookImage = `https://createqa.mheducation.com/covers/${this.bookData.isbn}.jpeg`;
+  }
+  setCurrentChapter(part: any, Chapter: any) {
+    console.log(part, Chapter);
+    this.currentChapter = this.tocList[part][Chapter];
   }
 
   groupTocList(items: any): void {
@@ -87,14 +95,16 @@ export class BookInfoPanelComponent implements OnInit {
           this.tocList[previousPart].push({
             title: item?.toc?.result?.title,
             pageCount: item?.toc?.result?.pagecount,
-            originalNumber: item?.toc?.result?.originalnumber
+            originalNumber: item?.toc?.result?.originalnumber,
+            guid: item?.toc?.result?.guid
           });
         }
         else {
           const filteredResults = results.map((tocItem: any) => ({
             title: tocItem?.title,
             pageCount: tocItem?.pagecount,
-            orignalNumber: tocItem.originalnumber
+            orignalNumber: tocItem.originalnumber,
+            guid: tocItem?.guid
           }));
           console.log(filteredResults);
           this.tocList[previousPart].push(...filteredResults);
@@ -103,14 +113,14 @@ export class BookInfoPanelComponent implements OnInit {
       else {
 
         if (previousPart != "") {
-          this.tocList[previousPart].push({ title: item.title, pageCount: item.pagecount, originalNumber: item.originalnumber });
+          this.tocList[previousPart].push({ title: item.title, pageCount: item.pagecount, originalNumber: item.originalnumber, guid: item.guid });
         }
         else {
           console.log("filteredResults");
-          // if (!this.tocList["individual"]) {
-          //   this.tocList["individual"] = [];
-          // }
-          this.tocList["individual"].push({ title: item.title, pageCount: item.pagecount, originalNumber: item.originalnumber });
+          if (!this.tocList["individual"]) {
+            this.tocList["individual"] = [];
+          }
+          this.tocList["individual"].push({ title: item.title, pageCount: item.pagecount, originalNumber: item.originalnumber, guid: item.guid });
         }
 
       }
