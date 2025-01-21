@@ -1,33 +1,57 @@
-<div class="text-center">
+<div class="text-center m-2" style="min-height: 100%; object-fit: contain;">
+    <div>{{currentChapter.title}} ({{currentChapter.pageCount +"pp"}})</div>
     @if(isAnonymous){
     <div class="">
         <div>To read this content, you'll need to sign in first.</div>
         <button (click)="handleSign()">Sign In / Register Now</button>
     </div>
     }
-    @if(!isAnonymous){
+    @else{
+    @if(pageViewLoading){
+    <div class="d-flex justify-content-center" style="z-index: 1;">
+        <div class="hec-loader-content"></div>
+    </div>
+    }
+    @else{
     <div class="">
-
-        <div class="d-flex align-items-center justify-content-center">
-            @if(pageNumber >1){
-            <button class="border-0 bg-transparent" (click)="handleChangePage(-1)"><i
-                    class="bi bi-caret-left-fill fs-1"></i></button>
+        <div class="preview-parent d-flex align-items-center justify-content-center p-2">
+            @if(prevButtonVisible){
+            <button class="border-0 bg-transparent start-0 position-absolute" (click)="handleChangePage(-1)">
+                <i class="bi bi-caret-left-fill fs-1"></i>
+            </button>
             }
-
-            <img [src]="imageUrl" alt="Book Image" style="height: fit-content; width: fit-content;" />
-            @if(pageNumber < pageCount){ <button class="border-0 bg-transparent" (click)="handleChangePage(1)"><i class=" bi bi-caret-right-fill
-                fs-1"></i></button>
-                }
+            <img class="img-fluid position-absolute top-0" [src]="imageUrl" alt="Book Image"
+                style="width: 90%; height: auto;" />
+            @if(nextButtonVisible){
+            <button class="border-0 bg-transparent end-0 position-absolute" (click)="handleChangePage(1)">
+                <i class="bi bi-caret-right-fill fs-1"></i>
+            </button>
+            }
+        </div>
+        <div>
+            <form #searchForm="ngForm" (ngSubmit)="setPageNumber()">
+                <div class="p-2 d-flex justify-content-center">
+                    <input type="number" class="form-control m-0" placeholder="Enter Page Number"
+                        [(ngModel)]="pageNumber" name="pageNumber" [min]="1" [max]="pageCount" required
+                        #pageNumberInput="ngModel" style="width: 200px;" />
+                    <button type="submit" class="btn btn-primary m-0" [disabled]="!searchForm.valid">Go</button>
+                    <p class="pt-2">of {{pageCount}}</p>
+                </div>
+                <!-- Validation messages -->
+                <!-- TODO-  not working now -->
+                <div *ngIf="pageNumberInput.invalid && (pageNumberInput.dirty || pageNumberInput.touched)">
+                    <small *ngIf="pageNumberInput.errors?.['required']" class="text-danger">Page number is
+                        required.</small>
+                    <small *ngIf="pageNumberInput.errors?.['min']" class="text-danger">Page number must be at least
+                        1.</small>
+                    <small *ngIf="pageNumberInput.errors?.['max']" class="text-danger">Page number cannot exceed
+                        {{pageCount}}.</small>
+                </div>
+            </form>
 
         </div>
-        <form #searchForm="ngForm" (ngSubmit)="setPageNumber()">
-            <div class="p-2 d-flex justify-content-between">
-                <input type="number" class="form-control" placeholder="Enter Page Number" [(ngModel)]="pageNumber"
-                    name="pageNumber" minimum=0 required />
-                <button type="submit" class="btn btn-primary" [disabled]="!searchForm.valid">Go</button>
-            </div>
-        </form>
     </div>
+    }
     }
 
 </div>

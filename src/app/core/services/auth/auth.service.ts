@@ -1,8 +1,8 @@
 import { CookieService } from 'ngx-cookie-service';
-import { EventEmitter, Injectable, signal } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from '../api/api.service'
-import { BehaviorSubject, catchError, Observable, of } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -46,10 +46,6 @@ export class AuthService {
         this.loginStatusSubject.next('failed');
       }
     });
-  }
-  public isAnonymous(): boolean {
-    const paris_user_id = this.cookieService.get('paris_user_id');
-    return paris_user_id ? false : true;
   }
   public getLoginErrorMessage(): string {
     return this.loginError;

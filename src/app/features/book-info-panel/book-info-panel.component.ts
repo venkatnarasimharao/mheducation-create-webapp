@@ -8,7 +8,7 @@ import { NgbAccordionModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { BookPageViewerComponent } from '../book-page-viewer/book-page-viewer.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map } from 'rxjs/operators';
+
 @Component({
   selector: 'hec-book-info-panel',
   standalone: true,
@@ -43,7 +43,7 @@ export class BookInfoPanelComponent implements OnInit {
 
   }
   ngOnInit(): void {
-    this.isAnonymous = this.AuthService.isAnonymous();
+    this.isAnonymous = this.apiService.isAnonymous();
     this.route.queryParams.subscribe(params => {
       this.fetchBookData(params['guid']);
     });
@@ -60,9 +60,7 @@ export class BookInfoPanelComponent implements OnInit {
         this.setBookCardData();
         this.loadDetailsTabData();
         this.groupTocList(this.bookData?.toc?.result);
-        console.log('Book data fetched successfully:', this.bookData);
-        this.currentChapter = this.tocList['Front Matter'][0];
-        console.log(this.currentChapter, "currentChapter");
+        this.setCurrentChapter(Object.keys(this.tocList)[0], 0);
       },
       (error: any) => {
         this.bookDataLoader = false;
@@ -71,22 +69,28 @@ export class BookInfoPanelComponent implements OnInit {
       }
     );
   }
+  getObjectKey(item: any) {
+    return Object.keys(item);
+  }
+  getObjectValue(item: any, index: number) {
+    const values = Object.values(item);
+    return Array.isArray(values[index]) ? values[index] : [];
+  }
   setBookCardData() {
     this.bookTitle = this.bookData?.title;
-    this.bookSummary = "@ " + this.bookData?.year + " | " + this.bookData?.authors + " | " + this.bookData?.source;
+    this.bookSummary = (this.bookData?.year ? ("@ " + this.bookData?.year) : "") + (this.bookData?.authors ? " | " + this.bookData.authors : "") + (this.bookData?.source ? " | " + this.bookData?.source : "");
     this.bookImage = `https://createqa.mheducation.com/covers/${this.bookData.isbn}.jpeg`;
   }
   setCurrentChapter(part: any, Chapter: any) {
-    console.log(part, Chapter);
     this.currentChapter = this.tocList[part][Chapter];
   }
-
   groupTocList(items: any): void {
     let previousPart = "";
     items.forEach((item: any) => {
 
       if (item.type === "Part") {
-        previousPart = item.title;
+        previousPart = item.originalnumber ? (item.originalnumber + ". " + item.title) : item.title;
+
         if (!this.tocList[previousPart]) {
           this.tocList[previousPart] = [];
         }
@@ -106,29 +110,25 @@ export class BookInfoPanelComponent implements OnInit {
             orignalNumber: tocItem.originalnumber,
             guid: tocItem?.guid
           }));
-          console.log(filteredResults);
           this.tocList[previousPart].push(...filteredResults);
         }
       }
       else {
-
         if (previousPart != "") {
           this.tocList[previousPart].push({ title: item.title, pageCount: item.pagecount, originalNumber: item.originalnumber, guid: item.guid });
         }
         else {
-          console.log("filteredResults");
           if (!this.tocList["individual"]) {
             this.tocList["individual"] = [];
           }
           this.tocList["individual"].push({ title: item.title, pageCount: item.pagecount, originalNumber: item.originalnumber, guid: item.guid });
+
         }
 
       }
 
     });
-    console.log(this.tocList);
   }
-
   handleSign() {
     const modalRef = this.modalService.open(LoginComponent, { centered: false });
     modalRef.result.then(() => {
@@ -137,8 +137,9 @@ export class BookInfoPanelComponent implements OnInit {
       this.isAnonymous = true;
     });
   }
-  handleAddToFavourite() {
+  addBook() {
     // Logic
+    console.log("add book to project functionality not yet implemented")
   }
   loadDetailsTabData() {
     this.relatedBookList = this.bookData.relationships.relationship;
@@ -157,7 +158,8 @@ export class BookInfoPanelComponent implements OnInit {
     const payload = JSON.parse(JSON.stringify(search_inside_config));
     payload.search.query = this.searchInsideQuery;
     payload.search.token = token;
-    payload.search.guid = "99c9fd84-bc04-37a0-ab66-4a43927a421e";
+    console.log(this.bookData);
+    payload.search.guid = this.bookData.guid;
 
 
     //   this.apiService.getSearchInsideList(payload)
@@ -199,12 +201,15 @@ export class BookInfoPanelComponent implements OnInit {
 
     // 
     this.apiService.getSearchInsideList(payload).subscribe((res) => {
-      const parsedResponse = JSON.parse(res.body).result;
-      console.log(parsedResponse[0].meta)
-      parsedResponse.map((item: any) => {
-        this.bookInsideData.push({ title: item.meta.sub.title, desc: item.content });
-      })
-      console.log('Book inside data fetched successfully:', this.bookInsideData);
+      const parsedResponse = JSON.parse(res.body).result
+      if (parsedResponse) {
+        parsedResponse.map((item: any) => {
+          this.bookInsideData.push({ title: item.meta.sub.title, desc: item.content });
+        })
+      }
+      else {
+        this.bookInsideData.push({ title: "Not Found", desc: "please enter correct queries" });
+      }
     })
   }
   openRelatedBook(index: number) {
@@ -215,20 +220,13 @@ export class BookInfoPanelComponent implements OnInit {
     // Logic to add book to favourites
     this.isFav = !this.isFav;
   }
-  setPageNumber() {
-
-  }
   toggleExpand(index: number) {
     this.expanded[index] = !this.expanded[index];
   }
   onScroll(event: any) {
-    console.log(event);
     const element = event.target;
-    console.log(element);
-
-    // Check if the user scrolled to the bottom
-    if (element.scrollHeight - element.scrollTop === element.clientHeight) {
-      this.handleSearchInside(this.bookInsideData.length); // Fetch more data
+    if (element.scrollHeight - element.scrollTop <= element.clientHeight + 2) {
+      this.handleSearchInside(this.bookInsideData.length + 1); // Fetch more data
     }
 
   }

@@ -1,3 +1,4 @@
+import { ApiService } from './../../../core/services/api/api.service';
 import { AuthService } from './../../../core/services/auth/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { NgbDropdownModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -21,6 +22,7 @@ export class HeaderComponent implements OnInit {
   loggedInStatus: string = "LogIn"
 
   constructor(private menuService: MenuSidebarService,
+    private ApiService: ApiService,
     private AuthService: AuthService,
     private modalService: NgbModal) {
   }
@@ -28,7 +30,7 @@ export class HeaderComponent implements OnInit {
     this.AuthService.authStatus.subscribe((event: any) => {
       this.loggedInStatus = event;
     });
-    if (!this.AuthService.isAnonymous()) {
+    if (!this.ApiService.isAnonymous()) {
       this.loggedInStatus = "LogOut"
     }
   }

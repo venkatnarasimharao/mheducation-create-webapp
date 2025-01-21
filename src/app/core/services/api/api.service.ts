@@ -15,6 +15,10 @@ export class ApiService {
     private cookieService: CookieService
   ) { }
 
+  public isAnonymous(): boolean {
+    const paris_user_id = this.cookieService.get('paris_user_id');
+    return paris_user_id ? false : true;
+  }
   getSearchListing() {
     const finalPay = USER_SEARCH_CONFIG
     let languages: any = sessionStorage.getItem('languages');
@@ -79,7 +83,6 @@ export class ApiService {
   }
 
   getBookDetails(assetId: string) {
-    // const assetId = "99c9fd84-bc04-37a0-ab66-4a43927a421e";
     const url = `/p/assets/${assetId}`;
     const params = {
       type: "metadata",
@@ -96,13 +99,11 @@ export class ApiService {
     });
 
   }
-  getBookPageView() {
-    const userId = "1000507376";  // Example user ID
-    const assetId = "99c9fd84-bc04-37a0-ab66-4a43927a421e";
-    const pageNumber = 1;
-    const url = `/users/${userId}/preview/${assetId}/${pageNumber}`;
+  getBookPageView(payload: any) {
+    const userId = this.cookieService.get("paris_user_id");  // Example user ID
+    const url = `/users/${userId}/preview/${payload.guid}/${payload.pageNumber}`;
     const headers = new HttpHeaders({
-      'jcookie': `JSESSIONID_CRT=-Sd6Dcvp7pmYbQ7LMppVramnav-Lx2PkO6HlrcXJ4GpxrEZz4uwS!-1589815393`,
+      'jcookie': `JSESSIONID_CRT=ZJ2KJNYkAmHECH3xiK36hc5W9uD7FOL8BAQtanl7mAuQrsCsYnFi!-2070150201`,
       'X-Response-Type': 'arraybuffer',
     });
     const params = {
@@ -117,8 +118,12 @@ export class ApiService {
   }
   getSearchInsideList(payload: any) {
     console.log(payload);
+    let user = "anonymous";
+    if (!this.isAnonymous()) {
+      user = this.cookieService.get("paris_user_id");
+    }
     return this.apiMethodService({
-      url: `/p/users/anonymous/searchinside`,
+      url: `/p/users/${user}/searchinside`,
       method: 'POST',
       body: payload,
       options: { responseType: 'text' }
