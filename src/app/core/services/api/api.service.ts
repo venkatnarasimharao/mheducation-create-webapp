@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { BOOK_COVER_IMAGES, USER_SEARCH_CONFIG } from '../../../shared/constants/search-payload.config';
 import { environment } from '../../../../environments/environment';
 import { CookieService } from 'ngx-cookie-service';
@@ -47,7 +47,18 @@ export class ApiService {
       method: 'POST',
       options: { headers },
       body: null
-    });
+    }).pipe(
+      map((data: any) => {
+        const headers = data.headers;
+        const cookieObjects = [
+          ...(headers['cookie'] || []),
+          ...(headers['set-cookie'] || []),
+        ];
+        const decoded = decodeURIComponent(data?.headers);
+        console.log(decoded, 'cccccccccccccc', data?.headers,cookieObjects)
+        console.log(data?.headers?.getSetCookie())
+        return data;
+      }))
   }
   userLogOut(paris_user_id: string) {
     return this.apiMethodService({
@@ -79,7 +90,7 @@ export class ApiService {
   }
 
   getBookDetails(assetId: string) {
-    // const assetId = "99c9fd84-bc04-37a0-ab66-4a43927a421e";
+    assetId = "99c9fd84-bc04-37a0-ab66-4a43927a421e";
     const url = `/p/assets/${assetId}`;
     const params = {
       type: "metadata",
@@ -102,7 +113,7 @@ export class ApiService {
     const pageNumber = 1;
     const url = `/users/${userId}/preview/${assetId}/${pageNumber}`;
     const headers = new HttpHeaders({
-      'jcookie': `JSESSIONID_CRT=-Sd6Dcvp7pmYbQ7LMppVramnav-Lx2PkO6HlrcXJ4GpxrEZz4uwS!-1589815393`,
+      'jcookie': `JSESSIONID_CRT=UTeDSY4ItJZdbwPHVjQtjJ-Pn860AzbYEEbhgxNaFz2xDr_CxAFP!-1589815393`,
       'X-Response-Type': 'arraybuffer',
     });
     const params = {

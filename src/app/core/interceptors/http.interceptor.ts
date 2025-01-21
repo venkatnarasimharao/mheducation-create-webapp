@@ -22,6 +22,7 @@ export const httpInterceptor: HttpInterceptorFn = (request, next) => {
 
   return next(transformedReq).pipe(
     map((event: any) => {
+      console.log(event?.headers?.keys(), 'headers', event.headers);
       if (event instanceof HttpResponse && event.headers?.get('Content-Type')?.includes('xml')) {
         const xmlString = event.body as string;
         const jsonResponse = XmlTransformerUtil.xmlToJson(xmlString);

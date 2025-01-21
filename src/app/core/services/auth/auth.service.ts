@@ -33,6 +33,7 @@ export class AuthService {
 
     this.apiService.userLogin(payload).subscribe({
       next: (response) => {
+        console.log(response?.headers?.keys(), 'headers', response.headers);
         if (response.ok) {
           this.authStatus.emit("LogOut");
           this.manageCookiesStorage(JSON.parse(response.body));

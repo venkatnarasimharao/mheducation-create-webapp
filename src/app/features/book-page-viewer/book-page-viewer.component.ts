@@ -70,25 +70,25 @@ export class BookPageViewerComponent implements OnInit, OnChanges {
       console.log(data, "data");
 
     });
-    this.imageUrl = `https://createqa.mheducation.com/createonline/users/1000507376/preview/${this.currentChapter.guid}/${this.pageNumber}?nocacheTimestamp=${Date.now()}`;
+    // this.imageUrl = `https://createqa.mheducation.com/createonline/users/1000507376/preview/${this.currentChapter.guid}/${this.pageNumber}?nocacheTimestamp=${Date.now()}`;
 
     console.log(this.imageUrl, "imageUrl");
-    // const payload = { guid: this.currentChapter.guid, pageNumber: "1" };
-    // this.ApiService.getBookPageView(payload).subscribe(
-    //   (response: any) => {
-    //     console.log(response, 'getBookPageView');
-    //     if (response.body?.type === 'image/jpeg' || response.body?.type === 'image/png') {
-    //       const blobUrl = URL.createObjectURL(response.body);
-    //       this.imageUrl = blobUrl;
-    //     } else {
-    //       console.error('Invalid image type:', response.body?.type);
-    //     }
-    //   },
-    //   (error: any) => {
-    //     console.error('Error fetching book data:', error); // Basic error handling
-    //     // Optionally, display a user-friendly message here
-    //   }
-    // );
+    const payload = { guid: this.currentChapter.guid, pageNumber: "1" };
+    this.ApiService.getBookPageView().subscribe(
+      (response: any) => {
+        console.log(response, 'getBookPageView');
+        if (response.body?.type === 'image/jpeg' || response.body?.type === 'image/png') {
+          const blobUrl = URL.createObjectURL(response.body);
+          this.imageUrl = blobUrl;
+        } else {
+          console.error('Invalid image type:', response.body?.type);
+        }
+      },
+      (error: any) => {
+        console.error('Error fetching book data:', error); // Basic error handling
+        // Optionally, display a user-friendly message here
+      }
+    );
   }
 
 }
