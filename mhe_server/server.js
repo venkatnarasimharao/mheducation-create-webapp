@@ -39,7 +39,7 @@ app.all('/proxy/createonline/*', async (req, res) => {
         const axiosOptions = {
             headers: req.headers ? {
                 // TODO issue in lowercase jcookie
-                Cookie: req.headers['jcookie'],
+                Cookie: req.headers['jcookie'] || '',
                 ...req.headers
             } : null
         }
@@ -55,8 +55,14 @@ app.all('/proxy/createonline/*', async (req, res) => {
         } else if (req.method === 'GET') {
             response = await axios.get(externalApiUrl, axiosOptions);
         }
-        const contentType = response.headers['content-type'] || 'application/xml';
-        res.set('Content-Type', contentType);
+        const headersToForward = response.headers;
+        Object.entries(headersToForward).forEach(([key, value]) => {
+            if (key === 'access-control-allow-origin') {
+                res.set(key, '*');
+            } else {
+                res.set(key, value);
+            }
+        });
         res.send(response.data);
     } catch (error) {
         console.log('Error while hitting the external API:', error.response);
