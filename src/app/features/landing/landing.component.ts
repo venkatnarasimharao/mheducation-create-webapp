@@ -22,6 +22,7 @@ import { SearchService } from '../../core/services/search/search.service';
   styleUrl: './landing.component.scss'
 })
 export class LandingComponent {
+  
   translate :TranslateService =inject(TranslateService);  
 
   private apiService = inject(ApiService);
@@ -39,47 +40,41 @@ export class LandingComponent {
   handleSearch(event: { categories: string[]; term: string }) {
     console.log('Search Data:', event);
   
-    // Create a deep copy of USER_SEARCH_CONFIG to avoid mutating the original
     const finalPayload = JSON.parse(JSON.stringify(USER_SEARCH_CONFIG));
   
-    // Update the "query" property with the search term
     finalPayload.search.query = event.term;
-  
-    // Update the "textType" based on selected categories
     if (event.categories.includes('all')) {
-      finalPayload.search.textTypes.textType = 'all';
+      finalPayload.search.textTypes = { textType: ['all'] };
     } else {
-      finalPayload.search.textTypes.textType = event.categories.join(',');
+      finalPayload.search.textTypes = { textType: event.categories };
+      finalPayload.search.textNamespace = 'http://mhhe.com/primis/meta/resolved';
     }
   
-    // Modify facets based on categories if needed
-    if (event.categories.length > 0) {
-      finalPayload.search.facets.facet.forEach((facet: any) => {
-        if (facet._label === 'Content Type') {
-          facet.item.forEach((item: any) => {
-            item._selected = event.categories.includes(item._value);
-          });
-        }
-      });
+    if (finalPayload.search.textTypes.textType.length === 3) {
+      finalPayload.search.findable = true;
+    } else {
+      finalPayload.search.findable = false;
     }
   
-    // Log the final payload for debugging
+  
     console.log('Final Payload:', finalPayload);
+
+     // Update search service with the latest data
+     this.searchService.updateSearchQuery(finalPayload.search.query, finalPayload.search.textTypes.textType, finalPayload.search.findable);
   
-    // Call the API with the updated payload
     this.apiService.getSearchListing(finalPayload).subscribe({
       next: (response) => {
-        // Handle the API response here
         console.log('API Response:', response.body);
         this.searchService.updateSearchResult(response.body);
       },
       error: (err) => {
-        // Handle any errors
         console.error('API Error:', err);
       }
     });
-    
   }
+  
+  
+  
 
   private loadCollections(): void {
     this.imageService.getCollections().subscribe({

@@ -6,16 +6,9 @@
       </div>
     }
   
-    <!-- Display no results found message if no results are returned -->
-    @if (noResults && !loading) {
-      <div class="no-results-message">
-        Sorry, no results found.
-      </div>
-    }
-  
     <!-- Display search results if available -->
-    @if (!loading && !noResults) {
-      @for (result of searchResults; track result) {
+    @if (!loading) {
+      @for (result of searchResults; track result.title) {
         <div class="card mb-3 shadow-sm">
           <div class="card-body">
             <div class="d-flex align-items-center">
@@ -26,7 +19,7 @@
             <p class="card-text">
               <strong>By:</strong> {{ result.authors }}<br />
               <strong>&copy;{{ result.year }}</strong><br />
-              <strong>Available Formats:</strong> {{ result.language }}
+              <strong>Available Formats:</strong>
             </p>
   
             <!-- Change button text based on data availability -->

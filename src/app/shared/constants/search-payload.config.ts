@@ -5,6 +5,7 @@ export const USER_SEARCH_CONFIG = {
         "textTypes": {
             "textType": ""
         },
+        "findable": "",
         "textNamespace": "",
         "textConstraints": {
             "textConstraint": [

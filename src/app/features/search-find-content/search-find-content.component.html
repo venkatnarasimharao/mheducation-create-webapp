@@ -76,11 +76,13 @@
       <div class="row">
         <!-- Filter Accordion -->
         <div class="col-md-3">
-          <hec-filter-accordion [collectionfilterData]="collectionfilter"></hec-filter-accordion>
-        </div>
+          <hec-filter-accordion [collectionfilterData]="collections">
+         </hec-filter-accordion>
+                </div>
 
         <!-- Search Results -->
         <div class="col-md-8">
+          <hec-searchbar></hec-searchbar>
           <hec-search-results></hec-search-results>
         </div>
       </div>

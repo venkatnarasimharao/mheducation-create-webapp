@@ -1,4 +1,3 @@
-
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { SearchService } from '../../../core/services/search/search.service';
@@ -8,12 +7,11 @@ import { SearchService } from '../../../core/services/search/search.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './search-results.component.html',
-  styleUrl: './search-results.component.scss'
+  styleUrl: './search-results.component.scss',
 })
 export class SearchResultsComponent implements OnInit {
   searchResults: any[] = [];
   loading: boolean = false;
-  noResults: boolean = false;
 
   constructor(private searchService: SearchService) {}
 
@@ -21,30 +19,29 @@ export class SearchResultsComponent implements OnInit {
     this.searchService.searchResults.subscribe({
       next: (state) => {
         this.loading = state.loading;
-        
-        if (!state.loading && state.result) {
-          if (state.result.result) {
-            this.searchResults = state.result.result.map((item: any) => ({
-              type: item.type,
-              title: item.title,
-              authors: item.authors,
-              year: item.year,
-              isbn: item.isbn,
-              description: item.description,
-              language: item.language,
-              enableAddButton: item.enableAddButton,
-            }));
-            this.noResults = false;
-          } else {
-            this.noResults = true;
-          }
+
+        if (!state.loading && state.result && state.result.result) {
+          const resultData = Array.isArray(state.result.result)
+            ? state.result.result
+            : [state.result.result]; //converting object to array
+
+          this.searchResults = resultData.map((item: any) => ({
+            type: item.type,
+            title: item.title,
+            authors: item.authors,
+            year: item.year,
+            isbn: item.isbn,
+            description: item.description,
+            enableAddButton: item.enableAddButton,
+          }));
+        } else {
+          this.searchResults = [];
         }
       },
       error: (error) => {
         console.error('Error fetching search results:', error);
         this.loading = false;
-        this.noResults = true;
-      }
+      },
     });
   }
 }

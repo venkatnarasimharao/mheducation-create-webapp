@@ -15,15 +15,15 @@ export class ApiService {
 
   getSearchListing(finalPayload: any) {
     const finalPay = JSON.parse(JSON.stringify(finalPayload));
-    let languages: any = sessionStorage.getItem('languages');
-    if (languages) {
-      languages = JSON.parse(languages);
-      finalPay['search']['facets']['facet'][4]['item'] = languages.map((item: any) => ({
-        _label: item.displayValue._text,
-        _value: item.name._text,
-        _selected: "false" // item.enabled._text === "true" ? "true" : 
-      }))
-    }
+    // let languages: any = sessionStorage.getItem('languages');
+    // if (languages) {
+    //   languages = JSON.parse(languages);
+    //   finalPay['search']['facets']['facet'][4]['item'] = languages.map((item: any) => ({
+    //     _label: item.displayValue._text,
+    //     _value: item.name._text,
+    //     _selected: "false" // item.enabled._text === "true" ? "true" : 
+    //   }))
+    // }
     // finalPay.search.textTypes.textType = '' // title | all | ["title","authors", "isbn", "description"];
     return this.apiMethodService({
       url: `/p/users/anonymous/search`,

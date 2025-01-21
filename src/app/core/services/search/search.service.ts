@@ -4,32 +4,49 @@ import { BehaviorSubject } from 'rxjs';
 interface SearchState {
   loading: boolean;
   result?: any;
+  query: string;
+  textType: string[];
+  findable: boolean;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class SearchService {
-  // Initialize with loading: true
-  private searchResultSource = new BehaviorSubject<SearchState>({
-    loading: true
+  private searchStateSource = new BehaviorSubject<SearchState>({
+    loading: true,
+    query: '',
+    textType: [],
+    findable: false
   });
-  
-  searchResults = this.searchResultSource.asObservable();
+
+  searchResults = this.searchStateSource.asObservable();
 
   updateSearchResult(data: any) {
-    console.log('Data', data);
-    // When updating results, set loading to false
-    this.searchResultSource.next({
+    this.searchStateSource.next({
       loading: false,
-      result: JSON.parse(data)
+      result: JSON.parse(data),
+      query: this.searchStateSource.value.query,
+      textType: this.searchStateSource.value.textType,
+      findable: this.searchStateSource.value.findable
     });
   }
 
-  // Add method to set loading state when search starts
+  updateSearchQuery(query: string, textType: string[], findable: boolean) {
+    this.searchStateSource.next({
+      ...this.searchStateSource.value,
+      query,
+      textType,
+      findable
+    });
+  }
+
   startSearch() {
-    this.searchResultSource.next({
-      loading: true
+    this.searchStateSource.next({
+      loading: true,
+      query: this.searchStateSource.value.query,
+      textType: this.searchStateSource.value.textType,
+      findable: this.searchStateSource.value.findable
     });
   }
 }
