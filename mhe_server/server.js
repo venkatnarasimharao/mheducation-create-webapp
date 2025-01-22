@@ -32,28 +32,44 @@ app.get('/', (req, res) => {
 
 app.all('/proxy/createonline/*', async (req, res) => {
     try {
+        let response = ``
         const dynamicEndpoint = req.originalUrl.replace('/proxy', '');
-
         const externalApiBaseUrl = 'https://createqa.mheducation.com';
 
         const externalApiUrl = externalApiBaseUrl + dynamicEndpoint;
-        console.log(req.headers, 'External API URL:', externalApiUrl);
+        console.log(req.headers, 'External API URL:', externalApiUrl, 'check this out', req.query);
         if (req.headers?.host) {
             delete req.headers.host
         }
 
+        const axiosOptions = {
+            headers: req.headers ? {
+                // TODO issue in lowercase jcookie
+                Cookie: req.headers['jcookie'] || '',
+                ...req.headers
+            } : null
+        }
+
+        if (req.headers['x-response-type']) {
+            axiosOptions.responseType = req.headers['x-response-type'];
+        }
+
         if (req.method === 'POST') {
             const xmlData = req.body;
-            const response = await axios.post(externalApiUrl, xmlData, (req.headers ? { headers: req.headers } : null));
+            response = await axios.post(externalApiUrl, xmlData, axiosOptions);
             console.log(response, 'Raw XML Payload:', xmlData);
-
-            res.set('Content-Type', 'application/xml');
-            res.send(response.data);
         } else if (req.method === 'GET') {
-            const response = await axios.get(externalApiUrl, { headers: `Cookie:JSESSIONID_CRT=wSuMdvebxmspJX6ncc4gKQs4vKd6t6ZF-zav6ZcnKyRkdiBD40mT!-2070150201` });
-            res.set('Content-Type', 'application/xml');
-            res.send(response.data);
+            response = await axios.get(externalApiUrl, axiosOptions);
         }
+        const headersToForward = response.headers;
+        Object.entries(headersToForward).forEach(([key, value]) => {
+            if (key === 'access-control-allow-origin') {
+                res.set(key, '*');
+            } else {
+                res.set(key, value);
+            }
+        });
+        res.send(response.data);
     } catch (error) {
         console.log('Error while hitting the external API:', error.response);
         res.status(error.status || 500).json({ error: error.message, message: extractErrorMessage(error?.response?.data) });
