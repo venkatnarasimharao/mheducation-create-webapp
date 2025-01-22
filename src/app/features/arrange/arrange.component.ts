@@ -10,8 +10,10 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbCollapseModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../../core/services/api/api.service';
-import { catchError, finalize } from 'rxjs/operators';
-import { ProjectItem,Section } from '../../shared/models/search.model';
+import { catchError, finalize, map } from 'rxjs/operators';
+import { ProjectItem, Section } from '../../shared/models/search.model';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'hec-arrange',
@@ -20,7 +22,6 @@ import { ProjectItem,Section } from '../../shared/models/search.model';
   templateUrl: './arrange.component.html',
   styleUrls: ['./arrange.component.scss'],
 })
-
 export class ArrangeComponent {
   isCollapsed: { [key: string]: boolean } = {
     introMaterial: false,
@@ -32,7 +33,6 @@ export class ArrangeComponent {
   selectAllChecked: boolean = false;
   isAnyCheckboxSelected: boolean = false;
 
-  
   selectedProject: any = '';
   selectProject: any[] = [];
   selectProjectItems: any[] = [];
@@ -45,130 +45,133 @@ export class ArrangeComponent {
 
   loadingProjectData: boolean = false;
   projectLoadError: string | null = null;
-  
+
   draggedItems: ProjectItem[] = [];
   sections: any[] = [];
   pricingData: any;
   router: any;
   selectedCheckboxCount: number = 0;
-  constructor(private apiService: ApiService) {
-  }
+  constructor(private apiService: ApiService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.loadProjects();
-    this.updateItemStates();
+
+    this.route.queryParams.subscribe((params) => {
+      const projectId = params['projectId'];
+      if (projectId) {
+        this.loadProjectData(projectId);
+      }
+    });
   }
 
-  loadProjects(): void {
-   this.apiService.getProjectList()
-      .subscribe({
-        next: (projects) => {
-                const data = JSON.parse(projects.body);
-                this.selectProject = data.project.map((item: any) => ({
-                  id: item['@attributes'].guid,
-                  name: item['@attributes'].title
-                }));
-          this.updateItemStates();
-        },
-        error: (error) => {
-          this.error = 'Failed to load projects';
-          console.error('Error loading projects:', error);
-        }
-      });
+  loadProjects() {
+    this.apiService.getProjectList().pipe(
+      map((projects) => {
+        const data = JSON.parse(projects.body);
+        this.selectProject = data.project.map((item: any) => ({
+          id: item['@attributes'].guid,
+          name: item['@attributes'].title,
+        }));
+        this.updateItemStates();
+      })
+    );
   }
   loadProjectPrice(): void {
     this.pricingData = {};
-    
-    this.apiService.getProjectPricing()
-      .subscribe({
-        next: (response) => {
-          if (response.error) {
-            console.warn('Unable to load pricing data:', response.error);
-            return;
-          }
-          if (response?.assetprices?.assetprice) {
-            response.assetprices.assetprice.forEach((asset: any) => {
-              const assetId = asset['@attributes']?.assetId;
-              const priceValue = asset.prices?.price?.['@attributes']?.value;
-              
-              if (assetId && priceValue) {
-                this.pricingData[assetId] = parseFloat(priceValue).toFixed(2);
-              }
-            });
-          }
-  
-          this.pricingData['FRONT_MATTER'] = response.frontmatterprices?.price?.['@attributes']?.value || '0.00';
-          this.pricingData['BACK_MATTER'] = response.backmatterprices?.price?.['@attributes']?.value || '0.00';
-          this.pricingData['PROJECT'] = response.projectprices?.price?.['@attributes']?.value || '0.00';
-          this.pricingData['NOMINAL'] = response.nominalprices?.price?.['@attributes']?.value || '0.00';
-  
-          console.log('Processed pricing data:', this.pricingData);
-        },
-        error: (error) => {
-          console.error('Error in loadProjectPrice:', error);
+
+    this.apiService.getProjectPricing().subscribe({
+      next: (response) => {
+        if (response.error) {
+          console.warn('Unable to load pricing data:', response.error);
+          return;
         }
-      });
+        if (response?.assetprices?.assetprice) {
+          response.assetprices.assetprice.forEach((asset: any) => {
+            const assetId = asset['@attributes']?.assetId;
+            const priceValue = asset.prices?.price?.['@attributes']?.value;
+
+            if (assetId && priceValue) {
+              this.pricingData[assetId] = parseFloat(priceValue).toFixed(2);
+            }
+          });
+        }
+
+        this.pricingData['FRONT_MATTER'] =
+          response.frontmatterprices?.price?.['@attributes']?.value || '0.00';
+        this.pricingData['BACK_MATTER'] =
+          response.backmatterprices?.price?.['@attributes']?.value || '0.00';
+        this.pricingData['PROJECT'] =
+          response.projectprices?.price?.['@attributes']?.value || '0.00';
+        this.pricingData['NOMINAL'] =
+          response.nominalprices?.price?.['@attributes']?.value || '0.00';
+
+        console.log('Processed pricing data:', this.pricingData);
+      },
+      error: (error) => {
+        console.error('Error in loadProjectPrice:', error);
+      },
+    });
   }
 
-  loadProjectData(item : any): void {
+  loadProjectData(projectId: any): void {
     this.loadingProjectData = true;
     this.projectLoadError = null;
-  
-    this.apiService.getProjectData(item.id)
-      .subscribe({
-        next: (response) => {
-          console.log('Project data response:', response);
-          
-          this.sections = [
-            {
-              id: 'introMaterial',  
-              title: 'Introductory Material',
-              selectAllChecked: false,
-              items: []
-            },
-            {
-              id: 'bookContent',
-              title: 'Book Content',
-              selectAllChecked: false,
-              items: []
-            },
-            {
-              id: 'backMaterials',
-              title: 'Back Materials',
-              selectAllChecked: false,
-              items: []
-            },
-            {
-              id: 'supplements',
-              title: 'Supplements',
-              selectAllChecked: false,
-              items: []
-            }
-          ];
-  
-          this.projectStructureEntries = response?.structure?.entry || [];
-          
-          if (this.projectStructureEntries.length) {
-            this.addItemToAppropriateSection({} as ProjectItem);
-          }
-          
-          this.updateItemStates();
-        },
-        error: (error) => {
-          console.error('Error loading project data:', error);
-          this.projectLoadError = 'Failed to load project data. Please try again.';
-        },
-        complete: () => {
-          this.loadingProjectData = false;
+
+    this.apiService.getProjectData(projectId).subscribe({
+      next: (response) => {
+        console.log('Project data response:', response);
+
+        this.sections = [
+          {
+            id: 'introMaterial',
+            title: 'Introductory Material',
+            selectAllChecked: false,
+            items: [],
+          },
+          {
+            id: 'bookContent',
+            title: 'Book Content',
+            selectAllChecked: false,
+            items: [],
+          },
+          {
+            id: 'backMaterials',
+            title: 'Back Materials',
+            selectAllChecked: false,
+            items: [],
+          },
+          {
+            id: 'supplements',
+            title: 'Supplements',
+            selectAllChecked: false,
+            items: [],
+          },
+        ];
+
+        this.projectStructureEntries = response?.structure?.entry || [];
+
+        if (this.projectStructureEntries.length) {
+          this.addItemToAppropriateSection({} as ProjectItem);
         }
-      });
+
+        this.updateItemStates();
+      },
+      error: (error) => {
+        console.error('Error loading project data:', error);
+        this.projectLoadError =
+          'Failed to load project data. Please try again.';
+      },
+      complete: () => {
+        this.loadingProjectData = false;
+      },
+    });
   }
   private processStructureEntries(entries: any[]): void {
-    entries.forEach(entry => {
+    entries.forEach((entry) => {
       if (entry.entry && Array.isArray(entry.entry)) {
         entry.entry.forEach((item: any) => {
           const processedItem = this.processItem(item);
-          console.log('processedItem Loading:',entries );
+          console.log('processedItem Loading:', entries);
           if (processedItem) {
             this.addItemToAppropriateSection(processedItem);
           }
@@ -180,53 +183,53 @@ export class ArrangeComponent {
     });
   }
 
- private processItem(entry: any): ProjectItem | null {
-  if (!entry['@attributes']) return null;
+  private processItem(entry: any): ProjectItem | null {
+    if (!entry['@attributes']) return null;
 
-  const attrs = entry['@attributes'];
-  const guid = attrs.guid;
-  let priceDisplay = 'N/A';
+    const attrs = entry['@attributes'];
+    const guid = attrs.guid;
+    let priceDisplay = 'N/A';
 
-  console.log('Processing item:', attrs.computedtitle, 'GUID:', guid);
-  console.log('Available pricing data:', this.pricingData);
+    console.log('Processing item:', attrs.computedtitle, 'GUID:', guid);
+    console.log('Available pricing data:', this.pricingData);
 
-  if (guid && this.pricingData) {
+    if (guid && this.pricingData) {
+      if (this.pricingData[guid]) {
+        priceDisplay = `$${this.pricingData[guid]}`;
+        console.log(
+          `Found direct price for ${attrs.computedtitle}: ${priceDisplay}`
+        );
+      } else {
+        const type = attrs.type?.toUpperCase();
+        console.log(
+          `Checking type-based price for ${attrs.computedtitle}, type: ${type}`
+        );
 
-    if (this.pricingData[guid]) {
-      priceDisplay = `$${this.pricingData[guid]}`;
-      console.log(`Found direct price for ${attrs.computedtitle}: ${priceDisplay}`);
-    } 
-    else {
-      const type = attrs.type?.toUpperCase();
-      console.log(`Checking type-based price for ${attrs.computedtitle}, type: ${type}`);
-      
-      if (type === 'FRONTMATTER' && this.pricingData['FRONT_MATTER']) {
-        priceDisplay = `$${this.pricingData['FRONT_MATTER']}`;
-      } 
-      else if (type === 'BACKMATTER' && this.pricingData['BACK_MATTER']) {
-        priceDisplay = `$${this.pricingData['BACK_MATTER']}`;
-      }
-      else if (this.pricingData['NOMINAL']) {
-        priceDisplay = `$${this.pricingData['NOMINAL']}`;
+        if (type === 'FRONTMATTER' && this.pricingData['FRONT_MATTER']) {
+          priceDisplay = `$${this.pricingData['FRONT_MATTER']}`;
+        } else if (type === 'BACKMATTER' && this.pricingData['BACK_MATTER']) {
+          priceDisplay = `$${this.pricingData['BACK_MATTER']}`;
+        } else if (this.pricingData['NOMINAL']) {
+          priceDisplay = `$${this.pricingData['NOMINAL']}`;
+        }
       }
     }
+
+    console.log(`Final price for ${attrs.computedtitle}: ${priceDisplay}`);
+
+    return {
+      guid: guid,
+      name: attrs.computedtitle || attrs.title,
+      format: this.determineFormat(entry),
+      pages: parseInt(attrs.pagecount) || 0,
+      price: priceDisplay,
+      checked: false,
+      disableUp: false,
+      disableDown: false,
+      type: attrs.type || entry.type || entry.structuraltype,
+      subType: attrs.subType || '',
+    };
   }
-
-  console.log(`Final price for ${attrs.computedtitle}: ${priceDisplay}`);
-
-  return {
-    guid: guid,
-    name: attrs.computedtitle || attrs.title,
-    format: this.determineFormat(entry),
-    pages: parseInt(attrs.pagecount) || 0,
-    price: priceDisplay,
-    checked: false,
-    disableUp: false,
-    disableDown: false,
-    type: attrs.type || entry.type || entry.structuraltype,
-    subType: attrs.subType || ''
-  };
-}
 
   private determineFormat(item: any): string {
     const isColor = item['@attributes']?._numberInteriorColors === '4';
@@ -236,14 +239,15 @@ export class ArrangeComponent {
 
   private addItemToAppropriateSection(item: ProjectItem): void {
     const traverseEntries = (entries: any[]): void => {
-      entries.forEach(entry => {
-        const targetContainer = entry['@attributes']?.targetContainer?.toLowerCase() || '';
-        
+      entries.forEach((entry) => {
+        const targetContainer =
+          entry['@attributes']?.targetContainer?.toLowerCase() || '';
+
         if (entry['@attributes']) {
           const currentItem = this.processItem(entry);
           if (currentItem) {
             let targetSectionId = '';
-            
+
             if (targetContainer.includes('frontmatter')) {
               targetSectionId = 'introMaterial';
             } else if (targetContainer.includes('contents')) {
@@ -253,16 +257,19 @@ export class ArrangeComponent {
             } else if (targetContainer.includes('supplement')) {
               targetSectionId = 'supplements';
             }
-  
-            const targetSection = this.sections.find(s => s.id === targetSectionId);
+
+            const targetSection = this.sections.find(
+              (s) => s.id === targetSectionId
+            );
             if (targetSection) {
-              console.log(`Adding item "${currentItem.name}" to section: ${targetSectionId}`);
+              console.log(
+                `Adding item "${currentItem.name}" to section: ${targetSectionId}`
+              );
               console.log('Target Container:', targetContainer);
               targetSection.items.push(currentItem);
             }
           }
         }
-        
 
         if (entry.entry) {
           if (Array.isArray(entry.entry)) {
@@ -273,12 +280,15 @@ export class ArrangeComponent {
         }
       });
     };
-  
-    if (this.projectStructureEntries && Array.isArray(this.projectStructureEntries)) {
+
+    if (
+      this.projectStructureEntries &&
+      Array.isArray(this.projectStructureEntries)
+    ) {
       traverseEntries(this.projectStructureEntries);
     }
   }
-  
+
   getAllItems() {
     return this.sections.flatMap((section) => section.items);
   }
@@ -300,7 +310,7 @@ export class ArrangeComponent {
 
   checkIfAnySelected() {
     this.isAnyCheckboxSelected = this.sections.some((section) =>
-      section.items.some((item:{ checked: boolean }) => item.checked)
+      section.items.some((item: { checked: boolean }) => item.checked)
     );
     console.log(
       'isAnyCheckboxSelected: checked triggered',
@@ -316,7 +326,9 @@ export class ArrangeComponent {
 
   deleteSelectedItems() {
     this.sections.forEach((section) => {
-      section.items = section.items.filter((item:{ checked: boolean }) => !item.checked);
+      section.items = section.items.filter(
+        (item: { checked: boolean }) => !item.checked
+      );
     });
     this.checkIfAnySelected();
   }
@@ -345,25 +357,30 @@ export class ArrangeComponent {
 
   drop(event: CdkDragDrop<ProjectItem[]>) {
     if (event.previousContainer === event.container) {
-
-      const sourceSection = this.sections.find(s => s.id === event.container.id);
+      const sourceSection = this.sections.find(
+        (s) => s.id === event.container.id
+      );
       if (!sourceSection) return;
 
       if (this.draggedItems.length > 0) {
-        const selectedItems = sourceSection.items.filter((item: ProjectItem) => item.checked);
-        const draggedIndexes = selectedItems.map((item: ProjectItem) => sourceSection.items.indexOf(item));
-        
-  
+        const selectedItems = sourceSection.items.filter(
+          (item: ProjectItem) => item.checked
+        );
+        const draggedIndexes = selectedItems.map((item: ProjectItem) =>
+          sourceSection.items.indexOf(item)
+        );
+
         draggedIndexes.sort((a: number, b: number) => b - a);
-        
-        const itemsToMove = draggedIndexes.map((index: number) => {
-          const [removed] = sourceSection.items.splice(index, 1);
-          return removed;
-        }).reverse();
-      
+
+        const itemsToMove = draggedIndexes
+          .map((index: number) => {
+            const [removed] = sourceSection.items.splice(index, 1);
+            return removed;
+          })
+          .reverse();
+
         sourceSection.items.splice(event.currentIndex, 0, ...itemsToMove);
       } else {
-  
         moveItemInArray(
           event.container.data,
           event.previousIndex,
@@ -371,25 +388,32 @@ export class ArrangeComponent {
         );
       }
     } else {
-  
-      const sourceSection = this.sections.find(s => s.id === event.previousContainer.id);
-      const targetSection = this.sections.find(s => s.id === event.container.id);
-      
+      const sourceSection = this.sections.find(
+        (s) => s.id === event.previousContainer.id
+      );
+      const targetSection = this.sections.find(
+        (s) => s.id === event.container.id
+      );
+
       if (!sourceSection || !targetSection) return;
 
       if (this.draggedItems.length > 0) {
-    
-        const selectedItems = sourceSection.items.filter((item: ProjectItem) => item.checked);
-        const draggedIndexes = selectedItems.map((item: ProjectItem) => sourceSection.items.indexOf(item));
-        
-        draggedIndexes.sort((a: number, b: number) => b - a);
-        
+        const selectedItems = sourceSection.items.filter(
+          (item: ProjectItem) => item.checked
+        );
+        const draggedIndexes = selectedItems.map((item: ProjectItem) =>
+          sourceSection.items.indexOf(item)
+        );
 
-        const itemsToMove = draggedIndexes.map((index: number) => {
-          const [removed] = sourceSection.items.splice(index, 1);
-          return removed;
-        }).reverse();
-        
+        draggedIndexes.sort((a: number, b: number) => b - a);
+
+        const itemsToMove = draggedIndexes
+          .map((index: number) => {
+            const [removed] = sourceSection.items.splice(index, 1);
+            return removed;
+          })
+          .reverse();
+
         targetSection.items.splice(event.currentIndex, 0, ...itemsToMove);
       } else {
         transferArrayItem(
@@ -400,14 +424,14 @@ export class ArrangeComponent {
         );
       }
     }
-    
+
     this.draggedItems = [];
     this.sections.forEach((section: Section) => {
-      section.items.forEach((item: ProjectItem) => item.checked = false);
+      section.items.forEach((item: ProjectItem) => (item.checked = false));
       section.selectAllChecked = false;
     });
     this.isAnyCheckboxSelected = false;
-    
+
     this.updateItemStates();
   }
 
@@ -423,19 +447,27 @@ export class ArrangeComponent {
   }
 
   updateItemStates(): void {
-    this.sections.forEach((section: { items: { disableUp: boolean; disableDown: boolean }[] }) => {
-      section.items.forEach((item: { disableUp: boolean; disableDown: boolean }, index: number) => {
-        item.disableUp = index === 0;
-        item.disableDown = index === section.items.length - 1;
-      });
-    });
+    this.sections.forEach(
+      (section: { items: { disableUp: boolean; disableDown: boolean }[] }) => {
+        section.items.forEach(
+          (
+            item: { disableUp: boolean; disableDown: boolean },
+            index: number
+          ) => {
+            item.disableUp = index === 0;
+            item.disableDown = index === section.items.length - 1;
+          }
+        );
+      }
+    );
   }
-  
 
   onSelect(item: { id: string; name: string }) {
     this.selectedProject = item;
     this.projectLoadError = null;
-    this.loadProjectData(item);
-    // this.router.navigate(['/'], { queryParams: { } });
+    // this.loadProjectData(item);
+    this.router.navigate(['/'], {
+      queryParams: { projectId: item.id },
+    });
   }
 }
