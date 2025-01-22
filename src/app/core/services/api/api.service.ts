@@ -15,7 +15,7 @@ export class ApiService {
   ) {
   }
 
-  session = 'JSESSIONID_CRT=PuKNrUaejWSxhEBlNJVyUrGBLGs4FTisCy8miPzWiSLKIUu7eoYX!-2070150201'
+  session = 'JSESSIONID_CRT=0wKO4YgD5WL-sILwC_R8zOwyqt4hvD_pektD7PvlWHlg05hrb3dr!-2070150201'
   getSearchListing() {
     const finalPay = USER_SEARCH_CONFIG
     let languages: any = sessionStorage.getItem('languages');

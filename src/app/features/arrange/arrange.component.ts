@@ -74,8 +74,8 @@ export class ArrangeComponent implements OnInit {
       if (projects.ok) {
         const data = JSON.parse(projects.body);
         this.selectProject = data.project.map((item: any) => ({
-          id: item['@attributes'].guid,
-          name: item['@attributes'].title,
+          id: item.guid,
+          name: item.title,
         }));
         this.updateItemStates();
       }
@@ -148,8 +148,8 @@ export class ArrangeComponent implements OnInit {
         if (response.ok) {
           const price = JSON.parse(response.body)
           response.assetprices.assetprice.forEach((asset: any) => {
-            const assetId = asset['@attributes']?.assetId;
-            const priceValue = asset.prices?.price?.['@attributes']?.value;
+            const assetId = asset?.assetId;
+            const priceValue = asset.prices?.price?.value;
             if (assetId && priceValue) {
               this.pricingData[assetId] = parseFloat(priceValue).toFixed(2);
             }
@@ -235,9 +235,9 @@ export class ArrangeComponent implements OnInit {
   }
 
   private processItem(entry: any): ProjectItem | null {
-    if (!entry['@attributes']) return null;
+    if (!entry) return null;
 
-    const attrs = entry['@attributes'];
+    const attrs = entry;
     const guid = attrs.guid;
     let priceDisplay = this.pricingData || 'N/A';
 
@@ -283,7 +283,7 @@ export class ArrangeComponent implements OnInit {
   }
 
   private determineFormat(item: any): string {
-    const isColor = item['@attributes']?._numberInteriorColors === '4';
+    const isColor = item?._numberInteriorColors === '4';
     const format = isColor ? 'Color' : 'Black & White';
     return `${format}, Print & Digital`;
   }
@@ -292,9 +292,9 @@ export class ArrangeComponent implements OnInit {
     const traverseEntries = (entries: any[]): void => {
       entries.forEach((entry) => {
         const targetContainer =
-          entry['@attributes']?.targetContainer?.toLowerCase() || '';
+          entry?.targetContainer?.toLowerCase() || '';
 
-        if (entry['@attributes']) {
+        if (entry) {
           const currentItem = this.processItem(entry);
           if (currentItem) {
             let targetSectionId = '';
