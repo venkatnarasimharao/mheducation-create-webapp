@@ -14,6 +14,9 @@ import { SearchCollectionInterface } from '../../shared/models/search.model';
 import { ApiService } from '../../core/services/api/api.service';
 import { ImageCardComponent } from '../../shared/components/image-card/image-card.component';
 import { SearchbarComponent } from '../../shared/components/searchbar/searchbar.component';
+import { SearchService } from '../../core/services/search/search.service';
+import { PayloadService } from '../../core/services/payload/payload.service';
+import { SortbyComponent } from '../../shared/components/sortby/sortby.component';
 
 @Component({
   selector: 'hec-search-find-content',
@@ -29,26 +32,24 @@ import { SearchbarComponent } from '../../shared/components/searchbar/searchbar.
     TranslateModule,
     SearchResultsComponent,
     ImageCardComponent,
-    SearchbarComponent
+    SearchbarComponent,
+    SortbyComponent,
   ],
   templateUrl: './search-find-content.component.html',
   styleUrls: ['./search-find-content.component.scss'],
 })
 export class SearchFindContentComponent implements OnInit {
   translate: TranslateService = inject(TranslateService);
-  //dropdownTitle
   selectProjectTitle: string = 'Test123';
   selectFormatTitle: string = 'PleaseSelect';
   selectArrangeTitle: string = 'Arrange';
   collectionDetails: SearchCollectionInterface | null = null;
-  
-  // Inject ApiService
-  private apiService: ApiService = inject(ApiService);
-  
-  // Store API data here
-  collections: any[] = [];
+  totalResults: number = 0;
 
-  //dropdown items
+  private apiService: ApiService = inject(ApiService);
+  private payloadService: PayloadService = inject(PayloadService);
+
+  collections: any[] = [];
   selectProjectItems: any[] = [
     { id: 1, name: 'Project1' },
     { id: 2, name: 'Project2' },
@@ -61,60 +62,75 @@ export class SearchFindContentComponent implements OnInit {
     { id: 3, name: 'Format3' },
   ];
 
-  //dropdown heading
   selectProjectHeading: string = 'SelectProject';
   selectFormatHeading: string = 'SelectFormat';
   arrangeHeading: string = '86 pgs / $12.46 est';
 
-  constructor(private route: ActivatedRoute, private readonly imageService: ImageGalleryService) {}
+  currentPage: number = 1;
+  totalPagesCount: number = 1;
+  pagePerItem: number = 5;
+  resultsPerPage: number = 20;
+
+  startValue: number = 1; // Start value for the current page
+  endValue: number = this.startValue + this.resultsPerPage - 1; // End value (start + resultsPerPage - 1)
+
+  constructor(
+    private route: ActivatedRoute,
+    private readonly imageService: ImageGalleryService,
+    private searchService: SearchService
+  ) {}
 
   ngOnInit(): void {
-    // Combine route params and query params
+    this.searchService.searchResults.subscribe((state) => {
+      if (state.result) {
+        const estimate = state.result?.estimate;
+        if (estimate) {
+          this.totalPagesCount = Math.ceil(Number(estimate) / this.resultsPerPage);
+          this.totalResults = state.result?.estimate || 0;
+
+          // Update end value when totalResults change
+          this.updateRange();
+        }
+      }
+    });
+
     combineLatest([this.route.params, this.route.queryParams])
-      .pipe(
-        map((results) => ({ params: results[0], query: results[1] })),
-      )
+      .pipe(map((results) => ({ params: results[0], query: results[1] })))
       .subscribe((results: any) => {
         const queryparam = results.query;
-        
+
         if (queryparam.collectionCode) {
           this.collectionDetails = this.imageService.getImageByCode(queryparam.collectionCode);
         }
       });
 
-    // Call the API to fetch collections data
     this.apiService.getCollectionsList().subscribe({
       next: (response) => {
         if (response?.body) {
-          const parsedBody = JSON.parse(response.body); // Parse JSON
-          console.log('Parsed response', parsedBody);
-    
+          const parsedBody = JSON.parse(response.body);
+
           if (parsedBody?.search?.valuefacets?.facet) {
             this.collections = parsedBody.search.valuefacets.facet.map((facet: any) => {
-              // Check if facet.item is an array, otherwise fallback to an empty array
               const items = Array.isArray(facet.item) ? facet.item : [facet.item].filter(Boolean);
-    
               return {
-                header: facet?.['@attributes']?.label,
-                displayType: facet?.['@attributes']?.displayType,
+                header: facet?.label,
+                displayType: facet?.displayType,
                 collectionTypes: items.map((item: any) => ({
-                  label: item?.['@attributes']?.label,
-                  selected: item?.['@attributes']?.selected,
-                  value: item?.['@attributes']?.value,
-                }))
+                  label: item?.label,
+                  selected: item?.selected,
+                  value: item?.value,
+                })),
               };
             });
           }
-    
-          console.log('Processed collectionfilterData:', this.collections);
         }
       },
       error: (err) => {
         console.error('Error fetching collections:', err);
-      }
+      },
     });
-    
   }
+
   onSelect(item: { id: number; name: string }) {
     this.selectProjectTitle = item.name;
   }
@@ -123,13 +139,33 @@ export class SearchFindContentComponent implements OnInit {
     this.selectFormatTitle = item.name;
   }
 
-  // Pagination
-  currentPageNumber: number = 1;
-  totalPagesCount: number = 100;
-  pagePerItem: number = 5;
+  onPageChange(newPage: number): void {
+    this.currentPage = newPage;
 
-  onPageChange(newPage: number) {
-    this.currentPageNumber = newPage;
-    console.log('Page changed to:', newPage);
+    // Retrieve the latest payload from PayloadService
+    const finalPayload = this.payloadService.getPayload();
+
+    if (finalPayload) {
+      // Adjust the 'start' value for pagination
+      this.startValue = (newPage - 1) * this.resultsPerPage + 1;
+      finalPayload.search.start = this.startValue;
+
+      // Update range (x to y)
+      this.updateRange();
+
+      // Call the API to fetch updated results based on the new page
+      this.apiService.getSearchListing(finalPayload).subscribe({
+        next: (response) => {
+          this.searchService.updateSearchResult(response.body);
+        },
+        error: (err) => {
+          console.error('API Error:', err);
+        },
+      });
+    }
+  }
+
+  private updateRange(): void {
+    this.endValue = Math.min(this.startValue + this.resultsPerPage - 1, this.totalResults);
   }
 }

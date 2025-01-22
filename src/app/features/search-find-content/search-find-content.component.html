@@ -76,33 +76,42 @@
       <div class="row">
         <!-- Filter Accordion -->
         <div class="col-md-3">
-          <hec-filter-accordion [collectionfilterData]="collections">
+         <hec-filter-accordion [collectionfilterData]="collections">
          </hec-filter-accordion>
-                </div>
-
+        </div>
+        
         <!-- Search Results -->
         <div class="col-md-8">
           <hec-searchbar></hec-searchbar>
+          
+          <div class="d-flex justify-content-end mb-1">
+            <hec-sortby></hec-sortby>
+          </div>
+          
           <hec-search-results></hec-search-results>
+          
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <p class="mb-0">Showing {{startValue}}-{{endValue}} of {{ totalResults }}</p>
+            <hec-pagination
+              [currentPage]="currentPage"
+              [totalPages]="totalPagesCount"
+              [maxSize]="pagePerItem"
+              (pageChange)="onPageChange($event)">
+            </hec-pagination>
+          </div>
         </div>
+        
       </div>
     </div>
 
     
      
     <!-- Pagination Section -->
-      <div class="d-flex flex-column vh-100">
-      <div class="mt-auto ms-auto mb-3 me-3">
-          <hec-pagination>
-          </hec-pagination>
-        </div>
-      </div>
-  
-     
-
-   
     
-
+    
+        
+  
+  
     <div class="col-12 col-md-4 col-sm-6">
       @if(collectionDetails){
       <h4 class="fw-bold">Showing Results for {{ collectionDetails.name }} Collection</h4>

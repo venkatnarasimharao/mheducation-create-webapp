@@ -37,11 +37,11 @@ export class XmlTransformerUtil {
 
         if (!(nodeType === 3 || nodeType === 8)) {
             if (node.attributes && node.attributes.length > 0) {
-                nodeObject['@attributes'] = {};
+                nodeObject = {};
                 for (let index = 0; index < node.attributes.length; index++) {
                     const attributeName = node.attributes[index].nodeName;
                     const attributeValue = node.attributes[index].nodeValue;
-                    nodeObject['@attributes'][attributeName] = attributeValue;
+                    nodeObject[attributeName] = attributeValue;
                 }
             }
 
@@ -55,15 +55,33 @@ export class XmlTransformerUtil {
                         const childType = childNode.nodeType;
 
                         if (!(childType === 3 || childType === 8)) {
-                            if (nodeObject[childName] === undefined) {
-                                nodeObject[childName] = this.root(childNode);
-                            } else {
-                                if (!(nodeObject[childName] instanceof Array)) {
-                                    const oldNode = nodeObject[childName];
-                                    nodeObject[childName] = [];
-                                    nodeObject[childName].push(oldNode);
+                            const childNodeValue = this.root(childNode);
+                            if (childName === 's:facet-value') {
+                                // Extract count and name values
+                                const countValue = childNodeValue['count'] || childNode.attributes?.getNamedItem('count')?.nodeValue || 0;
+    
+                                if (Array.isArray(nodeObject[childName])) {
+                                    nodeObject[childName].push({
+                                        count: parseInt(countValue, 10),
+                                        name: childNodeValue['name'] || childNode.attributes?.getNamedItem('name')?.nodeValue || ''
+                                    });
+                                } else {
+                                    nodeObject[childName] = [{
+                                        count: parseInt(countValue, 10),
+                                        name: childNodeValue['name'] || childNode.attributes?.getNamedItem('name')?.nodeValue || ''
+                                    }];
                                 }
-                                nodeObject[childName].push(this.root(childNode));
+                            } else {
+                                if (nodeObject[childName] === undefined) {
+                                    nodeObject[childName] = childNodeValue;
+                                } else {
+                                    if (!(nodeObject[childName] instanceof Array)) {
+                                        const oldNode = nodeObject[childName];
+                                        nodeObject[childName] = [];
+                                        nodeObject[childName].push(oldNode);
+                                    }
+                                    nodeObject[childName].push(childNodeValue);
+                                }
                             }
                         } else {
                             // Handle text nodes

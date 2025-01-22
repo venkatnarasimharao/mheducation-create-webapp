@@ -1,46 +1,3 @@
-<!-- <div ngbAccordion [closeOthers]="false">
-  @for (list of collectionfilterData; track list.header) {
-    <div ngbAccordionItem class="border-0 border-bottom" [collapsed]="false" [ngClass]="{'d-none': list.displayType === 'none'}">
-      <h2 ngbAccordionHeader>
-        @if (list.displayType !== 'none') {
-          <button ngbAccordionButton class="fw-bold">
-            {{ list.header | translate }}
-            <span class="text-muted ms-1"> ({{ selectedCheckboxes[list.header] }} Filter(s))</span>
-          </button>
-        }
-      </h2>
-      <div ngbAccordionCollapse>
-        <div ngbAccordionBody>
-          <ng-template>
-            @if (list.collectionTypes?.length > 0) {
-              @for (item of list.collectionTypes; track item.label) {
-                <div class="form-check">
-                  <div class="d-flex justify-content-between">
-                    <div>
-                      <input
-                        type="checkbox"
-                        class="form-check-input"
-                        [name]="item.label"
-                        [checked]="item.selected === 'true'"
-                        (change)="onCheckBoxChange($event, item, list.header)"
-                        [id]="item.label"
-                      />
-                      <label class="form-check-label" [for]="item.label">
-                        {{ item.label | translate }}
-                      </label>
-                    </div>
-                    <span class="text-muted">{{ item.value }}</span>
-                  </div>
-                </div>
-              }
-            }
-          </ng-template>
-        </div>
-      </div>
-    </div>
-  }
-</div> -->
-
 <div ngbAccordion [closeOthers]="false">
   @for (list of collectionfilterData; track list.header) {
     <div ngbAccordionItem class="border-0 border-bottom" [collapsed]="false" [ngClass]="{'d-none': list.displayType === 'none'}">
@@ -72,7 +29,7 @@
                         {{ item.label | translate }}
                       </label>
                     </div>
-                    <span class="text-muted">{{ item.value }}</span>
+                    <span class="text-muted">{{ item.count }}</span> <!-- Display the count -->
                   </div>
                 </div>
               }

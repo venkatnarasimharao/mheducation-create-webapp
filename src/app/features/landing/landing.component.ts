@@ -8,6 +8,7 @@ import { SearchbarComponent } from '../../shared/components/searchbar/searchbar.
 import { ApiService } from '../../core/services/api/api.service';
 import { USER_SEARCH_CONFIG } from '../../shared/constants/search-payload.config';
 import { SearchService } from '../../core/services/search/search.service';
+import { PayloadService } from '../../core/services/payload/payload.service';
 
 @Component({
   selector: 'hec-landing',
@@ -26,7 +27,8 @@ export class LandingComponent {
   translate :TranslateService =inject(TranslateService);  
 
   private apiService = inject(ApiService);
-  private searchService = inject(SearchService); 
+  private searchService = inject(SearchService);
+  private payloadService = inject(PayloadService); 
   collectionsData: Collection[] = [];
 
   constructor(
@@ -58,13 +60,14 @@ export class LandingComponent {
   
   
     console.log('Final Payload:', finalPayload);
+    this.payloadService.setPayload(finalPayload);
 
      // Update search service with the latest data
      this.searchService.updateSearchQuery(finalPayload.search.query, finalPayload.search.textTypes.textType, finalPayload.search.findable);
   
     this.apiService.getSearchListing(finalPayload).subscribe({
       next: (response) => {
-        console.log('API Response:', response.body);
+        console.log('API Response:', JSON.parse(response.body));
         this.searchService.updateSearchResult(response.body);
       },
       error: (err) => {
@@ -72,7 +75,6 @@ export class LandingComponent {
       }
     });
   }
-  
   
   
 
