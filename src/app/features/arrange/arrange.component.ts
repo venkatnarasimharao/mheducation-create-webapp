@@ -14,6 +14,7 @@ import { catchError, finalize, map } from 'rxjs/operators';
 import { ProjectItem, Section } from '../../shared/models/search.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { PROJECT_ARRANGE_CONFIG } from '../../shared/constants/search-payload.config';
 
 @Component({
   selector: 'hec-arrange',
@@ -58,10 +59,10 @@ export class ArrangeComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadProjects();
-
     this.route.queryParams.subscribe((params) => {
       const projectId = params['projectId'];
       if (projectId) {
+        this.loadProjectPrice();
         this.loadProjectData(projectId);
       }
     });
@@ -80,34 +81,80 @@ export class ArrangeComponent implements OnInit {
       }
     });
   }
+
+  saveProjects(projectId: any) {
+    const payload = PROJECT_ARRANGE_CONFIG;
+    // configurePayloadForRearrangements(payload,);
+    this.apiService
+      .saveProjectData(projectId, payload)
+      .subscribe((projects: any) => {
+        console.log('saveProjects', projects);
+        if (projects.ok) {
+          const data = JSON.parse(projects.body);
+          this.selectProject = data.project;
+          this.updateItemStates();
+        }
+      });
+  }
+
+  // configurePayloadForRearrangements(originalConfig: any, changes: any): any {
+  //   const updatedConfig = { ...originalConfig };
+  //   if (changes.structure) {
+  //     updatedConfig.project.structure.entry = updatedConfig.project.structure.entry.map((entry: any) => {
+  //       const updatedEntry = changes.structure[entry._subtype] || null;
+  //       if (updatedEntry) {
+  //         return { ...entry, ...updatedEntry };
+  //       }
+  //       return entry;
+  //     });
+  //   }
+
+  //   if (changes.projectCourseDetails) {
+  //     updatedConfig.project.projectCourseDetails = {
+  //       ...updatedConfig.project.projectCourseDetails,
+  //       ...changes.projectCourseDetails
+  //     };
+  //   }
+
+  //   if (changes.specialInstructions) {
+  //     updatedConfig.project.specialInstructions = changes.specialInstructions;
+  //   }
+
+  //   if (changes.TOCInfo) {
+  //     updatedConfig.project.TOCInfo = {
+  //       ...updatedConfig.project.TOCInfo,
+  //       ...changes.TOCInfo
+  //     };
+  //   }
+
+  //   // Other top-level updates, if needed
+  //   if (changes.status) {
+  //     updatedConfig.project._status = changes.status;
+  //   }
+
+  //   if (changes.title) {
+  //     updatedConfig.project._title = changes.title;
+  //   }
+
+  //   return updatedConfig;
+  // }
+
   loadProjectPrice(): void {
     this.pricingData = {};
 
-    this.apiService.getProjectPricing().subscribe({
+    this.apiService.getProjectPricing(this.selectedProject?.id).subscribe({
       next: (response) => {
-        if (response.error) {
-          console.warn('Unable to load pricing data:', response.error);
-          return;
-        }
-        if (response?.assetprices?.assetprice) {
+        console.log(response, 'pricing data in loadprice');
+        if (response.ok) {
+          const price = JSON.parse(response.body)
           response.assetprices.assetprice.forEach((asset: any) => {
             const assetId = asset['@attributes']?.assetId;
             const priceValue = asset.prices?.price?.['@attributes']?.value;
-
             if (assetId && priceValue) {
               this.pricingData[assetId] = parseFloat(priceValue).toFixed(2);
             }
           });
         }
-
-        this.pricingData['FRONT_MATTER'] =
-          response.frontmatterprices?.price?.['@attributes']?.value || '0.00';
-        this.pricingData['BACK_MATTER'] =
-          response.backmatterprices?.price?.['@attributes']?.value || '0.00';
-        this.pricingData['PROJECT'] =
-          response.projectprices?.price?.['@attributes']?.value || '0.00';
-        this.pricingData['NOMINAL'] =
-          response.nominalprices?.price?.['@attributes']?.value || '0.00';
 
         console.log('Processed pricing data:', this.pricingData);
       },
@@ -192,7 +239,7 @@ export class ArrangeComponent implements OnInit {
 
     const attrs = entry['@attributes'];
     const guid = attrs.guid;
-    let priceDisplay = 'N/A';
+    let priceDisplay = this.pricingData || 'N/A';
 
     console.log('Processing item:', attrs.computedtitle, 'GUID:', guid);
     console.log('Available pricing data:', this.pricingData);
@@ -435,7 +482,7 @@ export class ArrangeComponent implements OnInit {
       section.selectAllChecked = false;
     });
     this.isAnyCheckboxSelected = false;
-
+    // this.saveProjects(this.selectedProject.id);
     this.updateItemStates();
   }
 
@@ -469,7 +516,6 @@ export class ArrangeComponent implements OnInit {
   onSelect(item: { id: string; name: string }) {
     this.selectedProject = item;
     this.projectLoadError = null;
-    // this.loadProjectData(item);
     this.router.navigate(['/arrange'], {
       queryParams: { projectId: item.id },
     });

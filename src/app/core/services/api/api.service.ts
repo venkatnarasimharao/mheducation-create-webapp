@@ -15,6 +15,7 @@ export class ApiService {
   ) {
   }
 
+  session = 'JSESSIONID_CRT=PuKNrUaejWSxhEBlNJVyUrGBLGs4FTisCy8miPzWiSLKIUu7eoYX!-2070150201'
   getSearchListing() {
     const finalPay = USER_SEARCH_CONFIG
     let languages: any = sessionStorage.getItem('languages');
@@ -82,7 +83,7 @@ export class ApiService {
   const cookie = this.cookieService.get('jsessionid');
   const uid = this.cookieService.get('paris_user_id');
   const headers = new HttpHeaders({
-    'jcookie': `JSESSIONID_CRT=UCGNTymKV2AVnT-HO4UmmD5DSFCxRqQzCQ7YFBq53CU53Mxi9o0e!-2070150201`
+    'jcookie': this.session
   });
 
   return this.apiMethodService({
@@ -95,7 +96,7 @@ export class ApiService {
     const cookie = this.cookieService.get('jsessionid');
     const paris_user_id = this.cookieService.get('paris_user_id');
     const headers = new HttpHeaders({
-      'jcookie': `JSESSIONID_CRT=UCGNTymKV2AVnT-HO4UmmD5DSFCxRqQzCQ7YFBq53CU53Mxi9o0e!-2070150201`
+      'jcookie':this.session
     });
  
     return this.apiMethodService({
@@ -123,19 +124,32 @@ export class ApiService {
   );
   }
 
-    saveProjectData(userId: string, projectId: string, data: any): Observable<any> {
- 
+
+  saveProjectData(projectId: string, payload: any): Observable<any> {
+    const cookie = this.cookieService.get('jsessionid');
+    const paris_user_id = this.cookieService.get('paris_user_id');
+    const headers = new HttpHeaders({
+      'jcookie': this.session
+    });
+    
     return this.apiMethodService({
-      url: `/projects/${projectId}`,
-      method: 'PUT',
-      body: null,
+      url: `/users/${paris_user_id}/saveproject/${projectId};jsessionid=Gj6NvVUVcSIMGkSqJ4bVcXNP0lOtJp5azb9QwKx5AVUMN3OBR3iM!-2070150201!1737544783125?returnpricing=false`,
+      method: 'POST',
+      body: payload,
+      options: {headers}
     })
   }
-  getProjectPricing(): Observable<any> {
+  getProjectPricing(projectId:any): Observable<any> {
+    const cookie = this.cookieService.get('jsessionid');
+    const paris_user_id = this.cookieService.get('paris_user_id');
+    const headers = new HttpHeaders({
+      'jcookie': this.session
+    });
     return this.apiMethodService({
-      url: `users/1000507376/getprojectpricing/2341f3c1-19bd-9a1a-9f44-c15e6469ed93?countryCode=US&nocacheTimestamp=1737460101543`,
+      url: `/users/${paris_user_id}/getprojectpricing/${projectId}`,
       method: 'GET',
       body: null,
+      options: {headers}
     }).pipe(
       map((response: any) => {
         try {
