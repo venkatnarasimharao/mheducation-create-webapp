@@ -38,7 +38,6 @@ export class ApiService {
       options: { responseType: 'text' }
     })
   }
-
   userLogin(payload: { username: string, password: string }): Observable<any> {
     const { username, password } = payload;
     const base64String = btoa(`${username}:${password}`);
@@ -103,7 +102,7 @@ export class ApiService {
     const userId = this.cookieService.get("paris_user_id");  // Example user ID
     const url = `/users/${userId}/preview/${payload.guid}/${payload.pageNumber}`;
     const headers = new HttpHeaders({
-      'jcookie': `JSESSIONID_CRT=ZJ2KJNYkAmHECH3xiK36hc5W9uD7FOL8BAQtanl7mAuQrsCsYnFi!-2070150201`,
+      'jcookie': `JSESSIONID_CRT=c3yNIQ0mNGUZx5gQdtfjzWIY9sbnetM_1BHyFbKQ3gb5OW-CV4o8!-2070150201`,
       'X-Response-Type': 'arraybuffer',
     });
     const params = {
@@ -117,16 +116,21 @@ export class ApiService {
     });
   }
   getSearchInsideList(payload: any) {
-    console.log(payload);
     let user = "anonymous";
     if (!this.isAnonymous()) {
       user = this.cookieService.get("paris_user_id");
     }
+    const headers = new HttpHeaders({
+      'jcookie': `JSESSIONID_CRT=c3yNIQ0mNGUZx5gQdtfjzWIY9sbnetM_1BHyFbKQ3gb5OW-CV4o8!-2070150201`,
+      'X-Response-Type': 'arraybuffer',
+    });
     return this.apiMethodService({
       url: `/p/users/${user}/searchinside`,
       method: 'POST',
       body: payload,
-      options: { responseType: 'text' }
+      options: {
+        responseType: 'text', headers
+      }
     })
   }
 

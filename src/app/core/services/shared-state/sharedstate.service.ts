@@ -23,10 +23,12 @@ export class SharedstateService {
 
     this.apiService.apiMethodService({ url: '/p/languages', method: 'GET' }).subscribe({
       next: (res: any) => {
-        const languages = res.body ? JSON.parse(res.body) : {}
-        if (res.ok && languages?.language) {
-          this.languages.set(languages.language)
-          sessionStorage.setItem('languages', JSON.stringify(languages.language))
+        if (res.ok) {
+          const languages = res.body ? JSON.parse(res.body) : {}
+          if (languages?.language) {
+            this.languages.set(languages.language)
+            sessionStorage.setItem('languages', JSON.stringify(languages.language))
+          }
         }
       },
       error: (error: any) => {

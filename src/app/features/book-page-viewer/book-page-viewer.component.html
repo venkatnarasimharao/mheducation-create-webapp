@@ -1,18 +1,20 @@
-<div class="text-center m-2" style="min-height: 100%; object-fit: contain;">
+<div class="text-center m-2 position-relative" style="min-height: 100%; object-fit: contain;">
     <div>{{currentChapter.title}} ({{currentChapter.pageCount +"pp"}})</div>
     @if(isAnonymous){
-    <div class="">
+    <div style="height: 100%;">
+        <hr />
         <div>To read this content, you'll need to sign in first.</div>
         <button (click)="handleSign()">Sign In / Register Now</button>
     </div>
     }
     @else{
     @if(pageViewLoading){
-    <div class="d-flex justify-content-center" style="z-index: 1;">
-        <div class="hec-loader-content"></div>
+    <div class="d-flex justify-content-center align-items-center"
+        style="z-index: 1;min-height: 500px; position: absolute; top: 20%; left: 50%; transform: translate(-50%, -50%);">
+        <div class=" hec-loader-content"></div>
     </div>
     }
-    @else{
+    @if(isPreviousPage){
     <div class="">
         <div class="preview-parent d-flex align-items-center justify-content-center p-2">
             @if(prevButtonVisible){
@@ -35,7 +37,7 @@
                         [(ngModel)]="pageNumber" name="pageNumber" [min]="1" [max]="pageCount" required
                         #pageNumberInput="ngModel" style="width: 200px;" />
                     <button type="submit" class="btn btn-primary m-0" [disabled]="!searchForm.valid">Go</button>
-                    <p class="pt-2">of {{pageCount}}</p>
+                    <p class="pt-2">{{" of "+ pageCount}}</p>
                 </div>
                 <!-- Validation messages -->
                 <!-- TODO-  not working now -->

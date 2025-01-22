@@ -33,6 +33,8 @@ export class BookInfoPanelComponent implements OnInit {
   bookInsideData: any = [];
   expanded: { [key: number]: boolean } = {};
   currentChapter: any;
+  isSearchInsideLoader: boolean = false;
+  isCompletedSearchInside = false;
 
   constructor(private apiService: ApiService,
     private modalService: NgbModal,
@@ -47,20 +49,27 @@ export class BookInfoPanelComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.fetchBookData(params['guid']);
     });
-    // set current Chapter
+    this.AuthService.loginStatus$.subscribe((status) => {
+      if (status === 'success') {
+        this.isAnonymous = false;
+      }
+    });
   }
 
   private fetchBookData(guid: string): void {
     this.bookDataLoader = true;
     this.apiService.getBookDetails(guid).subscribe(
       (response: any) => {
-        this.bookDataLoader = false;
-        this.isDataFetched = true;
-        this.bookData = JSON.parse(response.body);
-        this.setBookCardData();
-        this.loadDetailsTabData();
-        this.groupTocList(this.bookData?.toc?.result);
-        this.setCurrentChapter(Object.keys(this.tocList)[0], 0);
+        if (response.ok) {
+          this.bookDataLoader = false;
+          this.isDataFetched = true;
+          this.bookData = JSON.parse(response.body);
+          this.setBookCardData();
+          this.loadDetailsTabData();
+          this.groupTocList(this.bookData?.toc?.result);
+          this.setCurrentChapter(Object.keys(this.tocList)[0], 0);
+        }
+
       },
       (error: any) => {
         this.bookDataLoader = false;
@@ -83,6 +92,7 @@ export class BookInfoPanelComponent implements OnInit {
   }
   setCurrentChapter(part: any, Chapter: any) {
     this.currentChapter = this.tocList[part][Chapter];
+    console.log(`Current Chapter`);
   }
   groupTocList(items: any): void {
     let previousPart = "";
@@ -160,6 +170,7 @@ export class BookInfoPanelComponent implements OnInit {
     payload.search.token = token;
     console.log(this.bookData);
     payload.search.guid = this.bookData.guid;
+    this.isSearchInsideLoader = true;
 
 
     //   this.apiService.getSearchInsideList(payload)
@@ -201,15 +212,19 @@ export class BookInfoPanelComponent implements OnInit {
 
     // 
     this.apiService.getSearchInsideList(payload).subscribe((res) => {
-      const parsedResponse = JSON.parse(res.body).result
-      if (parsedResponse) {
-        parsedResponse.map((item: any) => {
-          this.bookInsideData.push({ title: item.meta.sub.title, desc: item.content });
-        })
+      this.isSearchInsideLoader = false;
+      if (res.ok) {
+        const parsedResponse = JSON.parse(res.body).result
+        if (parsedResponse) {
+          parsedResponse.map((item: any) => {
+            this.bookInsideData.push({ title: item.meta.sub.title, desc: item.content });
+          })
+        }
+        else {
+          this.isCompletedSearchInside = true;
+        }
       }
-      else {
-        this.bookInsideData.push({ title: "Not Found", desc: "please enter correct queries" });
-      }
+
     })
   }
   openRelatedBook(index: number) {
@@ -224,6 +239,9 @@ export class BookInfoPanelComponent implements OnInit {
     this.expanded[index] = !this.expanded[index];
   }
   onScroll(event: any) {
+    if (this.isCompletedSearchInside || this.isSearchInsideLoader) {
+      return;
+    }
     const element = event.target;
     if (element.scrollHeight - element.scrollTop <= element.clientHeight + 2) {
       this.handleSearchInside(this.bookInsideData.length + 1); // Fetch more data

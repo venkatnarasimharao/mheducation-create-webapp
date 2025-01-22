@@ -36,34 +36,36 @@
             </button>
             }
         </div>
-        <div class="container mt-4 border-0">
-            <ul class="nav nav-tabs justify-content-between bg-primary text-white p-1 rounded">
+        <div class="container mt-4 shadow-sm p-0">
+            <ul class="nav nav-tabs bg-primary text-white p-2 d-flex justify-content-between ">
                 <li class="nav-item">
-                    <button class="nav-link" [class.active]="isActive('contents')"
+                    <button class="nav-link text-center border-0" [class.active]="isActive('contents')"
                         [class.bg-white]="isActive('contents')" [class.text-dark]="isActive('contents')"
                         [class.text-white]="!isActive('contents')" [class.fw-bold]="isActive('contents')"
                         (click)="setActiveTab('contents')" type="button" role="tab">
                         Contents
                     </button>
                 </li>
-                <li class="nav-item ">
-                    <button class="nav-link" [class.active]="isActive('details')" [class.bg-white]="isActive('details')"
-                        [class.text-dark]="isActive('details')" [class.text-white]="!isActive('details')"
-                        (click)="setActiveTab('details')" type="button" role="tab">
+                <li class="nav-item">
+                    <button class="nav-link text-center border-0" [class.active]="isActive('details')"
+                        [class.bg-white]="isActive('details')" [class.text-dark]="isActive('details')"
+                        [class.text-white]="!isActive('details')" (click)="setActiveTab('details')" type="button"
+                        role="tab">
                         Details
                     </button>
                 </li>
                 <li class="nav-item">
-                    <button class="nav-link" [class.active]="isActive('search')" [class.bg-white]="isActive('search')"
-                        [class.text-dark]="isActive('search')" [class.text-white]="!isActive('search')"
-                        (click)="setActiveTab('search')" type="button" role="tab">
+                    <button class="nav-link text-center border-0" [class.active]="isActive('search')"
+                        [class.bg-white]="isActive('search')" [class.text-dark]="isActive('search')"
+                        [class.text-white]="!isActive('search')" (click)="setActiveTab('search')" type="button"
+                        role="tab">
                         Search
                     </button>
-
                 </li>
             </ul>
+
             <!-- Tab Content -->
-            <div class="tab-content rounded-bottom">
+            <div class="tab-content m-0 p-0">
                 <!-- Contents Tab -->
                 @if(currentTab === 'contents'){
                 <div class="scrollable-container" ngbAccordion #accordion="ngbAccordion">
@@ -111,7 +113,7 @@
                 <hr />
                 }
                 @if(currentTab ==="details"){
-                <div class="mb-2 scrollable-container" id="details" role="tabpanel" aria-labelledby="details-tab">
+                <div class="scrollable-container" id="details" role="tabpanel" aria-labelledby="details-tab">
                     <h5>Abstract</h5>
                     <div class="p-1">{{bookDescription}}</div>
                     <hr />
@@ -131,10 +133,11 @@
                 <div class="scrollable-container" (scroll)="onScroll($event)" id="search" role="tabpanel"
                     aria-labelledby="search-tab">
                     <form #searchForm="ngForm" (ngSubmit)="handleSearchInside(1)">
-                        <div class="p-2 d-flex justify-content-between">
+                        <div class="form-control d-flex p-1">
                             <!-- Search input -->
-                            <input type="text" class="form-control" placeholder="Search here..."
-                                [(ngModel)]="searchInsideQuery" name="searchQuery" required />
+                            <input type="text" class=" no-focus-outline border-0 w-100 fs-3"
+                                placeholder="Search here..." [(ngModel)]="searchInsideQuery" name="searchQuery"
+                                required />
 
                             <!-- Search button -->
                             <button type="submit" class="btn btn-primary" [disabled]="!searchForm.valid">Go</button>
@@ -142,6 +145,11 @@
                     </form>
                     @if(bookInsideData.length > 0){
                     <p>Result for {{searchInsideQuery}}</p>
+                    }
+                    @if(isSearchInsideLoader){
+                    <div class="d-flex align-items-center justify-content-center" style="width: 100%; height: 100%;">
+                        <div class="hec-loader-content"></div>
+                    </div>
                     }
 
                     @for(item of bookInsideData;track $index){

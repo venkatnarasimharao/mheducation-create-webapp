@@ -53,9 +53,11 @@ export class AuthService {
 
   logout(): void {
     this.apiService.userLogOut(this.cookieService.get('paris_user_id')).subscribe((data) => {
-      this.cookieService.deleteAll();
-      this.router.navigate(['/']);
-      this.authStatus.emit("LogIn");
+      if (data.ok) {
+        this.cookieService.deleteAll();
+        this.router.navigate(['/']);
+        this.authStatus.emit("LogIn");
+      }
 
     });
   }

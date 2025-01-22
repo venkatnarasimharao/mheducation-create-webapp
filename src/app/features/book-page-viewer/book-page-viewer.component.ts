@@ -22,6 +22,7 @@ export class BookPageViewerComponent implements OnInit, OnChanges {
   pageViewLoading: boolean = false;
   prevButtonVisible: boolean = false;
   nextButtonVisible: boolean = false;
+  isPreviousPage: boolean = false;
   constructor(private AuthService: AuthService,
     private ApiService: ApiService,
     private modalService: NgbModal
@@ -29,20 +30,25 @@ export class BookPageViewerComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.isAnonymous = this.ApiService.isAnonymous();
     this.pageCount = this.currentChapter.pageCount;
-    // this.fetchBookData();
-    if (!this.isAnonymous) {
-      this.fetchBookPageView();
-      this.setButtonVisibility();
-    }
+    this.fetchBookPageView();
+
+    this.AuthService.loginStatus$.subscribe((status) => {
+      if (status === 'success') {
+        this.isAnonymous = false;
+      }
+    });
+
   }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['currentChapter'] && changes['currentChapter'].currentValue) {
       this.pageNumber = 1;
       this.pageCount = this.currentChapter.pageCount || 0;
       this.fetchBookPageView();
-      this.setButtonVisibility();
     }
   }
+
+
   handleSign() {
     const modalRef = this.modalService.open(LoginComponent, { centered: false });
     modalRef.result.then(() => {
@@ -54,8 +60,8 @@ export class BookPageViewerComponent implements OnInit, OnChanges {
   }
   setPageNumber() {
     this.fetchBookPageView();
-    this.setButtonVisibility();
   }
+
   setButtonVisibility() {
     if (this.pageNumber > 1) {
       this.prevButtonVisible = true;
@@ -72,27 +78,34 @@ export class BookPageViewerComponent implements OnInit, OnChanges {
   }
   handleChangePage(change: number) {
     this.pageNumber += change;
-    this.setButtonVisibility();
     this.fetchBookPageView();
   }
 
 
   private fetchBookPageView(): void {
+    this.setButtonVisibility();
+    if (this.isAnonymous) {
+      return;
+    }
     this.pageViewLoading = true;
     const payload = { guid: this.currentChapter.guid, pageNumber: this.pageNumber };
     this.ApiService.getBookPageView(payload).subscribe(
       (response: any) => {
-        this.pageViewLoading = false;
-        if (response.body?.type === 'image/jpeg' || response.body?.type === 'image/png') {
-          const blobUrl = URL.createObjectURL(response.body);
-          this.imageUrl = blobUrl;
-        } else {
-          console.error('Invalid image type:', response.body?.type);
-          this.imageUrl = "https://createqa.mheducation.com/createonline/images/bad_preview.jpg"
+        if (response.ok) {
+          this.pageViewLoading = false;
+          this.isPreviousPage = true;
+          if (response.body?.type === 'image/jpeg' || response.body?.type === 'image/png') {
+            const blobUrl = URL.createObjectURL(response.body);
+            this.imageUrl = blobUrl;
+          } else {
+            console.error('Invalid image type:', response.body?.type);
+            this.imageUrl = "https://createqa.mheducation.com/createonline/images/bad_preview.jpg"
+          }
         }
       },
       (error: any) => {
         this.pageViewLoading = false;
+        this.isPreviousPage = true;
         this.imageUrl = "https://createqa.mheducation.com/createonline/images/bad_preview.jpg"
         console.error('Error fetching book data:', error);
       }
