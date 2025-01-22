@@ -146,12 +146,10 @@ export class ArrangeComponent {
             }
           ];
   
-          // Store structure entries
           this.projectStructureEntries = response?.structure?.entry || [];
           
-          // Process all entries
           if (this.projectStructureEntries.length) {
-            this.addItemToAppropriateSection({} as ProjectItem); // This will trigger the traversal
+            this.addItemToAppropriateSection({} as ProjectItem);
           }
           
           this.updateItemStates();
@@ -189,16 +187,15 @@ export class ArrangeComponent {
   const guid = attrs.guid;
   let priceDisplay = 'N/A';
 
-  console.log('Processing item:', attrs.computedtitle, 'GUID:', guid); // Debug log
-  console.log('Available pricing data:', this.pricingData); // Debug log
+  console.log('Processing item:', attrs.computedtitle, 'GUID:', guid);
+  console.log('Available pricing data:', this.pricingData);
 
   if (guid && this.pricingData) {
-    // Check direct guid match first
+
     if (this.pricingData[guid]) {
       priceDisplay = `$${this.pricingData[guid]}`;
       console.log(`Found direct price for ${attrs.computedtitle}: ${priceDisplay}`);
     } 
-    // Check type-based pricing
     else {
       const type = attrs.type?.toUpperCase();
       console.log(`Checking type-based price for ${attrs.computedtitle}, type: ${type}`);
@@ -210,13 +207,12 @@ export class ArrangeComponent {
         priceDisplay = `$${this.pricingData['BACK_MATTER']}`;
       }
       else if (this.pricingData['NOMINAL']) {
-        // Use NOMINAL price as fallback
         priceDisplay = `$${this.pricingData['NOMINAL']}`;
       }
     }
   }
 
-  console.log(`Final price for ${attrs.computedtitle}: ${priceDisplay}`); // Debug log
+  console.log(`Final price for ${attrs.computedtitle}: ${priceDisplay}`);
 
   return {
     guid: guid,
@@ -239,17 +235,13 @@ export class ArrangeComponent {
   }
 
   private addItemToAppropriateSection(item: ProjectItem): void {
-    // Recursive function to traverse all entries and find their sections
     const traverseEntries = (entries: any[]): void => {
       entries.forEach(entry => {
-        // Get the target container for current entry
         const targetContainer = entry['@attributes']?.targetContainer?.toLowerCase() || '';
         
-        // Process current entry
         if (entry['@attributes']) {
           const currentItem = this.processItem(entry);
           if (currentItem) {
-            // Determine section based on target container
             let targetSectionId = '';
             
             if (targetContainer.includes('frontmatter')) {
@@ -262,7 +254,6 @@ export class ArrangeComponent {
               targetSectionId = 'supplements';
             }
   
-            // Find target section and add item
             const targetSection = this.sections.find(s => s.id === targetSectionId);
             if (targetSection) {
               console.log(`Adding item "${currentItem.name}" to section: ${targetSectionId}`);
@@ -283,7 +274,6 @@ export class ArrangeComponent {
       });
     };
   
-    // Process the structure entries
     if (this.projectStructureEntries && Array.isArray(this.projectStructureEntries)) {
       traverseEntries(this.projectStructureEntries);
     }
