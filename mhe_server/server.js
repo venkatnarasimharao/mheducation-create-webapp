@@ -50,7 +50,7 @@ app.all('/proxy/createonline/*', async (req, res) => {
             res.set('Content-Type', 'application/xml');
             res.send(response.data);
         } else if (req.method === 'GET') {
-            const response = await axios.get(externalApiUrl, { headers: `Cookie:JSESSIONID_CRT=ZQ9pdA4rmP2wa86SfrarKWHHGlHrgTO6NWYDwPYyqYLXanl9LJWN!-1589815393` });
+            const response = await axios.get(externalApiUrl, { headers: `Cookie:JSESSIONID_CRT=wSuMdvebxmspJX6ncc4gKQs4vKd6t6ZF-zav6ZcnKyRkdiBD40mT!-2070150201` });
             res.set('Content-Type', 'application/xml');
             res.send(response.data);
         }

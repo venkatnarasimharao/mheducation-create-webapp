@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { NgbCollapseModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../../core/services/api/api.service';
 import { catchError, finalize } from 'rxjs/operators';
+import { ProjectItem,Section } from '../../shared/models/search.model';
 
 @Component({
   selector: 'hec-arrange',
@@ -19,6 +20,7 @@ import { catchError, finalize } from 'rxjs/operators';
   templateUrl: './arrange.component.html',
   styleUrls: ['./arrange.component.scss'],
 })
+
 export class ArrangeComponent {
   isCollapsed: { [key: string]: boolean } = {
     introMaterial: false,
@@ -26,190 +28,267 @@ export class ArrangeComponent {
     backMaterials: false,
     supplements: false,
   };
+
   selectAllChecked: boolean = false;
   isAnyCheckboxSelected: boolean = false;
 
-  //dropdownTitle
-  selectProjectTitle: string = 'Test123';
-  selectFormatTitle: string = 'Please Select';
-  selectArrangeTitle: string = 'Arrange';
-
-
-  //dropdown items
-  selectProjectItems: any[] = [
-    { id: 1, name: 'Project 1' },
-    { id: 2, name: 'Project 2' },
-    { id: 3, name: 'Project 3' },
-  ];
   
+  selectedProject: any = '';
+  selectProject: any[] = [];
+  selectProjectItems: any[] = [];
+  projectStructureEntries: any[] = [];
+
   isLoading: boolean = false;
   error: string | null = null;
-  userId: string = '30141477';
-  projectId: string = '1d0d1b85-aae4-267d-b373-4127c6d37a55';
+  userId: string = '';
+  projectId: string = '';
+
+  loadingProjectData: boolean = false;
+  projectLoadError: string | null = null;
   
-  sections = [
-    {
-      id: 'introMaterial',
-      title: 'Introductory Material',
-      selectAllChecked: false,
-      items: [
-        {
-          name: 'Detailed Contents',
-          format: 'Color, Print & Digital',
-          pages: 5,
-          price: '$0.57',
-          checked: false,
-          disableUp: true,
-          disableDown: false,
-        },
-        {
-          name: 'Practice',
-          format: 'Color, Print & Digital',
-          pages: 1,
-          price: '$0.57',
-          checked: false,
-          disableUp: false,
-          disableDown: true,
-        },
-      ],
-    },
-
-    {
-      id: 'bookContent',
-      title: 'Book Content',
-      selectAllChecked: false,
-      items: [
-        {
-          name: 'Chapter 1: Basics',
-          format: 'Black & White, Print & Digital',
-          pages: 20,
-          price: '$1.50',
-          checked: false,
-          disableUp: true,
-          disableDown: false,
-        },
-        {
-          name: 'Chapter 2: Advanced Topics',
-          format: 'Color, Print & Digital',
-          pages: 30,
-          price: '$2.50',
-          checked: false,
-          disableUp: false,
-          disableDown: false,
-        },
-        {
-          name: 'Chapter 3: Summary',
-          format: 'Black & White, Print & Digital',
-          pages: 10,
-          price: '$0.80',
-          checked: false,
-          disableUp: false,
-          disableDown: true,
-        },
-      ],
-    },
-
-    {
-      id: 'backMaterials',
-      title: 'Back Materials',
-      selectAllChecked: false,
-      items: [
-        {
-          name: 'Introduction',
-          format: 'Color, Print & Digital',
-          pages: 5,
-          price: '$0.57',
-          checked: false,
-          disableUp: true,
-          disableDown: false,
-        },
-        {
-          name: 'Divesting Harvard',
-          format: 'Color, Print & Digital',
-          pages: 5,
-          price: '$0.57',
-          checked: false,
-          disableUp: false,
-          disableDown: true,
-        },
-      ],
-    },
-    {
-      id: 'supplements',
-      title: 'Supplements',
-      selectAllChecked: false,
-      items: [
-        {
-          name: 'Introduction',
-          format: 'Color, Print & Digital',
-          pages: 5,
-          price: '$0.57',
-          checked: false,
-          disableUp: true,
-          disableDown: false,
-        },
-        {
-          name: 'Divesting Harvard',
-          format: 'Color, Print & Digital',
-          pages: 5,
-          price: '$0.57',
-          checked: false,
-          disableUp: false,
-          disableDown: true,
-        },
-      ],
-    },
-  ];
-
-  // sections: any[] = [];
+  draggedItems: ProjectItem[] = [];
+  sections: any[] = [];
+  pricingData: any;
+  router: any;
+  selectedCheckboxCount: number = 0;
   constructor(private apiService: ApiService) {
   }
 
   ngOnInit(): void {
+    this.loadProjects();
     this.updateItemStates();
-    this.loadProjectData();
   }
 
-  loadProjectData(): void {
-    this.isLoading = true;
-    this.error = null;
-  
-    this.apiService.getProjectData(this.userId, this.projectId)
-      .subscribe((data) => {
-        console.log(data, 'getProjectData')
-        if (data) {
-          this.sections = this.transformApiData(data);
-          console.log('Successfully loaded project data:', data);
+  loadProjects(): void {
+   this.apiService.getProjectList()
+      .subscribe({
+        next: (projects) => {
+                const data = JSON.parse(projects.body);
+                this.selectProject = data.project.map((item: any) => ({
+                  id: item['@attributes'].guid,
+                  name: item['@attributes'].title
+                }));
           this.updateItemStates();
+        },
+        error: (error) => {
+          this.error = 'Failed to load projects';
+          console.error('Error loading projects:', error);
+        }
+      });
+  }
+  loadProjectPrice(): void {
+    this.pricingData = {};
+    
+    this.apiService.getProjectPricing()
+      .subscribe({
+        next: (response) => {
+          if (response.error) {
+            console.warn('Unable to load pricing data:', response.error);
+            return;
+          }
+          if (response?.assetprices?.assetprice) {
+            response.assetprices.assetprice.forEach((asset: any) => {
+              const assetId = asset['@attributes']?.assetId;
+              const priceValue = asset.prices?.price?.['@attributes']?.value;
+              
+              if (assetId && priceValue) {
+                this.pricingData[assetId] = parseFloat(priceValue).toFixed(2);
+              }
+            });
+          }
+  
+          this.pricingData['FRONT_MATTER'] = response.frontmatterprices?.price?.['@attributes']?.value || '0.00';
+          this.pricingData['BACK_MATTER'] = response.backmatterprices?.price?.['@attributes']?.value || '0.00';
+          this.pricingData['PROJECT'] = response.projectprices?.price?.['@attributes']?.value || '0.00';
+          this.pricingData['NOMINAL'] = response.nominalprices?.price?.['@attributes']?.value || '0.00';
+  
+          console.log('Processed pricing data:', this.pricingData);
+        },
+        error: (error) => {
+          console.error('Error in loadProjectPrice:', error);
         }
       });
   }
 
-  private transformApiData(apiData: any): any[] {
-    try {
-      return apiData.sections.map((section: any) => ({
-        id: section.id,
-        title: section.title,
-        selectAllChecked: false,
-        items: section.items.map((item: any) => ({
-          name: item.name,
-          format: item.format,
-          pages: item.pages,
-          price: item.price,
-          checked: false,
-          disableUp: false,
-          disableDown: false,
-          indentLevel: item.indentLevel || 1,
-          displayNumber: item.displayNumber || '',
-        })),
-      }));
-    } catch (error) {
-      console.error('Error transforming API data:', error);
-      return [];
+  loadProjectData(item : any): void {
+    this.loadingProjectData = true;
+    this.projectLoadError = null;
+  
+    this.apiService.getProjectData(item.id)
+      .subscribe({
+        next: (response) => {
+          console.log('Project data response:', response);
+          
+          this.sections = [
+            {
+              id: 'introMaterial',  
+              title: 'Introductory Material',
+              selectAllChecked: false,
+              items: []
+            },
+            {
+              id: 'bookContent',
+              title: 'Book Content',
+              selectAllChecked: false,
+              items: []
+            },
+            {
+              id: 'backMaterials',
+              title: 'Back Materials',
+              selectAllChecked: false,
+              items: []
+            },
+            {
+              id: 'supplements',
+              title: 'Supplements',
+              selectAllChecked: false,
+              items: []
+            }
+          ];
+  
+          // Store structure entries
+          this.projectStructureEntries = response?.structure?.entry || [];
+          
+          // Process all entries
+          if (this.projectStructureEntries.length) {
+            this.addItemToAppropriateSection({} as ProjectItem); // This will trigger the traversal
+          }
+          
+          this.updateItemStates();
+        },
+        error: (error) => {
+          console.error('Error loading project data:', error);
+          this.projectLoadError = 'Failed to load project data. Please try again.';
+        },
+        complete: () => {
+          this.loadingProjectData = false;
+        }
+      });
+  }
+  private processStructureEntries(entries: any[]): void {
+    entries.forEach(entry => {
+      if (entry.entry && Array.isArray(entry.entry)) {
+        entry.entry.forEach((item: any) => {
+          const processedItem = this.processItem(item);
+          console.log('processedItem Loading:',entries );
+          if (processedItem) {
+            this.addItemToAppropriateSection(processedItem);
+          }
+          if (item.entry && Array.isArray(item.entry)) {
+            this.processStructureEntries([item]);
+          }
+        });
+      }
+    });
+  }
+
+ private processItem(entry: any): ProjectItem | null {
+  if (!entry['@attributes']) return null;
+
+  const attrs = entry['@attributes'];
+  const guid = attrs.guid;
+  let priceDisplay = 'N/A';
+
+  console.log('Processing item:', attrs.computedtitle, 'GUID:', guid); // Debug log
+  console.log('Available pricing data:', this.pricingData); // Debug log
+
+  if (guid && this.pricingData) {
+    // Check direct guid match first
+    if (this.pricingData[guid]) {
+      priceDisplay = `$${this.pricingData[guid]}`;
+      console.log(`Found direct price for ${attrs.computedtitle}: ${priceDisplay}`);
+    } 
+    // Check type-based pricing
+    else {
+      const type = attrs.type?.toUpperCase();
+      console.log(`Checking type-based price for ${attrs.computedtitle}, type: ${type}`);
+      
+      if (type === 'FRONTMATTER' && this.pricingData['FRONT_MATTER']) {
+        priceDisplay = `$${this.pricingData['FRONT_MATTER']}`;
+      } 
+      else if (type === 'BACKMATTER' && this.pricingData['BACK_MATTER']) {
+        priceDisplay = `$${this.pricingData['BACK_MATTER']}`;
+      }
+      else if (this.pricingData['NOMINAL']) {
+        // Use NOMINAL price as fallback
+        priceDisplay = `$${this.pricingData['NOMINAL']}`;
+      }
+    }
+  }
+
+  console.log(`Final price for ${attrs.computedtitle}: ${priceDisplay}`); // Debug log
+
+  return {
+    guid: guid,
+    name: attrs.computedtitle || attrs.title,
+    format: this.determineFormat(entry),
+    pages: parseInt(attrs.pagecount) || 0,
+    price: priceDisplay,
+    checked: false,
+    disableUp: false,
+    disableDown: false,
+    type: attrs.type || entry.type || entry.structuraltype,
+    subType: attrs.subType || ''
+  };
+}
+
+  private determineFormat(item: any): string {
+    const isColor = item['@attributes']?._numberInteriorColors === '4';
+    const format = isColor ? 'Color' : 'Black & White';
+    return `${format}, Print & Digital`;
+  }
+
+  private addItemToAppropriateSection(item: ProjectItem): void {
+    // Recursive function to traverse all entries and find their sections
+    const traverseEntries = (entries: any[]): void => {
+      entries.forEach(entry => {
+        // Get the target container for current entry
+        const targetContainer = entry['@attributes']?.targetContainer?.toLowerCase() || '';
+        
+        // Process current entry
+        if (entry['@attributes']) {
+          const currentItem = this.processItem(entry);
+          if (currentItem) {
+            // Determine section based on target container
+            let targetSectionId = '';
+            
+            if (targetContainer.includes('frontmatter')) {
+              targetSectionId = 'introMaterial';
+            } else if (targetContainer.includes('contents')) {
+              targetSectionId = 'bookContent';
+            } else if (targetContainer.includes('backmatter')) {
+              targetSectionId = 'backMaterials';
+            } else if (targetContainer.includes('supplement')) {
+              targetSectionId = 'supplements';
+            }
+  
+            // Find target section and add item
+            const targetSection = this.sections.find(s => s.id === targetSectionId);
+            if (targetSection) {
+              console.log(`Adding item "${currentItem.name}" to section: ${targetSectionId}`);
+              console.log('Target Container:', targetContainer);
+              targetSection.items.push(currentItem);
+            }
+          }
+        }
+        
+
+        if (entry.entry) {
+          if (Array.isArray(entry.entry)) {
+            traverseEntries(entry.entry);
+          } else {
+            traverseEntries([entry.entry]);
+          }
+        }
+      });
+    };
+  
+    // Process the structure entries
+    if (this.projectStructureEntries && Array.isArray(this.projectStructureEntries)) {
+      traverseEntries(this.projectStructureEntries);
     }
   }
   
-
   getAllItems() {
     return this.sections.flatMap((section) => section.items);
   }
@@ -274,22 +353,83 @@ export class ArrangeComponent {
     return this.sections.map((section) => section.id);
   }
 
-  drop(event: CdkDragDrop<any[]>) {
+  drop(event: CdkDragDrop<ProjectItem[]>) {
     if (event.previousContainer === event.container) {
-      moveItemInArray(
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
+
+      const sourceSection = this.sections.find(s => s.id === event.container.id);
+      if (!sourceSection) return;
+
+      if (this.draggedItems.length > 0) {
+        const selectedItems = sourceSection.items.filter((item: ProjectItem) => item.checked);
+        const draggedIndexes = selectedItems.map((item: ProjectItem) => sourceSection.items.indexOf(item));
+        
+  
+        draggedIndexes.sort((a: number, b: number) => b - a);
+        
+        const itemsToMove = draggedIndexes.map((index: number) => {
+          const [removed] = sourceSection.items.splice(index, 1);
+          return removed;
+        }).reverse();
+      
+        sourceSection.items.splice(event.currentIndex, 0, ...itemsToMove);
+      } else {
+  
+        moveItemInArray(
+          event.container.data,
+          event.previousIndex,
+          event.currentIndex
+        );
+      }
     } else {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
+  
+      const sourceSection = this.sections.find(s => s.id === event.previousContainer.id);
+      const targetSection = this.sections.find(s => s.id === event.container.id);
+      
+      if (!sourceSection || !targetSection) return;
+
+      if (this.draggedItems.length > 0) {
+    
+        const selectedItems = sourceSection.items.filter((item: ProjectItem) => item.checked);
+        const draggedIndexes = selectedItems.map((item: ProjectItem) => sourceSection.items.indexOf(item));
+        
+        draggedIndexes.sort((a: number, b: number) => b - a);
+        
+
+        const itemsToMove = draggedIndexes.map((index: number) => {
+          const [removed] = sourceSection.items.splice(index, 1);
+          return removed;
+        }).reverse();
+        
+        targetSection.items.splice(event.currentIndex, 0, ...itemsToMove);
+      } else {
+        transferArrayItem(
+          event.previousContainer.data,
+          event.container.data,
+          event.previousIndex,
+          event.currentIndex
+        );
+      }
     }
+    
+    this.draggedItems = [];
+    this.sections.forEach((section: Section) => {
+      section.items.forEach((item: ProjectItem) => item.checked = false);
+      section.selectAllChecked = false;
+    });
+    this.isAnyCheckboxSelected = false;
+    
     this.updateItemStates();
+  }
+
+  onDragStarted(event: any, item: ProjectItem) {
+    const section = this.sections.find((s: Section) => s.items.includes(item));
+    if (!section) return;
+
+    if (item.checked) {
+      this.draggedItems = section.items.filter((i: ProjectItem) => i.checked);
+    } else {
+      this.draggedItems = [];
+    }
   }
 
   updateItemStates(): void {
@@ -302,7 +442,10 @@ export class ArrangeComponent {
   }
   
 
-  onSelect(item: { id: number; name: string }) {
-    this.selectProjectTitle = item.name;
+  onSelect(item: { id: string; name: string }) {
+    this.selectedProject = item;
+    this.projectLoadError = null;
+    this.loadProjectData(item);
+    // this.router.navigate(['/'], { queryParams: { } });
   }
 }

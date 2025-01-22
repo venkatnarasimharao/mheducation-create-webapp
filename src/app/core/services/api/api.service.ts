@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, map, Observable, of, tap } from 'rxjs';
 import { BOOK_COVER_IMAGES, USER_SEARCH_CONFIG } from '../../../shared/constants/search-payload.config';
 import { environment } from '../../../../environments/environment';
 import { CookieService } from 'ngx-cookie-service';
@@ -78,18 +78,49 @@ export class ApiService {
     return this.apiMethodService({ url: `/locale/${languageCode}/props.json`, method: 'GET' });
   }
 
-  getProjectData(userId: string, projectId: string): Observable<any> {
+  getProjectList(): Observable<any> {
+  const cookie = this.cookieService.get('jsessionid');
+  const uid = this.cookieService.get('paris_user_id');
+  const headers = new HttpHeaders({
+    'Cookie': `JSESSIONID_CRT=${cookie}`
+  });
+
+  return this.apiMethodService({
+    url: `/users/${uid}/listprojects?nocacheTimestamp=1737022264852&state=active`,
+    method: 'GET',
+    options: { headers }
+  })
+}
+  getProjectData(projectId: string): Observable<any> {
     const cookie = this.cookieService.get('jsessionid');
+    const paris_user_id = this.cookieService.get('paris_user_id');
     const headers = new HttpHeaders({
       'Cookie': `JSESSIONID_CRT=${cookie}`
     });
  
     return this.apiMethodService({
-      url: `/p/users/1000507376/projects/d5f69362-163a-9f6c-e9de-86a3002f7010`,
+      url: `/p/users/${paris_user_id}/projects/${projectId}`,
       options: { headers },
       method: 'GET',
-      body: null
-    });
+
+    }).pipe(
+      map((response: any) => {
+          if (typeof response.body === 'string') {
+              try {
+                  return JSON.parse(response.body);
+              } catch (error) {
+                  console.error('Error parsing response:', error);
+                  throw new Error('Invalid response format');
+              }
+          }
+          return response;
+      }),
+      tap(parsedResponse => console.log('Parsed Data Response:', parsedResponse)),
+      catchError(error => {
+          console.error('API Error:', error);
+          throw error;
+      })
+  );
   }
 
     saveProjectData(userId: string, projectId: string, data: any): Observable<any> {
@@ -99,6 +130,28 @@ export class ApiService {
       method: 'PUT',
       body: null,
     })
+  }
+  getProjectPricing(): Observable<any> {
+    return this.apiMethodService({
+      url: `users/1000507376/getprojectpricing/2341f3c1-19bd-9a1a-9f44-c15e6469ed93?countryCode=US&nocacheTimestamp=1737460101543`,
+      method: 'GET',
+      body: null,
+    }).pipe(
+      map((response: any) => {
+        try {
+          const parsedData = JSON.parse(response.body);
+          console.log('this is project pricing data',parsedData)
+          return parsedData;
+        } catch (error) {
+          console.error('Error parsing pricing response:', error);
+          return { error: 'PARSING_ERROR' };
+        }
+      }),
+      catchError(error => {
+        console.error('Pricing API Error:', error);
+        return of({ error: 'API_ERROR' });
+      })
+    );
   }
 
   apiMethodService<T>({ url, method, body, params = {}, options = {} }: any): Observable<any> {

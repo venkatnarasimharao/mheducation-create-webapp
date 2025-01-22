@@ -10,16 +10,29 @@
                         <div class="d-flex flex-column align-items-start">
                             <label for="select-project" class="fw-bold mb-1">Select Project</label>
                             <div ngbDropdown class="d-inline-block">
-                                <button type="button" ngbDropdownToggle noCaret id="select-project"
-                                    class="btn btn-outline-dark text-dark bg-transparent w-100" aria-haspopup="true">
-                                    {{ selectProjectTitle }}
+                                <button type="button" 
+                                        ngbDropdownToggle 
+                                        noCaret 
+                                        id="select-project"
+                                        class="btn btn-outline-dark text-dark bg-transparent w-100" 
+                                        [disabled]="isLoading"
+                                        aria-haspopup="true">
+                                    {{ isLoading ? 'Loading...' : (selectedProject?.name || 'Select Project') }}
                                 </button>
                                 <div ngbDropdownMenu class="w-100" role="menu" aria-labelledby="select-project">
-                                    @for(item of selectProjectItems; track item.name){
-                                    <button type="button" class="dropdown-item" role="menuitem"
-                                        (click)="onSelect(item)">
-                                        {{ item.name }}
-                                    </button>
+                                    @if (error) {
+                                        <div class="dropdown-item text-danger">{{ error }}</div>
+                                    } @else if (selectProject.length === 0 && !isLoading) {
+                                        <div class="dropdown-item">No projects found</div>
+                                    } @else {
+                                        @for(item of selectProject; track item.id) {
+                                            <button type="button" 
+                                                    class="dropdown-item" 
+                                                    role="menuitem"
+                                                    (click)="onSelect(item)">
+                                                {{ item.name }}
+                                            </button>
+                                        }
                                     }
                                 </div>
                             </div>
@@ -28,8 +41,15 @@
                             Edit Project Details
                         </a>
                     </div>
-                    <p class="mb-0">Discipline Title: <span class="fw-bold">Business Math</span></p>
+                    <!-- <p class="mb-0">Discipline Title: <span class="fw-bold">Business Math</span></p> -->
+                    @if (!selectedProject?.id) {
+                        <div class="alert alert-warning mt-3 d-flex align-items-center">
+                            <span class="ms-3">Please select a project to view the content</span>
+                        </div>
+                    }
+                    
                 </div>
+                
                 <button class="btn btn-outline-primary mt-3 mt-md-0" aria-label="Format Table of Contents">
                     Format TOC <i class="bi bi-chevron-right"></i>
                 </button>
@@ -108,77 +128,100 @@
             </div>
 
             <!-- TOC Management -->
-            <div cdkDropListGroup>
-                @for (section of sections; track section.id; let sectionIndex = $index) {
-                @if (section.title !== 'Supplements' || (section.title === 'Supplements' && section.items.length > 0)) {
-                <div class="d-flex justify-content-between align-items-center px-2"
-                    [hidden]="section.title === 'Supplements' && (!section.items || section.items.length === 0)">
-                    <h3 class="fw-bolder h4" id="{{ section.id }}-header">{{ section.title }}</h3>
-                    <button type="button" class="btn btn-link p-0" (click)="toggleCollapse(section.id)"
-                        [attr.aria-expanded]="!isCollapsed[section.id]" [attr.aria-controls]="section.id + 'Table'"
-                        attr.aria-labelledby="{{ section.id }}-header"
-                        [attr.title]="isCollapsed[section.id] ? 'Expand section' : 'Collapse section'"
-                        [attr.aria-label]="isCollapsed[section.id] ? 'Expand section' : 'Collapse section'">
-                        <i class="bi" [class.bi-chevron-down]="isCollapsed[section.id]"
-                            [class.bi-chevron-up]="!isCollapsed[section.id]">
-                        </i>
-                    </button>
-                </div>
 
-                <div [id]="section.id + 'Table'" [ngbCollapse]="isCollapsed[section.id]" role="region"
-                    [attr.aria-labelledby]="section.id + '-header'">
-                    <div cdkDropList [id]="section.id" [cdkDropListData]="section.items"
-                        [cdkDropListConnectedTo]="getConnectedDropLists()" (cdkDropListDropped)="drop($event)"
-                        class="table-responsive">
-                        <div class="table-responsive">
-                            <table class="table table-borderless mt-2">
-                                <thead class="table-bordered border-bottom">
-                                    <tr>
-                                        <th scope="col" class="col-12 col-sm-1">
-                                            <input type="checkbox" class="form-check-input me-1"
-                                                [(ngModel)]="section.selectAllChecked"
-                                                (change)="toggleAllCheckboxes(section)"
-                                                attr.aria-label="Select all items in {{ section.title }}" />
-
-                                        </th>
-                                        <th> <span class="d-none d-sm-inline">Product</span></th>
-                                        <th scope="col" class="col-3 col-sm-1 d-none d-sm-table-cell">Pages</th>
-                                        <th scope="col" class="col-3 col-sm-1">Price</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @for (item of section.items; track item.name; let itemIndex = $index) {
-                                    <tr cdkDrag role="row">
-                                        <td class="text-break">
-                                            <input type="checkbox" class="form-check-input me-3"
-                                                [(ngModel)]="item.checked" (change)="checkIfAllSelected(section)"
-                                                attr.aria-label="Select {{ item.name }}" />
-
-                                            <span class="me-3"><i class="bi bi-plus-square"></i></span>
-                                            <span class=""><i class="bi bi-arrows-expand"></i></span>
-                                        
-
-                                        </td>
-                                        <td>
-                                            <a href="#" class="text-decoration-none text-primary">{{ item.name }}</a>
-
-                                                <!-- Mobile-only information -->
-                                            <div class="d-sm-none small text-muted mt-1">
-                                                {{ item.format }} • {{ item.pages }} pages
-                                            </div>
-                                        </td>
-                                        <td class="d-none d-sm-table-cell">{{ item.pages }}</td>
-                                        <td>{{ item.price }}</td>
-                                    </tr>
-                                    }
-                                </tbody>
-                            </table>
+            @if (selectedProject?.id) {
+                <div cdkDropListGroup>
+                    @if (loadingProjectData) {
+                        <div class="text-center py-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
                         </div>
-                    </div>
+                    } @else if (projectLoadError) {
+                        <div class="alert alert-danger" role="alert">
+                            {{ projectLoadError }}
+                        </div>
+                    } @else {
+                        @for (section of sections; track $index; let sectionIndex = $index) {
+                            @if (section.items.length > 0) {
+                                <div class="d-flex justify-content-between align-items-center px-2">
+                                    <h3 class="fw-bolder h4" id="{{ section.id }}-header">{{ section.title }}</h3>
+                                    <button type="button" 
+                                            class="btn btn-link p-0" 
+                                            (click)="toggleCollapse(section.id)"
+                                            [attr.aria-expanded]="!isCollapsed[section.id]" 
+                                            [attr.aria-controls]="section.id + 'Table'"
+                                            [attr.aria-labelledby]="section.id + '-header'">
+                                        <i class="bi" 
+                                           [class.bi-chevron-down]="isCollapsed[section.id]"
+                                           [class.bi-chevron-up]="!isCollapsed[section.id]"></i>
+                                    </button>
+                                </div>
+                
+                                <div [id]="section.id + 'Table'" 
+                                     [ngbCollapse]="isCollapsed[section.id]" 
+                                     role="region"
+                                     [attr.aria-labelledby]="section.id + '-header'">
+                                    <div cdkDropList 
+                                         [id]="section.id" 
+                                         [cdkDropListData]="section.items"
+                                         [cdkDropListConnectedTo]="getConnectedDropLists()" 
+                                         (cdkDropListDropped)="drop($event)"
+                                         class="table-responsive">
+                                        <table class="table table-borderless mt-2">
+                                            <thead class="table-bordered border-bottom">
+                                                <tr>
+                                                    <th scope="col" class="col-12 col-sm-1">
+                                                        <input type="checkbox" 
+                                                               class="form-check-input me-1"
+                                                               [(ngModel)]="section.selectAllChecked"
+                                                               (change)="toggleAllCheckboxes(section)"
+                                                               [attr.aria-label]="'Select all items in ' + section.title" />
+                                                    </th>
+                                                    <th><span class="d-none d-sm-inline">Product</span></th>
+                                                    <th scope="col" class="col-3 col-sm-1 d-none d-sm-table-cell">Pages</th>
+                                                    <th scope="col" class="col-3 col-sm-1">Price</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @for (item of section.items; track $index; let itemIndex = $index) {
+                                                    <tr cdkDrag role="row" (cdkDragStarted)="onDragStarted($event, item)">
+                                                        <td class="text-break">
+                                                          <input type="checkbox" 
+                                                                 class="form-check-input me-3"
+                                                                 [(ngModel)]="item.checked" 
+                                                                 (change)="checkIfAllSelected(section)"
+                                                                 [attr.aria-label]="'Select ' + item.name" />
+                                                          <span class="me-3"><i class="bi bi-plus-square"></i></span>
+                                                          <span class=""><i class="bi bi-arrows-expand"></i></span>
+                                                        </td>
+                                                        <td>
+                                                          <a href="#" class="text-decoration-none text-primary">{{ item.name }}</a>
+                                                          <div class="d-sm-none small text-muted mt-1">
+                                                            {{ item.format }} • {{ item.pages }} pages
+                                                          </div>
+                                                        </td>
+                                                        <td class="d-none d-sm-table-cell">{{ item.pages }}</td>
+                                                        <td>{{ item.price }}</td>
+                                    
+                                                        <ng-template cdkDragPreview>
+                                                          <div class="drag-preview">
+                                                            Moving {{ draggedItems.length || 1 }} item{{ draggedItems.length > 1 ? 's' : '' }}
+                                                          </div>
+                                                        </ng-template>
+                                                      </tr>
+                                                      
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <hr />
+                            }
+                        }
+                    }
                 </div>
-                <hr />
-                }}
-            </div>
+        }
         </div>
     </div>
 </div>
