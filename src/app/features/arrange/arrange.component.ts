@@ -6,7 +6,7 @@ import {
   transferArrayItem,
   CdkDropList,
 } from '@angular/cdk/drag-drop';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbCollapseModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../../core/services/api/api.service';
@@ -22,7 +22,7 @@ import { Observable } from 'rxjs';
   templateUrl: './arrange.component.html',
   styleUrls: ['./arrange.component.scss'],
 })
-export class ArrangeComponent {
+export class ArrangeComponent implements OnInit {
   isCollapsed: { [key: string]: boolean } = {
     introMaterial: false,
     bookContent: false,
@@ -49,9 +49,12 @@ export class ArrangeComponent {
   draggedItems: ProjectItem[] = [];
   sections: any[] = [];
   pricingData: any;
-  router: any;
   selectedCheckboxCount: number = 0;
-  constructor(private apiService: ApiService, private route: ActivatedRoute) {}
+  constructor(
+    private apiService: ApiService,
+    private route: ActivatedRoute,
+    private readonly router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadProjects();
@@ -65,16 +68,17 @@ export class ArrangeComponent {
   }
 
   loadProjects() {
-    this.apiService.getProjectList().pipe(
-      map((projects) => {
+    this.apiService.getProjectList().subscribe((projects: any) => {
+      console.log(projects);
+      if (projects.ok) {
         const data = JSON.parse(projects.body);
         this.selectProject = data.project.map((item: any) => ({
           id: item['@attributes'].guid,
           name: item['@attributes'].title,
         }));
         this.updateItemStates();
-      })
-    );
+      }
+    });
   }
   loadProjectPrice(): void {
     this.pricingData = {};
@@ -466,7 +470,7 @@ export class ArrangeComponent {
     this.selectedProject = item;
     this.projectLoadError = null;
     // this.loadProjectData(item);
-    this.router.navigate(['/'], {
+    this.router.navigate(['/arrange'], {
       queryParams: { projectId: item.id },
     });
   }

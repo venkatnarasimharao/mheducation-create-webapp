@@ -82,7 +82,7 @@ export class ApiService {
   const cookie = this.cookieService.get('jsessionid');
   const uid = this.cookieService.get('paris_user_id');
   const headers = new HttpHeaders({
-    'Cookie': `JSESSIONID_CRT=${cookie}`
+    'jcookie': `JSESSIONID_CRT=UCGNTymKV2AVnT-HO4UmmD5DSFCxRqQzCQ7YFBq53CU53Mxi9o0e!-2070150201`
   });
 
   return this.apiMethodService({
@@ -95,7 +95,7 @@ export class ApiService {
     const cookie = this.cookieService.get('jsessionid');
     const paris_user_id = this.cookieService.get('paris_user_id');
     const headers = new HttpHeaders({
-      'Cookie': `JSESSIONID_CRT=${cookie}`
+      'jcookie': `JSESSIONID_CRT=UCGNTymKV2AVnT-HO4UmmD5DSFCxRqQzCQ7YFBq53CU53Mxi9o0e!-2070150201`
     });
  
     return this.apiMethodService({
