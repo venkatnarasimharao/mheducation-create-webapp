@@ -56,7 +56,6 @@ export class XmlTransformerUtil {
 
                         if (!(childType === 3 || childType === 8)) {
                             const childNodeValue = this.root(childNode);
-                            console.log(childName, childNode, 'childNode is here', childNode?.attributes, childNode?.attributes?.length)
                             if (this.attributeVlaues.includes(childName)) {
                                 let allAttr: any = {}
                                 for (const attr of childNode.attributes) {
