@@ -79,6 +79,8 @@ export class SearchFindContentComponent implements OnInit {
     this.selectFormatTitle = item.name;
   }
   openBookDetails() {
-    this.router.navigate(['/preview'], { queryParams: { guid: "99c9fd84-bc04-37a0-ab66-4a43927a421e" } });
+    this.router.navigate(['/preview'], {
+      queryParams: { guid: "99c9fd84-bc04-37a0-ab66-4a43927a421e" }
+    });
   }
 }

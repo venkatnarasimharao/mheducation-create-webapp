@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { search_inside_config } from '../../shared/constants/search-payload.config';
 import { LoginComponent } from '../../shared/components/login/login.component';
-import { NgbAccordionModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAccordionModule, NgbModal, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { BookPageViewerComponent } from '../book-page-viewer/book-page-viewer.component';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,7 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'hec-book-info-panel',
   standalone: true,
-  imports: [FormsModule, NgbAccordionModule, CommonModule, BookPageViewerComponent],
+  imports: [FormsModule, NgbAccordionModule, CommonModule, BookPageViewerComponent, NgbNavModule],
   templateUrl: './book-info-panel.component.html',
   styleUrl: './book-info-panel.component.scss'
 })
@@ -36,6 +36,7 @@ export class BookInfoPanelComponent implements OnInit {
   isSearchInsideLoader: boolean = false;
   isCompletedSearchInside = false;
 
+
   constructor(private apiService: ApiService,
     private modalService: NgbModal,
     private AuthService: AuthService,
@@ -46,8 +47,19 @@ export class BookInfoPanelComponent implements OnInit {
   }
   ngOnInit(): void {
     this.isAnonymous = this.apiService.isAnonymous();
+    let previousGuid: string | null = null;
     this.route.queryParams.subscribe(params => {
-      this.fetchBookData(params['guid']);
+      const currentGuid = params['guid'];
+      const currentPart = params['part'];
+      const currentChapter = params['Chapter'];
+      if (currentGuid && currentGuid !== previousGuid) {
+        previousGuid = currentGuid;
+        this.fetchBookData(currentGuid);
+      }
+      else if (currentPart && currentChapter) {
+        this.setCurrentChapter(currentPart, currentChapter);
+      }
+      // this.fetchBookData(params['guid']);
     });
     this.AuthService.loginStatus$.subscribe((status) => {
       if (status === 'success') {
@@ -67,7 +79,9 @@ export class BookInfoPanelComponent implements OnInit {
           this.setBookCardData();
           this.loadDetailsTabData();
           this.groupTocList(this.bookData?.toc?.result);
+
           this.setCurrentChapter(Object.keys(this.tocList)[0], 0);
+          // TODO: having in route
         }
 
       },
@@ -87,12 +101,17 @@ export class BookInfoPanelComponent implements OnInit {
   }
   setBookCardData() {
     this.bookTitle = this.bookData?.title;
-    this.bookSummary = (this.bookData?.year ? ("@ " + this.bookData?.year) : "") + (this.bookData?.authors ? " | " + this.bookData.authors : "") + (this.bookData?.source ? " | " + this.bookData?.source : "");
+    this.bookSummary = (this.bookData?.year ? (" © " + this.bookData?.year) : "") + (this.bookData?.authors ? " | " + this.bookData.authors : "") + (this.bookData?.source ? " | " + this.bookData?.source : "");
     this.bookImage = `https://createqa.mheducation.com/covers/${this.bookData.isbn}.jpeg`;
   }
   setCurrentChapter(part: any, Chapter: any) {
     this.currentChapter = this.tocList[part][Chapter];
+    this.router.navigate([], {
+      queryParams: { part, Chapter },
+      queryParamsHandling: 'merge', // Keeps existing query params and updates the specified ones
+    });
     console.log(`Current Chapter`);
+
   }
   groupTocList(items: any): void {
     let previousPart = "";
@@ -154,6 +173,7 @@ export class BookInfoPanelComponent implements OnInit {
   loadDetailsTabData() {
     this.relatedBookList = this.bookData.relationships.relationship;
     this.bookDescription = this.bookData.description;
+    // console.log(this.bookInsideData, "hey");
   }
   setActiveTab(tab: string): void {
     this.currentTab = tab;
@@ -225,11 +245,18 @@ export class BookInfoPanelComponent implements OnInit {
         }
       }
 
-    })
+    },
+      (err: any) => {
+        console.error('Error search inside fetching book data:', err);
+        this.isSearchInsideLoader = false;
+      }
+    )
+
   }
   openRelatedBook(index: number) {
     this.isDataFetched = false;
-    this.fetchBookData(this.relatedBookList[index]['@attributes'].guid);
+    this.fetchBookData(this.relatedBookList[index].guid);
+
   }
   addToFav() {
     // Logic to add book to favourites

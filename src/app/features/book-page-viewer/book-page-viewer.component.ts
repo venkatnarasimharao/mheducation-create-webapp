@@ -31,10 +31,10 @@ export class BookPageViewerComponent implements OnInit, OnChanges {
     this.isAnonymous = this.ApiService.isAnonymous();
     this.pageCount = this.currentChapter.pageCount;
     this.fetchBookPageView();
-
     this.AuthService.loginStatus$.subscribe((status) => {
       if (status === 'success') {
         this.isAnonymous = false;
+        this.fetchBookPageView();
       }
     });
 

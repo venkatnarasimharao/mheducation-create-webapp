@@ -9,6 +9,7 @@ import { CookieService } from 'ngx-cookie-service';
   providedIn: 'root'
 })
 export class ApiService {
+  JSESSIONID_CRT = "hviTFBQu-htMwC8ZmlZmSu27DgjnjP5eheMPhd4zthzuTb76czur! - 2070150201";
 
   constructor(
     private http: HttpClient,
@@ -102,7 +103,7 @@ export class ApiService {
     const userId = this.cookieService.get("paris_user_id");  // Example user ID
     const url = `/users/${userId}/preview/${payload.guid}/${payload.pageNumber}`;
     const headers = new HttpHeaders({
-      'jcookie': `JSESSIONID_CRT=c3yNIQ0mNGUZx5gQdtfjzWIY9sbnetM_1BHyFbKQ3gb5OW-CV4o8!-2070150201`,
+      'jcookie': `JSESSIONID_CRT=${this.JSESSIONID_CRT}`,
       'X-Response-Type': 'arraybuffer',
     });
     const params = {
@@ -121,7 +122,7 @@ export class ApiService {
       user = this.cookieService.get("paris_user_id");
     }
     const headers = new HttpHeaders({
-      'jcookie': `JSESSIONID_CRT=c3yNIQ0mNGUZx5gQdtfjzWIY9sbnetM_1BHyFbKQ3gb5OW-CV4o8!-2070150201`,
+      'jcookie': `JSESSIONID_CRT=${this.JSESSIONID_CRT}`,
       'X-Response-Type': 'arraybuffer',
     });
     return this.apiMethodService({

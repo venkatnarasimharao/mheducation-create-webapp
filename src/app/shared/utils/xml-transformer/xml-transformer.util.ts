@@ -1,5 +1,5 @@
 export class XmlTransformerUtil {
-
+    static attributeVlaues: any = ['s:facet-value'];
     /**
     * Helper function to process content node and return a string value
     * @param node content node in the XML
@@ -37,11 +37,11 @@ export class XmlTransformerUtil {
 
         if (!(nodeType === 3 || nodeType === 8)) {
             if (node.attributes && node.attributes.length > 0) {
-                nodeObject['@attributes'] = {};
+                nodeObject = {};
                 for (let index = 0; index < node.attributes.length; index++) {
                     const attributeName = node.attributes[index].nodeName;
                     const attributeValue = node.attributes[index].nodeValue;
-                    nodeObject['@attributes'][attributeName] = attributeValue;
+                    nodeObject[attributeName] = attributeValue;
                 }
             }
 
@@ -55,15 +55,28 @@ export class XmlTransformerUtil {
                         const childType = childNode.nodeType;
 
                         if (!(childType === 3 || childType === 8)) {
-                            if (nodeObject[childName] === undefined) {
-                                nodeObject[childName] = this.root(childNode);
-                            } else {
-                                if (!(nodeObject[childName] instanceof Array)) {
-                                    const oldNode = nodeObject[childName];
-                                    nodeObject[childName] = [];
-                                    nodeObject[childName].push(oldNode);
+                            const childNodeValue = this.root(childNode);
+                            if (this.attributeVlaues.includes(childName)) {
+                                let allAttr: any = {}
+                                for (const attr of childNode.attributes) {
+                                    allAttr[attr.name] = childNode.attributes?.getNamedItem(attr.name)?.nodeValue
                                 }
-                                nodeObject[childName].push(this.root(childNode));
+                                if (Array.isArray(nodeObject[childName])) {
+                                    nodeObject[childName].push(allAttr);
+                                } else {
+                                    nodeObject[childName] = [allAttr];
+                                }
+                            } else {
+                                if (nodeObject[childName] === undefined) {
+                                    nodeObject[childName] = childNodeValue;
+                                } else {
+                                    if (!(nodeObject[childName] instanceof Array)) {
+                                        const oldNode = nodeObject[childName];
+                                        nodeObject[childName] = [];
+                                        nodeObject[childName].push(oldNode);
+                                    }
+                                    nodeObject[childName].push(childNodeValue);
+                                }
                             }
                         } else {
                             // Handle text nodes

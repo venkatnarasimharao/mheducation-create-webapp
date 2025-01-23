@@ -1,18 +1,16 @@
 @if(bookDataLoader){
-<div class="d-flex align-items-center justify-content-center" style="width: 100%; height: 100%;">
+<div class="d-flex align-items-center justify-content-center vh-100">
     <div class="hec-loader-content"></div>
 </div>
 }
 @if(isDataFetched){
 <div class="d-md-flex p-3">
-    <div class="book-info-panel col-12 col-md-auto">
-        <div class="card mx-auto mt-4 border-0 p-3 shadow-sm" style="max-width: 400px;">
+    <div class="book-info-panel col-10 col-md-auto">
+        <div class="card mx-auto mt-4 border-0 p-3 shadow-sm mw-60">
             <div class="d-flex justify-content-between align-items-center">
-                <!-- Book Image -->
                 <div class="flex-shrink-0 mb-3 mb-md-0">
-                    <img [src]="bookImage" alt="Book Image" class="img-fluid rounded" style="width: 150px;" />
+                    <img [src]="bookImage" alt="Book Image" class="img-fluid rounded w-150" />
                 </div>
-                <!-- Book Details -->
                 <div class="ms-md-4 text-center text-md-start">
 
                     <h5 class="card-title mb-2">@if(!isAnonymous){
@@ -36,156 +34,141 @@
             </button>
             }
         </div>
-        <div class="container mt-4 shadow-sm p-0">
-            <ul class="nav nav-tabs bg-primary text-white p-2 d-flex justify-content-between ">
-                <li class="nav-item">
-                    <button class="nav-link text-center border-0" [class.active]="isActive('contents')"
-                        [class.bg-white]="isActive('contents')" [class.text-dark]="isActive('contents')"
-                        [class.text-white]="!isActive('contents')" [class.fw-bold]="isActive('contents')"
-                        (click)="setActiveTab('contents')" type="button" role="tab">
-                        Contents
-                    </button>
-                </li>
-                <li class="nav-item">
-                    <button class="nav-link text-center border-0" [class.active]="isActive('details')"
-                        [class.bg-white]="isActive('details')" [class.text-dark]="isActive('details')"
-                        [class.text-white]="!isActive('details')" (click)="setActiveTab('details')" type="button"
-                        role="tab">
-                        Details
-                    </button>
-                </li>
-                <li class="nav-item">
-                    <button class="nav-link text-center border-0" [class.active]="isActive('search')"
-                        [class.bg-white]="isActive('search')" [class.text-dark]="isActive('search')"
-                        [class.text-white]="!isActive('search')" (click)="setActiveTab('search')" type="button"
-                        role="tab">
-                        Search
-                    </button>
-                </li>
-            </ul>
-
-            <!-- Tab Content -->
-            <div class="tab-content m-0 p-0">
-                <!-- Contents Tab -->
-                @if(currentTab === 'contents'){
-                <div class="scrollable-container" ngbAccordion #accordion="ngbAccordion">
-                    <div *ngFor="let entry of getObjectKey(tocList); let i = index" [ngbAccordionItem]="'panel-' + i"
-                        [collapsed]='false'>
-                        @if(entry !=="individual"){
-                        <h2 ngbAccordionHeader>
-
-                            <button ngbAccordionButton>@if(!isAnonymous){
-                                <button class="bg-transparent border-0"><i class="bi bi-plus-square fs-1"></i></button>
-                                }{{ entry}}</button>
-                            <!-- TODO- handle the case for individual -->
-                        </h2>
-                        }
-                        <div ngbAccordionCollapse>
-                            <div ngbAccordionBody>
-                                <ul class="list-group">
-                                    @for(item of getObjectValue(tocList,i); track $index){
-                                    <li class="list-group-item d-flex justify-content-between align-items-center"
-                                        (click)="setCurrentChapter(entry, $index)">
-
-                                        @if(item?.originalNumber){
-                                        <span>@if(!isAnonymous && item?.title){
-                                            <button class="bg-transparent border-0"><i
-                                                    class="bi bi-plus-square fs-3"></i></button>
-                                            }{{item?.originalNumber }}. {{ item?.title }}</span>
+        <div class="mt-4 shadow-sm">
+            <ul ngbNav #nav="ngbNav" [(activeId)]="currentTab" class="nav-tabs bg-primary p-0 d-flex">
+                <li [ngbNavItem]="'contents'" class=" flex-grow-1 text-center">
+                    <button ngbNavLink class="nav-link w-100" [class.active]="currentTab === 'contents'"
+                        [class.bg-white]="currentTab === 'contents'" [class.text-primary]="currentTab === 'contents'"
+                        [class.text-white]="currentTab !== 'contents'">Contents</button>
+                    <ng-template ngbNavContent>
+                        <div class="scrollable-container" ngbAccordion #accordion="ngbAccordion">
+                            <div *ngFor="let entry of getObjectKey(tocList); let i = index"
+                                [ngbAccordionItem]="'panel-' + i" [collapsed]='false'>
+                                @if(entry !== "individual"){
+                                <h2 ngbAccordionHeader>
+                                    <button ngbAccordionButton>
+                                        @if(!isAnonymous){
+                                        <button class="bg-transparent border-0">
+                                            <i class="bi bi-plus-square fs-1"></i>
+                                        </button>
                                         }
-                                        @else{
-                                        <span>@if(!isAnonymous && item?.title){
-                                            <button class="bg-transparent border-0"><i
-                                                    class="bi bi-plus-square fs-3"></i></button>
-                                            } {{ item?.title }}</span>
-                                        }
-
-                                        <span class="badge bg-primary rounded-pill">{{ item?.pageCount ?
-                                            (item?.pageCount+'pp'):""}}</span>
-                                    </li>
-                                    }
-
-                                </ul>
+                                        {{ entry }}
+                                    </button>
+                                </h2>
+                                }
+                                <div ngbAccordionCollapse>
+                                    <div ngbAccordionBody>
+                                        <ul class="list-group">
+                                            @for(item of getObjectValue(tocList, i); track $index){
+                                            <li class="list-group-item d-flex justify-content-between align-items-center"
+                                                (click)="setCurrentChapter(entry, $index)">
+                                                @if(item?.originalNumber){
+                                                <span>
+                                                    @if(!isAnonymous && item?.title){
+                                                    <button class="bg-transparent border-0">
+                                                        <i class="bi bi-plus-square fs-3"></i>
+                                                    </button>
+                                                    }
+                                                    {{item?.originalNumber }}. {{ item?.title }}
+                                                </span>
+                                                }
+                                                @else{
+                                                <span>
+                                                    @if(!isAnonymous && item?.title){
+                                                    <button class="bg-transparent border-0">
+                                                        <i class="bi bi-plus-square fs-3"></i>
+                                                    </button>
+                                                    }
+                                                    {{ item?.title }}
+                                                </span>
+                                                }
+                                                <span class="badge bg-primary rounded-pill">
+                                                    {{ item?.pageCount ? (item?.pageCount+'pp'):"" }}
+                                                </span>
+                                            </li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    </ng-template>
+                </li>
+
+                <li [ngbNavItem]="'details'" class=" flex-grow-1 text-center">
+                    <button ngbNavLink class="nav-link w-100" [class.active]="currentTab === 'details'"
+                        [class.bg-white]="currentTab === 'details'" [class.text-primary]="currentTab === 'details'"
+                        [class.text-white]="currentTab !== 'details'">Details</button>
+                    <ng-template ngbNavContent>
+                        <div class="scrollable-container" id="details">
+                            <h5>Abstract</h5>
+                            <div class="p-1" [innerHtml]="bookDescription"></div>
+                            <hr />
+                            <h5>Previous and Alternate Editions:</h5>
+                            @for(relatedBook of relatedBookList; track $index){
+                <li class="text-primary" (click)="openRelatedBook($index)">
+                    <a href="javascript:void(0)">{{relatedBook?.title}}</a>
+                </li>
+                }
                 <hr />
-                }
-                @if(currentTab ==="details"){
-                <div class="scrollable-container" id="details" role="tabpanel" aria-labelledby="details-tab">
-                    <h5>Abstract</h5>
-                    <div class="p-1">{{bookDescription}}</div>
-                    <hr />
-                    <h5>Previous and Alternate Editions:</h5>
-                    @for(relatedBook of relatedBookList; track $index){
-                    <li class="text-primary" (click)="openRelatedBook($index)">
-                        <a href="javascript:void(0)">{{relatedBook?.['@attributes']?.title}}
-                        </a>
-                    </li>
-                    }
+        </div>
+        </ng-template>
+        </li>
 
-
-                    <hr />
-                </div>
-                }
-                @if(currentTab ==="search"){
-                <div class="scrollable-container" (scroll)="onScroll($event)" id="search" role="tabpanel"
-                    aria-labelledby="search-tab">
+        <li [ngbNavItem]="'search'" class=" flex-grow-1 text-center">
+            <button ngbNavLink class="nav-link w-100" [class.active]="currentTab === 'search'"
+                [class.bg-white]="currentTab === 'search'" [class.text-primary]="currentTab === 'search'"
+                [class.text-white]="currentTab !== 'search'">Search</button>
+            <ng-template ngbNavContent>
+                <div class="scrollable-container" (scroll)="onScroll($event)" id="search">
                     <form #searchForm="ngForm" (ngSubmit)="handleSearchInside(1)">
                         <div class="form-control d-flex p-1">
-                            <!-- Search input -->
-                            <input type="text" class=" no-focus-outline border-0 w-100 fs-3"
-                                placeholder="Search here..." [(ngModel)]="searchInsideQuery" name="searchQuery"
-                                required />
-
-                            <!-- Search button -->
+                            <input type="text" class="no-focus-outline border-0 w-100 fs-3" placeholder="Search here..."
+                                [(ngModel)]="searchInsideQuery" name="searchQuery" required />
                             <button type="submit" class="btn btn-primary" [disabled]="!searchForm.valid">Go</button>
                         </div>
                     </form>
+
                     @if(bookInsideData.length > 0){
                     <p>Result for {{searchInsideQuery}}</p>
                     }
+
                     @if(isSearchInsideLoader){
-                    <div class="d-flex align-items-center justify-content-center" style="width: 100%; height: 100%;">
+                    <div class="d-flex align-items-center justify-content-center">
                         <div class="hec-loader-content"></div>
                     </div>
                     }
 
-                    @for(item of bookInsideData;track $index){
+                    @for(item of bookInsideData; track $index){
                     <div>
                         <h5>{{ item.title }}</h5>
-                        <div>
+                        <div class="">
                             @if(!expanded[$index]){
-                            <span>
-                                {{ item.desc | slice: 0:100 }}
-                                @if(item.desc.length > 100){
-                                <span>...</span>
-                                }
-                            </span>
+                            <div [innerHtml]="item.desc | slice: 0:300"></div>
+                            @if(item.desc.length > 300){
+                            <span>...</span>
+                            }
                             }
                             @else{
-                            <span>
-                                {{ item.desc }}
-                            </span>
+                            <div [innerHtml]="item.desc"></div>
                             }
-                            @if(item.desc.length >100){
+
+                            @if(item.desc.length > 100){
                             <button class="bg-transparent text-primary border-0" (click)="toggleExpand($index)">
                                 {{ expanded[$index] ? 'Show Less' : 'Show More' }}
                             </button>
                             }
-
                         </div>
                         <hr />
                     </div>
                     }
-
-
                 </div>
-                }
-            </div>
-        </div>
+            </ng-template>
+        </li>
+        </ul>
+        <div [ngbNavOutlet]="nav" class="mt-2"></div>
     </div>
-    <hec-book-page-viewer class="book-page-viewer" [currentChapter]="currentChapter"></hec-book-page-viewer>
+</div>
+<hec-book-page-viewer class="book-page-viewer" [currentChapter]="currentChapter"></hec-book-page-viewer>
 </div>
 }
