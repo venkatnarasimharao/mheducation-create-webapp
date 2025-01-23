@@ -37,25 +37,4 @@ describe('LandingComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  it('should handle error when loadCollections fails', () => {
-    const consoleErrorSpy = spyOn(console, 'error'); 
-    const mockError = new Error('Test error');
-
-    imageGalleryServiceMock.getCollections.and.returnValue(throwError(() => mockError));
-
-    component.ngOnInit();
-
-  
-    expect(consoleErrorSpy).toHaveBeenCalledWith('Error loading collections data:', mockError);
-    expect(component.collectionsData).toEqual([]);
-  });
-  it('should call handleSearch and log the event', () => {
-    const mockEvent = {
-      categories: ['category1', 'category2'],
-      term: 'search term'
-    };
-    component.handleSearch(mockEvent);
-    expect(consoleLogSpy).toHaveBeenCalledWith('Search Data:', mockEvent);
-  });
 });

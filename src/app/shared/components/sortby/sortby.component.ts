@@ -14,6 +14,7 @@ import { SearchService } from '../../../core/services/search/search.service';
 export class SortbyComponent implements OnInit {
   selectedSortOption: string | null = null; // Initially, no option is selected
 
+
   constructor(
     private payloadService: PayloadService,
     private apiService: ApiService,
@@ -38,17 +39,6 @@ export class SortbyComponent implements OnInit {
 
     this.payloadService.updatePayload(currentPayload);
     console.log('Payload with default sort option:', currentPayload);
-
-    // Optionally fetch the default sorted data
-    this.apiService.getSearchListing(currentPayload).subscribe({
-      next: (response) => {
-        console.log('Default API Response:', response);
-        this.searchService.updateSearchResult(response.body);
-      },
-      error: (error) => {
-        console.error('API Error:', error);
-      }
-    });
   }
 
   // Handle sorting change
@@ -79,10 +69,14 @@ export class SortbyComponent implements OnInit {
     // Log the updated payload
     console.log('Updated Payload:', currentPayload);
 
+    this.searchService.startSearch();
+
     this.apiService.getSearchListing(currentPayload).subscribe({
       next: (response) => {
-        console.log('API Response:', response);
-        this.searchService.updateSearchResult(response.body);
+        if (response.ok) {
+          console.log('API Response:', JSON.parse(response.body));
+          this.searchService.updateSearchResult(response.body);
+        }
       },
       error: (error) => {
         console.error('API Error:', error);

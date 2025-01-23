@@ -25,10 +25,6 @@ import { PayloadService } from '../../core/services/payload/payload.service';
 export class LandingComponent {
   
   translate :TranslateService =inject(TranslateService);  
-
-  private apiService = inject(ApiService);
-  private searchService = inject(SearchService);
-  private payloadService = inject(PayloadService); 
   collectionsData: Collection[] = [];
 
   constructor(
@@ -37,46 +33,7 @@ export class LandingComponent {
 
   ngOnInit(): void {
     this.loadCollections();
-  }
-
-  handleSearch(event: { categories: string[]; term: string }) {
-    console.log('Search Data:', event);
-  
-    const finalPayload = JSON.parse(JSON.stringify(USER_SEARCH_CONFIG));
-  
-    finalPayload.search.query = event.term;
-    if (event.categories.includes('all')) {
-      finalPayload.search.textTypes = { textType: ['all'] };
-    } else {
-      finalPayload.search.textTypes = { textType: event.categories };
-      finalPayload.search.textNamespace = 'http://mhhe.com/primis/meta/resolved';
-    }
-  
-    if (finalPayload.search.textTypes.textType.length === 3) {
-      finalPayload.search.findable = true;
-    } else {
-      finalPayload.search.findable = false;
-    }
-  
-  
-    console.log('Final Payload:', finalPayload);
-    this.payloadService.setPayload(finalPayload);
-
-     // Update search service with the latest data
-     this.searchService.updateSearchQuery(finalPayload.search.query, finalPayload.search.textTypes.textType, finalPayload.search.findable);
-  
-    this.apiService.getSearchListing(finalPayload).subscribe({
-      next: (response) => {
-        console.log('API Response:', JSON.parse(response.body));
-        this.searchService.updateSearchResult(response.body);
-      },
-      error: (err) => {
-        console.error('API Error:', err);
-      }
-    });
-  }
-  
-  
+  }  
 
   private loadCollections(): void {
     this.imageService.getCollections().subscribe({

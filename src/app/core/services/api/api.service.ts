@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BOOK_COVER_IMAGES, USER_SEARCH_CONFIG } from '../../../shared/constants/search-payload.config';
 import { environment } from '../../../../environments/environment';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +12,29 @@ export class ApiService {
 
   constructor(
     private http: HttpClient,
-  ) { }
+    private cookieService: CookieService){}
+
+    public isAnonymous(): boolean {
+      const paris_user_id = this.cookieService.get('paris_user_id');
+      return paris_user_id ? false : true;
+    }
+
+    
 
   getSearchListing(finalPayload: any) {
     const finalPay = JSON.parse(JSON.stringify(finalPayload));
+
+    
+    let user = "anonymous";
+    if(!this.isAnonymous()){
+        user = this.cookieService.get('paris_user_id');
+    }
+    const headers = new HttpHeaders({
+      'jcookie': `JSESSIONID_CRT=2reSopI07Vk2Po5iS-00SDVN5TwRvE1heNc0fZG0NAIW5A5nowfH!-2070150201`,
+      'X-Response-Type': 'arraybuffer',
+    });
+ 
+
     // let languages: any = sessionStorage.getItem('languages');
     // if (languages) {
     //   languages = JSON.parse(languages);
@@ -26,10 +46,10 @@ export class ApiService {
     // }
     // finalPay.search.textTypes.textType = '' // title | all | ["title","authors", "isbn", "description"];
     return this.apiMethodService({
-      url: `/p/users/anonymous/search`,
+      url: `/p/users/${user}/search`,
       method: 'POST',
       body: finalPay,
-      options: { responseType: 'text' }
+      options: { responseType: 'text', headers }
     })
   }
 

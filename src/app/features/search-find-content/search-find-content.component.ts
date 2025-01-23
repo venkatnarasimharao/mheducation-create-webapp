@@ -17,6 +17,7 @@ import { SearchbarComponent } from '../../shared/components/searchbar/searchbar.
 import { SearchService } from '../../core/services/search/search.service';
 import { PayloadService } from '../../core/services/payload/payload.service';
 import { SortbyComponent } from '../../shared/components/sortby/sortby.component';
+import { USER_SEARCH_CONFIG } from '../../shared/constants/search-payload.config';
 
 @Component({
   selector: 'hec-search-find-content',
@@ -73,15 +74,21 @@ export class SearchFindContentComponent implements OnInit {
 
   startValue: number = 1; // Start value for the current page
   endValue: number = this.startValue + this.resultsPerPage - 1; // End value (start + resultsPerPage - 1)
+  loading: boolean = false;
+  sfcloading: boolean = true;
+  searchedTerm: string = '';
 
   constructor(
     private route: ActivatedRoute,
     private readonly imageService: ImageGalleryService,
-    private searchService: SearchService
+    private searchService: SearchService,
   ) {}
 
   ngOnInit(): void {
+    const payload = this.payloadService.getPayload();
+
     this.searchService.searchResults.subscribe((state) => {
+      this.loading = state.loading;
       if (state.result) {
         const estimate = state.result?.estimate;
         if (estimate) {
@@ -92,7 +99,7 @@ export class SearchFindContentComponent implements OnInit {
           this.updateRange();
         }
       }
-    });
+    });  
 
     combineLatest([this.route.params, this.route.queryParams])
       .pipe(map((results) => ({ params: results[0], query: results[1] })))
@@ -106,30 +113,35 @@ export class SearchFindContentComponent implements OnInit {
 
     this.apiService.getCollectionsList().subscribe({
       next: (response) => {
-        if (response?.body) {
-          const parsedBody = JSON.parse(response.body);
-
-          if (parsedBody?.search?.valuefacets?.facet) {
-            this.collections = parsedBody.search.valuefacets.facet.map((facet: any) => {
-              const items = Array.isArray(facet.item) ? facet.item : [facet.item].filter(Boolean);
-              return {
-                header: facet?.label,
-                displayType: facet?.displayType,
-                collectionTypes: items.map((item: any) => ({
-                  label: item?.label,
-                  selected: item?.selected,
-                  value: item?.value,
-                })),
-              };
-            });
+        this.sfcloading = false
+        if(response.ok){
+          if (response?.body) {
+            const parsedBody = JSON.parse(response.body);
+  
+            if (parsedBody?.search?.valuefacets?.facet) {
+              this.collections = parsedBody.search.valuefacets.facet.map((facet: any) => {
+                const items = Array.isArray(facet.item) ? facet.item : [facet.item].filter(Boolean);
+                return {
+                  header: facet?.label,
+                  displayType: facet?.displayType,
+                  collectionTypes: items.map((item: any) => ({
+                    label: item?.label,
+                    selected: item?.selected,
+                    value: item?.value,
+                  })),
+                };
+              });
+            }
           }
         }
+       
       },
       error: (err) => {
         console.error('Error fetching collections:', err);
       },
     });
   }
+
 
   onSelect(item: { id: number; name: string }) {
     this.selectProjectTitle = item.name;
@@ -153,10 +165,14 @@ export class SearchFindContentComponent implements OnInit {
       // Update range (x to y)
       this.updateRange();
 
+      this.searchService.startSearch();
+
       // Call the API to fetch updated results based on the new page
       this.apiService.getSearchListing(finalPayload).subscribe({
         next: (response) => {
-          this.searchService.updateSearchResult(response.body);
+          if (response.ok) {
+            this.searchService.updateSearchResult(response.body);
+          }
         },
         error: (err) => {
           console.error('API Error:', err);

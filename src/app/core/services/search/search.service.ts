@@ -14,7 +14,7 @@ interface SearchState {
 })
 export class SearchService {
   private searchStateSource = new BehaviorSubject<SearchState>({
-    loading: true,
+    loading: false,
     query: '',
     textType: [],
     findable: false
@@ -24,7 +24,7 @@ export class SearchService {
 
   updateSearchResult(data: any) {
     this.searchStateSource.next({
-      loading: false,
+      loading:false,
       result: JSON.parse(data),
       query: this.searchStateSource.value.query,
       textType: this.searchStateSource.value.textType,

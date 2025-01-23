@@ -23,7 +23,7 @@ export class FilterAccordionComponent implements OnInit {
   @Input() collectionfilterData: any[] = [];
   selectedCheckboxes: { [header: string]: number } = {};
   facetsData: any[] = [];
-  count: number = 0;
+
 
   searchPayload: { query: string; textType: string[]; findable: boolean } | undefined;
 
@@ -34,13 +34,69 @@ export class FilterAccordionComponent implements OnInit {
         textType: state.textType,
         findable: state.findable
       };
-      console.log('Received searchPayload:', this.searchPayload);
+  
+      // Call the function to sync facets with the API response
+      this.syncFacetsWithApiResponse(state.result?.['s:facets']?.['s:facet'] || []);
     });
-
+  
     // Initialize selection states from payload
     this.syncSelectionStatesFromPayload();
-    console.log(this.collectionfilterData, 'Collection data')
+    console.log(this.collectionfilterData, 'Collection data');
   }
+  
+  // New method to sync facets with the API response
+  private syncFacetsWithApiResponse(apiFacets: any[]): void {
+    this.collectionfilterData.forEach((list) => {
+      const currentPayload = this.payloadService.getPayload() || USER_SEARCH_CONFIG;
+      const normalizedHeader = this.normalizeHeader(list.header);
+  
+      const payloadFacet = currentPayload.search.facets.facet.find(
+        (f: any) => this.normalizeHeader(f._label) === normalizedHeader
+      );
+  
+      if (payloadFacet && list.collectionTypes) {
+        const payloadItems = Array.isArray(payloadFacet.item)
+          ? payloadFacet.item
+          : [payloadFacet.item];
+  
+        const apiFacetValues = apiFacets
+          .find((facet: any) => this.normalizeHeader(facet.name) === normalizedHeader)
+          ?.['s:facet-value'] || [];
+  
+        list.collectionTypes.forEach((item: any) => {
+          const payloadItem = payloadItems.find(
+            (pi: any) => pi._label === item.label || pi._value === item.value
+          );
+  
+          if (payloadItem) {
+            item.selected = payloadItem._selected;
+  
+            // Find matching facet value
+            const matchingFacetValue = apiFacetValues.find(
+              (facetValue: any) =>
+                facetValue.name === payloadItem._value || facetValue.name === payloadItem._label
+            );
+  
+            if (matchingFacetValue) {
+              item.count = matchingFacetValue.count; // Update count
+            } 
+          } 
+        });
+      }
+    });
+  }
+  
+  private normalizeHeader(header: string): string {
+    const headerMap: { [key: string]: string } = {
+      "Content Type": "ContentType",
+      "Copyright Year": "CopyrightYear",
+      "Trim Size": "TrimSize",
+    };
+  
+    return headerMap[header] || header.replace(/\s+/g, '');
+  }
+  
+  
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['collectionfilterData']) {
@@ -48,6 +104,7 @@ export class FilterAccordionComponent implements OnInit {
       this.updateSelectedCounts();
     }
     console.log('Recieved Collections-', this.collectionfilterData)
+    
   }
 
   // New method to sync selection states from payload
@@ -82,6 +139,7 @@ export class FilterAccordionComponent implements OnInit {
       ).length || 0;
       this.selectedCheckboxes[list.header] = checkedCount;
     }
+
   }
 
   isItemSelected(item: any): boolean {
@@ -90,6 +148,22 @@ export class FilterAccordionComponent implements OnInit {
 
   onCheckBoxChange(event: Event, item: any, header: string): void {
     const isChecked = (event.target as HTMLInputElement).checked;
+
+  // If unchecking, ensure at least one checkbox remains selected for "Content Type"
+  if (!isChecked && header === 'Content Type') {
+    const list = this.collectionfilterData.find((list) => list.header === header);
+    const otherSelectedItems = list?.collectionTypes.filter(
+      (listItem: any) =>
+        listItem.selected === 'true' ||
+        listItem.selected === true
+    );
+
+    // If it's the only selected checkbox, prevent unchecking
+    if (otherSelectedItems?.length === 1) {
+      (event.target as HTMLInputElement).checked = true; // Revert the checkbox state
+      return; // Exit without further processing
+    }
+  }
   
     // Update the item's selected state as a string to match payload format
     item.selected = isChecked ? 'true' : 'false';
@@ -169,13 +243,17 @@ export class FilterAccordionComponent implements OnInit {
     // Use updatePayload to merge changes
     console.log('final payload filters-', finalPayload);
     this.payloadService.updatePayload(finalPayload);
+    
+    //to start the loader
+    this.searchService.startSearch();
   
     // Make the API call
     this.apiService.getSearchListing(finalPayload).subscribe({
       next: (response) => {
-        console.log('API Response:', JSON.parse(response.body));
-
-        this.searchService.updateSearchResult(response.body);  
+        if (response.ok) {
+          console.log('API Response:', JSON.parse(response.body));
+          this.searchService.updateSearchResult(response.body);
+        } 
       },
       error: (err) => {
         console.error('API Error:', err);
