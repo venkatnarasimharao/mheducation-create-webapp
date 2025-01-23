@@ -12,39 +12,21 @@ export class ApiService {
 
   constructor(
     private http: HttpClient,
-    private cookieService: CookieService){}
-
-    public isAnonymous(): boolean {
-      const paris_user_id = this.cookieService.get('paris_user_id');
-      return paris_user_id ? false : true;
-    }
-
-    
+    private cookieService: CookieService
+  ) { }
+  
+  public isAnonymous(): string {
+    return this.cookieService.get('paris_user_id')
+  }
 
   getSearchListing(finalPayload: any) {
     const finalPay = JSON.parse(JSON.stringify(finalPayload));
-
-    
-    let user = "anonymous";
-    if(!this.isAnonymous()){
-        user = this.cookieService.get('paris_user_id');
-    }
+    const userId: string = this.isAnonymous();
+    let user = userId || "anonymous";
     const headers = new HttpHeaders({
-      'jcookie': `JSESSIONID_CRT=2reSopI07Vk2Po5iS-00SDVN5TwRvE1heNc0fZG0NAIW5A5nowfH!-2070150201`,
       'X-Response-Type': 'arraybuffer',
     });
- 
 
-    // let languages: any = sessionStorage.getItem('languages');
-    // if (languages) {
-    //   languages = JSON.parse(languages);
-    //   finalPay['search']['facets']['facet'][4]['item'] = languages.map((item: any) => ({
-    //     _label: item.displayValue._text,
-    //     _value: item.name._text,
-    //     _selected: "false" // item.enabled._text === "true" ? "true" : 
-    //   }))
-    // }
-    // finalPay.search.textTypes.textType = '' // title | all | ["title","authors", "isbn", "description"];
     return this.apiMethodService({
       url: `/p/users/${user}/search`,
       method: 'POST',
