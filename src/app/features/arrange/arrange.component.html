@@ -22,10 +22,10 @@
                                 <div ngbDropdownMenu class="w-100" role="menu" aria-labelledby="select-project">
                                     @if (error) {
                                         <div class="dropdown-item text-danger">{{ error }}</div>
-                                    } @else if (selectProject.length === 0 && !isLoading) {
+                                    } @else if (projectList.length === 0 && !isLoading) {
                                         <div class="dropdown-item">No projects found</div>
                                     } @else {
-                                        @for(item of selectProject; track item.id) {
+                                        @for(item of projectList; track item.id) {
                                             <button type="button" 
                                                     class="dropdown-item" 
                                                     role="menuitem"
@@ -131,7 +131,7 @@
 
             @if (selectedProject?.id) {
                 <div cdkDropListGroup>
-                    @if (loadingProjectData) {
+                    @if (arrangeSpinner) {
                         <div class="text-center py-4">
                             <div class="spinner-border text-primary" role="status">
                                 <span class="visually-hidden">Loading...</span>
@@ -143,7 +143,7 @@
                         </div>
                     } @else {
                         @for (section of sections; track $index; let sectionIndex = $index) {
-                            @if (section.items.length > 0) {
+                            @if (section.items.length) {
                                 <div class="d-flex justify-content-between align-items-center px-2">
                                     <h3 class="fw-bolder h4" id="{{ section.id }}-header">{{ section.title }}</h3>
                                     <button type="button" 
@@ -185,32 +185,34 @@
                                             </thead>
                                             <tbody>
                                                 @for (item of section.items; track $index; let itemIndex = $index) {
-                                                    <tr cdkDrag role="row" (cdkDragStarted)="onDragStarted($event, item)">
-                                                        <td class="text-break">
-                                                          <input type="checkbox" 
-                                                                 class="form-check-input me-3"
-                                                                 [(ngModel)]="item.checked" 
-                                                                 (change)="checkIfAllSelected(section)"
-                                                                 [attr.aria-label]="'Select ' + item.name" />
-                                                          <span class="me-3"><i class="bi bi-plus-square"></i></span>
-                                                          <span class=""><i class="bi bi-arrows-expand"></i></span>
-                                                        </td>
-                                                        <td>
-                                                          <a href="#" class="text-decoration-none text-primary">{{ item.name }}</a>
-                                                          <div class="d-sm-none small text-muted mt-1">
-                                                            {{ item.format }} • {{ item.pages }} pages
-                                                          </div>
-                                                        </td>
-                                                        <td class="d-none d-sm-table-cell">{{ item.pages }}</td>
-                                                        <td>{{ item.price }}</td>
-                                    
-                                                        <ng-template cdkDragPreview>
-                                                          <div class="drag-preview">
-                                                            Moving {{ draggedItems.length || 1 }} item{{ draggedItems.length > 1 ? 's' : '' }}
-                                                          </div>
-                                                        </ng-template>
-                                                      </tr>
-                                                      
+                                                    @if(item.type?.toLowerCase() !== 'placeholder') {
+                                                        <tr cdkDrag role="row" (cdkDragStarted)="onDragStarted($event, item)">
+                                                            <td class="text-break">
+                                                              <input type="checkbox" 
+                                                                     class="form-check-input me-3"
+                                                                     [(ngModel)]="item.checked" 
+                                                                     (change)="checkIfAllSelected(section)"
+                                                                     [attr.aria-label]="'Select ' + item.name" />
+                                                              <span class="me-3"><i class="bi bi-plus-square"></i></span>
+                                                              <span class=""><i class="bi bi-arrows-expand"></i></span>
+                                                            </td>
+                                                            <td>
+                                                              <a href="#" class="text-decoration-none text-primary">{{ item.computedtitle || item.title }}</a>
+                                                              <div class="d-sm-none small text-muted mt-1">
+                                                                {{ item.format }} • {{ item.pages }} pages
+                                                              </div>
+                                                            </td>
+                                                            <td class="d-none d-sm-table-cell">{{ item.pagecount }}</td>
+                                                            <td>{{ pricingData[item.guid] }}</td>
+                                        
+                                                            <ng-template cdkDragPreview>
+                                                              <div class="drag-preview">
+                                                                Moving {{ draggedItems.length || 1 }} item{{ draggedItems.length > 1 ? 's' : '' }}
+                                                              </div>
+                                                            </ng-template>
+                                                          </tr>
+                                                          
+                                                    }
                                                 }
                                             </tbody>
                                         </table>

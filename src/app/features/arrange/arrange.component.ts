@@ -35,7 +35,7 @@ export class ArrangeComponent implements OnInit {
   isAnyCheckboxSelected: boolean = false;
 
   selectedProject: any = '';
-  selectProject: any[] = [];
+  projectList: any[] = [];
   selectProjectItems: any[] = [];
   projectStructureEntries: any[] = [];
 
@@ -44,7 +44,7 @@ export class ArrangeComponent implements OnInit {
   userId: string = '';
   projectId: string = '';
 
-  loadingProjectData: boolean = false;
+  arrangeSpinner: boolean = false;
   projectLoadError: string | null = null;
 
   draggedItems: ProjectItem[] = [];
@@ -58,25 +58,31 @@ export class ArrangeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadProjects();
     this.route.queryParams.subscribe((params) => {
-      const projectId = params['projectId'];
-      if (projectId) {
-        this.loadProjectPrice();
-        this.loadProjectData(projectId);
-      }
+      this.projectId = params['projectId'];
+      this.getProjectList();
     });
   }
 
-  loadProjects() {
+  getProjectList() {
     this.apiService.getProjectList().subscribe((projects: any) => {
       console.log(projects);
       if (projects.ok) {
         const data = JSON.parse(projects.body);
-        this.selectProject = data.project.map((item: any) => ({
+        this.projectList = data.project.map((item: any) => ({
           id: item.guid,
           name: item.title,
         }));
+        if (this.projectId) {
+          const selectedProject = this.projectList.filter((e: any) => {
+            return e.id === this.projectId;
+          });
+          this.selectedProject = selectedProject?.length
+            ? selectedProject[0]
+            : {};
+          this.getProjectArrangeList();
+          this.loadProjectPrice();
+        }
         this.updateItemStates();
       }
     });
@@ -84,93 +90,47 @@ export class ArrangeComponent implements OnInit {
 
   saveProjects(projectId: any) {
     const payload = PROJECT_ARRANGE_CONFIG;
-    // configurePayloadForRearrangements(payload,);
     this.apiService
       .saveProjectData(projectId, payload)
       .subscribe((projects: any) => {
         console.log('saveProjects', projects);
         if (projects.ok) {
           const data = JSON.parse(projects.body);
-          this.selectProject = data.project;
           this.updateItemStates();
         }
       });
   }
 
-  // configurePayloadForRearrangements(originalConfig: any, changes: any): any {
-  //   const updatedConfig = { ...originalConfig };
-  //   if (changes.structure) {
-  //     updatedConfig.project.structure.entry = updatedConfig.project.structure.entry.map((entry: any) => {
-  //       const updatedEntry = changes.structure[entry._subtype] || null;
-  //       if (updatedEntry) {
-  //         return { ...entry, ...updatedEntry };
-  //       }
-  //       return entry;
-  //     });
-  //   }
-
-  //   if (changes.projectCourseDetails) {
-  //     updatedConfig.project.projectCourseDetails = {
-  //       ...updatedConfig.project.projectCourseDetails,
-  //       ...changes.projectCourseDetails
-  //     };
-  //   }
-
-  //   if (changes.specialInstructions) {
-  //     updatedConfig.project.specialInstructions = changes.specialInstructions;
-  //   }
-
-  //   if (changes.TOCInfo) {
-  //     updatedConfig.project.TOCInfo = {
-  //       ...updatedConfig.project.TOCInfo,
-  //       ...changes.TOCInfo
-  //     };
-  //   }
-
-  //   // Other top-level updates, if needed
-  //   if (changes.status) {
-  //     updatedConfig.project._status = changes.status;
-  //   }
-
-  //   if (changes.title) {
-  //     updatedConfig.project._title = changes.title;
-  //   }
-
-  //   return updatedConfig;
-  // }
-
   loadProjectPrice(): void {
     this.pricingData = {};
 
-    this.apiService.getProjectPricing(this.selectedProject?.id).subscribe({
+    this.apiService.getProjectPricing(this.projectId).subscribe({
       next: (response) => {
         console.log(response, 'pricing data in loadprice');
         if (response.ok) {
-          const price = JSON.parse(response.body)
-          response.assetprices.assetprice.forEach((asset: any) => {
+          const price = JSON.parse(response.body);
+          price.assetprices.assetprice.forEach((asset: any) => {
             const assetId = asset?.assetId;
             const priceValue = asset.prices?.price?.value;
             if (assetId && priceValue) {
               this.pricingData[assetId] = parseFloat(priceValue).toFixed(2);
             }
           });
+          console.log(price, 'Processed pricing data:', this.pricingData);
         }
-
-        console.log('Processed pricing data:', this.pricingData);
-      },
-      error: (error) => {
-        console.error('Error in loadProjectPrice:', error);
       },
     });
   }
 
-  loadProjectData(projectId: any): void {
-    this.loadingProjectData = true;
+  getProjectArrangeList(): void {
+    this.arrangeSpinner = true;
     this.projectLoadError = null;
 
-    this.apiService.getProjectData(projectId).subscribe({
-      next: (response) => {
-        console.log('Project data response:', response);
+    this.apiService.getProjectData(this.projectId).subscribe((data: any) => {
+      this.arrangeSpinner = false;
+      if (data.ok) {
+        const result = JSON.parse(data.body);
+        console.log('Project data response', result);
 
         this.sections = [
           {
@@ -198,23 +158,24 @@ export class ArrangeComponent implements OnInit {
             items: [],
           },
         ];
+        this.projectStructureEntries = result?.structure?.entry || [];
 
-        this.projectStructureEntries = response?.structure?.entry || [];
-
-        if (this.projectStructureEntries.length) {
-          this.addItemToAppropriateSection({} as ProjectItem);
+        for (const row of this.projectStructureEntries) {
+          if (row.subtype === 'frontmatter') {
+            this.sections[0].items = row.entry;
+          } else if (row.subtype === 'contents') {
+            this.sections[1].items = row.entry;
+          } else if (row.subtype === 'backmatter') {
+            this.sections[2].items = row.entry;
+          }
         }
 
+        // if (this.projectStructureEntries.length) {
+        //   this.addItemToAppropriateSection({} as ProjectItem);
+        // }
+
         this.updateItemStates();
-      },
-      error: (error) => {
-        console.error('Error loading project data:', error);
-        this.projectLoadError =
-          'Failed to load project data. Please try again.';
-      },
-      complete: () => {
-        this.loadingProjectData = false;
-      },
+      }
     });
   }
   private processStructureEntries(entries: any[]): void {
@@ -236,7 +197,6 @@ export class ArrangeComponent implements OnInit {
 
   private processItem(entry: any): ProjectItem | null {
     if (!entry) return null;
-
     const attrs = entry;
     const guid = attrs.guid;
     let priceDisplay = this.pricingData || 'N/A';
@@ -244,29 +204,16 @@ export class ArrangeComponent implements OnInit {
     console.log('Processing item:', attrs.computedtitle, 'GUID:', guid);
     console.log('Available pricing data:', this.pricingData);
 
-    if (guid && this.pricingData) {
-      if (this.pricingData[guid]) {
-        priceDisplay = `$${this.pricingData[guid]}`;
-        console.log(
-          `Found direct price for ${attrs.computedtitle}: ${priceDisplay}`
-        );
-      } else {
-        const type = attrs.type?.toUpperCase();
-        console.log(
-          `Checking type-based price for ${attrs.computedtitle}, type: ${type}`
-        );
-
-        if (type === 'FRONTMATTER' && this.pricingData['FRONT_MATTER']) {
-          priceDisplay = `$${this.pricingData['FRONT_MATTER']}`;
-        } else if (type === 'BACKMATTER' && this.pricingData['BACK_MATTER']) {
-          priceDisplay = `$${this.pricingData['BACK_MATTER']}`;
-        } else if (this.pricingData['NOMINAL']) {
-          priceDisplay = `$${this.pricingData['NOMINAL']}`;
-        }
-      }
+    if (guid && this.pricingData?.guid) {
+      priceDisplay = `$${this.pricingData[guid]}`;
+      console.log(
+        `Found direct price for ${attrs.computedtitle}: ${priceDisplay}`
+      );
     }
-
-    console.log(`Final price for ${attrs.computedtitle}: ${priceDisplay}`);
+    console.log(
+      attrs,
+      `Final price for ${attrs.computedtitle}: ${priceDisplay}`
+    );
 
     return {
       guid: guid,
@@ -291,8 +238,7 @@ export class ArrangeComponent implements OnInit {
   private addItemToAppropriateSection(item: ProjectItem): void {
     const traverseEntries = (entries: any[]): void => {
       entries.forEach((entry) => {
-        const targetContainer =
-          entry?.targetContainer?.toLowerCase() || '';
+        const targetContainer = entry?.subtype?.toLowerCase() || '';
 
         if (entry) {
           const currentItem = this.processItem(entry);
@@ -312,7 +258,15 @@ export class ArrangeComponent implements OnInit {
             const targetSection = this.sections.find(
               (s) => s.id === targetSectionId
             );
-            if (targetSection) {
+            console.log(
+              currentItem,
+              targetSectionId,
+              'check the entry',
+              this.sections,
+              'targetSection',
+              targetSection
+            );
+            if (targetSection && currentItem?.name) {
               console.log(
                 `Adding item "${currentItem.name}" to section: ${targetSectionId}`
               );
@@ -482,7 +436,6 @@ export class ArrangeComponent implements OnInit {
       section.selectAllChecked = false;
     });
     this.isAnyCheckboxSelected = false;
-    // this.saveProjects(this.selectedProject.id);
     this.updateItemStates();
   }
 

@@ -14,8 +14,7 @@ export class ApiService {
     private cookieService: CookieService
   ) {
   }
-
-  session = 'JSESSIONID_CRT=0wKO4YgD5WL-sILwC_R8zOwyqt4hvD_pektD7PvlWHlg05hrb3dr!-2070150201'
+  session = 'JSESSIONID_CRT=55GSVpuBmOQ9QGgkIP7L9DJHiUFUQKo1SJbB5cFXlx7Xs1ic54fK!-2070150201'
   getSearchListing() {
     const finalPay = USER_SEARCH_CONFIG
     let languages: any = sessionStorage.getItem('languages');
@@ -103,25 +102,7 @@ export class ApiService {
       url: `/p/users/${paris_user_id}/projects/${projectId}`,
       options: { headers },
       method: 'GET',
-
-    }).pipe(
-      map((response: any) => {
-          if (typeof response.body === 'string') {
-              try {
-                  return JSON.parse(response.body);
-              } catch (error) {
-                  console.error('Error parsing response:', error);
-                  throw new Error('Invalid response format');
-              }
-          }
-          return response;
-      }),
-      tap(parsedResponse => console.log('Parsed Data Response:', parsedResponse)),
-      catchError(error => {
-          console.error('API Error:', error);
-          throw error;
-      })
-  );
+    })
   }
 
 
@@ -150,22 +131,7 @@ export class ApiService {
       method: 'GET',
       body: null,
       options: {headers}
-    }).pipe(
-      map((response: any) => {
-        try {
-          const parsedData = JSON.parse(response.body);
-          console.log('this is project pricing data',parsedData)
-          return parsedData;
-        } catch (error) {
-          console.error('Error parsing pricing response:', error);
-          return { error: 'PARSING_ERROR' };
-        }
-      }),
-      catchError(error => {
-        console.error('Pricing API Error:', error);
-        return of({ error: 'API_ERROR' });
-      })
-    );
+    })
   }
 
   apiMethodService<T>({ url, method, body, params = {}, options = {} }: any): Observable<any> {
