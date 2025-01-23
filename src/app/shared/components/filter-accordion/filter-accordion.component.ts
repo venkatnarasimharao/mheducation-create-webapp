@@ -161,21 +161,21 @@ export class FilterAccordionComponent implements OnInit {
   onCheckBoxChange(event: Event, item: any, header: string): void {
     const isChecked = (event.target as HTMLInputElement).checked;
 
-  // // If unchecking, ensure at least one checkbox remains selected for "Content Type"
-  // if (!isChecked && header === 'Content Type') {
-  //   const list = this.collectionfilterData.find((list) => list.header === header);
-  //   const otherSelectedItems = list?.collectionTypes.filter(
-  //     (listItem: any) =>
-  //       listItem.selected === 'true' ||
-  //       listItem.selected === true
-  //   );
+  // If unchecking, ensure at least one checkbox remains selected for "Content Type"
+  if (!isChecked && header === 'Content Type') {
+    const list = this.collectionfilterData.find((list) => list.header === header);
+    const otherSelectedItems = list?.collectionTypes.filter(
+      (listItem: any) =>
+        listItem.selected === 'true' ||
+        listItem.selected === true
+    );
 
-  //   // If it's the only selected checkbox, prevent unchecking
-  //   if (otherSelectedItems?.length === 1) {
-  //     (event.target as HTMLInputElement).checked = true; // Revert the checkbox state
-  //     return; // Exit without further processing
-  //   }
-  // }
+    // If it's the only selected checkbox, prevent unchecking
+    if (otherSelectedItems?.length === 1) {
+      (event.target as HTMLInputElement).checked = true; // Revert the checkbox state
+      return; // Exit without further processing
+    }
+  }
   
     // Update the item's selected state as a string to match payload format
     item.selected = isChecked ? 'true' : 'false';
