@@ -45,46 +45,58 @@ export class FilterAccordionComponent implements OnInit {
   }
   
   // New method to sync facets with the API response
-  private syncFacetsWithApiResponse(apiFacets: any[]): void {
+  private syncFacetsWithApiResponse(apiFacets: any[]): void { 
+    // Clear existing data for all collection filter lists
     this.collectionfilterData.forEach((list) => {
-      const currentPayload = this.payloadService.getPayload() || USER_SEARCH_CONFIG;
-      const normalizedHeader = this.normalizeHeader(list.header);
-  
-      const payloadFacet = currentPayload.search.facets.facet.find(
-        (f: any) => this.normalizeHeader(f._label) === normalizedHeader
-      );
-  
-      if (payloadFacet && list.collectionTypes) {
-        const payloadItems = Array.isArray(payloadFacet.item)
-          ? payloadFacet.item
-          : [payloadFacet.item];
-  
-        const apiFacetValues = apiFacets
-          .find((facet: any) => this.normalizeHeader(facet.name) === normalizedHeader)
-          ?.['s:facet-value'] || [];
-  
-        list.collectionTypes.forEach((item: any) => {
-          const payloadItem = payloadItems.find(
-            (pi: any) => pi._label === item.label || pi._value === item.value
-          );
-  
-          if (payloadItem) {
-            item.selected = payloadItem._selected;
-  
-            // Find matching facet value
-            const matchingFacetValue = apiFacetValues.find(
-              (facetValue: any) =>
-                facetValue.name === payloadItem._value || facetValue.name === payloadItem._label
-            );
-  
-            if (matchingFacetValue) {
-              item.count = matchingFacetValue.count; // Update count
-            } 
-          } 
-        });
-      }
+        if (list.collectionTypes) {
+            list.collectionTypes = list.collectionTypes.map((item:any) => ({
+                ...item,
+                selected: false,
+                count: 0
+            }));  
+        }
     });
-  }
+
+    // Sync with new API response
+    this.collectionfilterData.forEach((list) => { 
+        const currentPayload = this.payloadService.getPayload() || USER_SEARCH_CONFIG; 
+        const normalizedHeader = this.normalizeHeader(list.header); 
+   
+        const payloadFacet = currentPayload.search.facets.facet.find( 
+            (f: any) => this.normalizeHeader(f._label) === normalizedHeader 
+        ); 
+   
+        if (payloadFacet && list.collectionTypes) { 
+            const payloadItems = Array.isArray(payloadFacet.item) 
+                ? payloadFacet.item 
+                : [payloadFacet.item]; 
+   
+            const apiFacetValues = apiFacets 
+                .find((facet: any) => this.normalizeHeader(facet.name) === normalizedHeader) 
+                ?.['s:facet-value'] || []; 
+   
+            list.collectionTypes.forEach((item: any) => { 
+                const payloadItem = payloadItems.find( 
+                    (pi: any) => pi._label === item.label || pi._value === item.value 
+                ); 
+   
+                if (payloadItem) { 
+                    item.selected = payloadItem._selected; 
+   
+                    // Find matching facet value 
+                    const matchingFacetValue = apiFacetValues.find( 
+                        (facetValue: any) => 
+                            facetValue.name === payloadItem._value || facetValue.name === payloadItem._label 
+                    ); 
+   
+                    if (matchingFacetValue) { 
+                        item.count = matchingFacetValue.count; // Update count 
+                    }  
+                }  
+            }); 
+        } 
+    }); 
+}
   
   private normalizeHeader(header: string): string {
     const headerMap: { [key: string]: string } = {
