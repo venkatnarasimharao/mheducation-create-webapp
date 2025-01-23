@@ -45,46 +45,58 @@ export class FilterAccordionComponent implements OnInit {
   }
   
   // New method to sync facets with the API response
-  private syncFacetsWithApiResponse(apiFacets: any[]): void {
+  private syncFacetsWithApiResponse(apiFacets: any[]): void { 
+    // Clear existing data for all collection filter lists
     this.collectionfilterData.forEach((list) => {
-      const currentPayload = this.payloadService.getPayload() || USER_SEARCH_CONFIG;
-      const normalizedHeader = this.normalizeHeader(list.header);
-  
-      const payloadFacet = currentPayload.search.facets.facet.find(
-        (f: any) => this.normalizeHeader(f._label) === normalizedHeader
-      );
-  
-      if (payloadFacet && list.collectionTypes) {
-        const payloadItems = Array.isArray(payloadFacet.item)
-          ? payloadFacet.item
-          : [payloadFacet.item];
-  
-        const apiFacetValues = apiFacets
-          .find((facet: any) => this.normalizeHeader(facet.name) === normalizedHeader)
-          ?.['s:facet-value'] || [];
-  
-        list.collectionTypes.forEach((item: any) => {
-          const payloadItem = payloadItems.find(
-            (pi: any) => pi._label === item.label || pi._value === item.value
-          );
-  
-          if (payloadItem) {
-            item.selected = payloadItem._selected;
-  
-            // Find matching facet value
-            const matchingFacetValue = apiFacetValues.find(
-              (facetValue: any) =>
-                facetValue.name === payloadItem._value || facetValue.name === payloadItem._label
-            );
-  
-            if (matchingFacetValue) {
-              item.count = matchingFacetValue.count; // Update count
-            } 
-          } 
-        });
-      }
+        if (list.collectionTypes) {
+            list.collectionTypes = list.collectionTypes.map((item:any) => ({
+                ...item,
+                selected: false,
+                count: 0
+            }));  
+        }
     });
-  }
+
+    // Sync with new API response
+    this.collectionfilterData.forEach((list) => { 
+        const currentPayload = this.payloadService.getPayload() || USER_SEARCH_CONFIG; 
+        const normalizedHeader = this.normalizeHeader(list.header); 
+   
+        const payloadFacet = currentPayload.search.facets.facet.find( 
+            (f: any) => this.normalizeHeader(f._label) === normalizedHeader 
+        ); 
+   
+        if (payloadFacet && list.collectionTypes) { 
+            const payloadItems = Array.isArray(payloadFacet.item) 
+                ? payloadFacet.item 
+                : [payloadFacet.item]; 
+   
+            const apiFacetValues = apiFacets 
+                .find((facet: any) => this.normalizeHeader(facet.name) === normalizedHeader) 
+                ?.['s:facet-value'] || []; 
+   
+            list.collectionTypes.forEach((item: any) => { 
+                const payloadItem = payloadItems.find( 
+                    (pi: any) => pi._label === item.label || pi._value === item.value 
+                ); 
+   
+                if (payloadItem) { 
+                    item.selected = payloadItem._selected; 
+   
+                    // Find matching facet value 
+                    const matchingFacetValue = apiFacetValues.find( 
+                        (facetValue: any) => 
+                            facetValue.name === payloadItem._value || facetValue.name === payloadItem._label 
+                    ); 
+   
+                    if (matchingFacetValue) { 
+                        item.count = matchingFacetValue.count; // Update count 
+                    }  
+                }  
+            }); 
+        } 
+    }); 
+}
   
   private normalizeHeader(header: string): string {
     const headerMap: { [key: string]: string } = {
@@ -149,21 +161,21 @@ export class FilterAccordionComponent implements OnInit {
   onCheckBoxChange(event: Event, item: any, header: string): void {
     const isChecked = (event.target as HTMLInputElement).checked;
 
-  // If unchecking, ensure at least one checkbox remains selected for "Content Type"
-  if (!isChecked && header === 'Content Type') {
-    const list = this.collectionfilterData.find((list) => list.header === header);
-    const otherSelectedItems = list?.collectionTypes.filter(
-      (listItem: any) =>
-        listItem.selected === 'true' ||
-        listItem.selected === true
-    );
+  // // If unchecking, ensure at least one checkbox remains selected for "Content Type"
+  // if (!isChecked && header === 'Content Type') {
+  //   const list = this.collectionfilterData.find((list) => list.header === header);
+  //   const otherSelectedItems = list?.collectionTypes.filter(
+  //     (listItem: any) =>
+  //       listItem.selected === 'true' ||
+  //       listItem.selected === true
+  //   );
 
-    // If it's the only selected checkbox, prevent unchecking
-    if (otherSelectedItems?.length === 1) {
-      (event.target as HTMLInputElement).checked = true; // Revert the checkbox state
-      return; // Exit without further processing
-    }
-  }
+  //   // If it's the only selected checkbox, prevent unchecking
+  //   if (otherSelectedItems?.length === 1) {
+  //     (event.target as HTMLInputElement).checked = true; // Revert the checkbox state
+  //     return; // Exit without further processing
+  //   }
+  // }
   
     // Update the item's selected state as a string to match payload format
     item.selected = isChecked ? 'true' : 'false';
