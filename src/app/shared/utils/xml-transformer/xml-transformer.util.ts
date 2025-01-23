@@ -1,5 +1,5 @@
 export class XmlTransformerUtil {
-
+    static attributeVlaues: any = ['s:facet-value'];
     /**
     * Helper function to process content node and return a string value
     * @param node content node in the XML
@@ -56,20 +56,15 @@ export class XmlTransformerUtil {
 
                         if (!(childType === 3 || childType === 8)) {
                             const childNodeValue = this.root(childNode);
-                            if (childName === 's:facet-value') {
-                                // Extract count and name values
-                                const countValue = childNodeValue['count'] || childNode.attributes?.getNamedItem('count')?.nodeValue || 0;
-    
+                            if (this.attributeVlaues.includes(childName)) {
+                                let allAttr: any = {}
+                                for (const attr of childNode.attributes) {
+                                    allAttr[attr.name] = childNode.attributes?.getNamedItem(attr.name)?.nodeValue
+                                }
                                 if (Array.isArray(nodeObject[childName])) {
-                                    nodeObject[childName].push({
-                                        count: parseInt(countValue, 10),
-                                        name: childNodeValue['name'] || childNode.attributes?.getNamedItem('name')?.nodeValue || ''
-                                    });
+                                    nodeObject[childName].push(allAttr);
                                 } else {
-                                    nodeObject[childName] = [{
-                                        count: parseInt(countValue, 10),
-                                        name: childNodeValue['name'] || childNode.attributes?.getNamedItem('name')?.nodeValue || ''
-                                    }];
+                                    nodeObject[childName] = [allAttr];
                                 }
                             } else {
                                 if (nodeObject[childName] === undefined) {
