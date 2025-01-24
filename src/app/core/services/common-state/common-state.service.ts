@@ -9,6 +9,12 @@ export class CommonStateService {
   constructor(private cookieService: CookieService) { }
   public isAnonymous() {
     const paris_user_id = this.cookieService.get('paris_user_id');
-    return paris_user_id ? null : paris_user_id;
+    return paris_user_id ? false : true;
+  }
+  public getUserId() {
+    if (this.isAnonymous()) {
+      return "";
+    }
+    return this.cookieService.get('paris_user_id');
   }
 }

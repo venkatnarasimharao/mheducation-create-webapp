@@ -98,7 +98,7 @@ export class ApiService {
 
   }
   getBookPageView(payload: any) {
-    const userId = this.cookieService.get("paris_user_id");  // Example user ID
+    const userId = this.commonStateService.getUserId();
     const url = `/users/${userId}/preview/${payload.guid}/${payload.pageNumber}`;
     const headers = new HttpHeaders({
       'X-Response-Type': 'arraybuffer',
@@ -116,7 +116,7 @@ export class ApiService {
   getSearchInsideList(payload: any) {
     let user = "anonymous";
     if (!this.commonStateService.isAnonymous()) {
-      user = this.cookieService.get("paris_user_id");
+      user = this.commonStateService.getUserId();
     }
     return this.apiMethodService({
       url: `/p/users/${user}/searchinside`,

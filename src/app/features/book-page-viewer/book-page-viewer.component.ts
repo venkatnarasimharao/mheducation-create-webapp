@@ -30,7 +30,7 @@ export class BookPageViewerComponent implements OnInit, OnChanges {
     private modalService: NgbModal
   ) { }
   ngOnInit(): void {
-    this.isAnonymous = this.commonStateService.isAnonymous() ? true : false;
+    this.isAnonymous = this.commonStateService.isAnonymous();
     this.pageCount = this.currentChapter.pageCount;
     this.fetchBookPageView();
     this.authService.loginStatus$.subscribe((status) => {
@@ -54,7 +54,7 @@ export class BookPageViewerComponent implements OnInit, OnChanges {
   handleSign() {
     const modalRef = this.modalService.open(LoginComponent, { centered: false });
     modalRef.result.then(() => {
-      this.isAnonymous = this.commonStateService.isAnonymous() ? true : false;
+      this.isAnonymous = this.commonStateService.isAnonymous();
       if (!this.isAnonymous) {
         this.fetchBookPageView();
       }

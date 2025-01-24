@@ -49,7 +49,7 @@ export class BookInfoPanelComponent implements OnInit {
 
   }
   ngOnInit(): void {
-    this.isAnonymous = this.commonStateService.isAnonymous() ? true : false;
+    this.isAnonymous = this.commonStateService.isAnonymous();
     let previousGuid: string | null = null;
     this.route.queryParams.subscribe(params => {
       const currentGuid = params['guid'];

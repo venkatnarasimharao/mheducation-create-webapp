@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { CommonStateService } from './../services/common-state/common-state.service';
 import { SharedstateService } from './../services/shared-state/sharedstate.service';
 import { Injectable } from '@angular/core';
-import { CanActivate } from '@angular/router';
+import { CanActivate, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { LoginComponent } from '../../shared/components/login/login.component';
@@ -13,7 +13,8 @@ import { LoginComponent } from '../../shared/components/login/login.component';
 export class AuthGuard implements CanActivate {
   constructor(
     private modalService: NgbModal,
-    private commonStateService: CommonStateService
+    private commonStateService: CommonStateService,
+    private router: Router
   ) { }
 
   canActivate(

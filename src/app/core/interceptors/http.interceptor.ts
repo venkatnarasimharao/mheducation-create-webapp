@@ -7,7 +7,6 @@ import { inject } from '@angular/core';
 export const httpInterceptor: HttpInterceptorFn = (request, next) => {
   const cookieService = inject(CookieService);
   const JSESSIONID_CRT = cookieService.get('JSESSIONID_CRT');
-  console.log(JSESSIONID_CRT, "dnukjhfdgv");
   let transformedReq = request
   if (JSESSIONID_CRT) {
     // TODO jcookie -> Cookie
