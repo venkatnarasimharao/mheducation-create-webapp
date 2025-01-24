@@ -34,7 +34,6 @@ export interface ApiEntry {
 export interface ProjectItem {
   guid: string;
   name: string;
-  format: string;
   pages: number;
   price: string;
   checked: boolean;

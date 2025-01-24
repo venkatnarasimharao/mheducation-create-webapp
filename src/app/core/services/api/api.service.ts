@@ -14,7 +14,7 @@ export class ApiService {
     private cookieService: CookieService
   ) {
   }
-  session = 'JSESSIONID_CRT=55GSVpuBmOQ9QGgkIP7L9DJHiUFUQKo1SJbB5cFXlx7Xs1ic54fK!-2070150201'
+  session = 'JSESSIONID_CRT=qdyTMT7aULxgMuTsl_NadfmTMaTw7mK8IOMR788-MmYnJe2EVjFZ!-2070150201'
   getSearchListing() {
     const finalPay = USER_SEARCH_CONFIG
     let languages: any = sessionStorage.getItem('languages');

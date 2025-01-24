@@ -36,12 +36,10 @@ export class ArrangeComponent implements OnInit {
 
   selectedProject: any = '';
   projectList: any[] = [];
-  selectProjectItems: any[] = [];
   projectStructureEntries: any[] = [];
 
   isLoading: boolean = false;
   error: string | null = null;
-  userId: string = '';
   projectId: string = '';
 
   arrangeSpinner: boolean = false;
@@ -50,7 +48,7 @@ export class ArrangeComponent implements OnInit {
   draggedItems: ProjectItem[] = [];
   sections: any[] = [];
   pricingData: any;
-  selectedCheckboxCount: number = 0;
+
   constructor(
     private apiService: ApiService,
     private route: ActivatedRoute,
@@ -83,22 +81,8 @@ export class ArrangeComponent implements OnInit {
           this.getProjectArrangeList();
           this.loadProjectPrice();
         }
-        this.updateItemStates();
       }
     });
-  }
-
-  saveProjects(projectId: any) {
-    const payload = PROJECT_ARRANGE_CONFIG;
-    this.apiService
-      .saveProjectData(projectId, payload)
-      .subscribe((projects: any) => {
-        console.log('saveProjects', projects);
-        if (projects.ok) {
-          const data = JSON.parse(projects.body);
-          this.updateItemStates();
-        }
-      });
   }
 
   loadProjectPrice(): void {
@@ -169,12 +153,6 @@ export class ArrangeComponent implements OnInit {
             this.sections[2].items = row.entry;
           }
         }
-
-        // if (this.projectStructureEntries.length) {
-        //   this.addItemToAppropriateSection({} as ProjectItem);
-        // }
-
-        this.updateItemStates();
       }
     });
   }
@@ -184,9 +162,7 @@ export class ArrangeComponent implements OnInit {
         entry.entry.forEach((item: any) => {
           const processedItem = this.processItem(item);
           console.log('processedItem Loading:', entries);
-          if (processedItem) {
-            this.addItemToAppropriateSection(processedItem);
-          }
+      
           if (item.entry && Array.isArray(item.entry)) {
             this.processStructureEntries([item]);
           }
@@ -218,7 +194,6 @@ export class ArrangeComponent implements OnInit {
     return {
       guid: guid,
       name: attrs.computedtitle || attrs.title,
-      format: this.determineFormat(entry),
       pages: parseInt(attrs.pagecount) || 0,
       price: priceDisplay,
       checked: false,
@@ -229,74 +204,6 @@ export class ArrangeComponent implements OnInit {
     };
   }
 
-  private determineFormat(item: any): string {
-    const isColor = item?._numberInteriorColors === '4';
-    const format = isColor ? 'Color' : 'Black & White';
-    return `${format}, Print & Digital`;
-  }
-
-  private addItemToAppropriateSection(item: ProjectItem): void {
-    const traverseEntries = (entries: any[]): void => {
-      entries.forEach((entry) => {
-        const targetContainer = entry?.subtype?.toLowerCase() || '';
-
-        if (entry) {
-          const currentItem = this.processItem(entry);
-          if (currentItem) {
-            let targetSectionId = '';
-
-            if (targetContainer.includes('frontmatter')) {
-              targetSectionId = 'introMaterial';
-            } else if (targetContainer.includes('contents')) {
-              targetSectionId = 'bookContent';
-            } else if (targetContainer.includes('backmatter')) {
-              targetSectionId = 'backMaterials';
-            } else if (targetContainer.includes('supplement')) {
-              targetSectionId = 'supplements';
-            }
-
-            const targetSection = this.sections.find(
-              (s) => s.id === targetSectionId
-            );
-            console.log(
-              currentItem,
-              targetSectionId,
-              'check the entry',
-              this.sections,
-              'targetSection',
-              targetSection
-            );
-            if (targetSection && currentItem?.name) {
-              console.log(
-                `Adding item "${currentItem.name}" to section: ${targetSectionId}`
-              );
-              console.log('Target Container:', targetContainer);
-              targetSection.items.push(currentItem);
-            }
-          }
-        }
-
-        if (entry.entry) {
-          if (Array.isArray(entry.entry)) {
-            traverseEntries(entry.entry);
-          } else {
-            traverseEntries([entry.entry]);
-          }
-        }
-      });
-    };
-
-    if (
-      this.projectStructureEntries &&
-      Array.isArray(this.projectStructureEntries)
-    ) {
-      traverseEntries(this.projectStructureEntries);
-    }
-  }
-
-  getAllItems() {
-    return this.sections.flatMap((section) => section.items);
-  }
   toggleCollapse(sectionId: string) {
     this.isCollapsed[sectionId] = !this.isCollapsed[sectionId];
   }
@@ -336,24 +243,6 @@ export class ArrangeComponent implements OnInit {
       );
     });
     this.checkIfAnySelected();
-  }
-  isFirstItem(sectionIndex: number, itemIndex: number): boolean {
-    const allItems = this.getAllItems();
-    const globalIndex = this.getGlobalIndex(sectionIndex, itemIndex);
-    return globalIndex === 0;
-  }
-
-  isLastItem(sectionIndex: number, itemIndex: number): boolean {
-    const allItems = this.getAllItems();
-    const globalIndex = this.getGlobalIndex(sectionIndex, itemIndex);
-    return globalIndex === allItems.length - 1;
-  }
-
-  getGlobalIndex(sectionIndex: number, itemIndex: number): number {
-    const priorItemsCount = this.sections
-      .slice(0, sectionIndex)
-      .reduce((count, section) => count + section.items.length, 0);
-    return priorItemsCount + itemIndex;
   }
 
   getConnectedDropLists(): string[] {
@@ -436,7 +325,7 @@ export class ArrangeComponent implements OnInit {
       section.selectAllChecked = false;
     });
     this.isAnyCheckboxSelected = false;
-    this.updateItemStates();
+    
   }
 
   onDragStarted(event: any, item: ProjectItem) {
@@ -448,22 +337,6 @@ export class ArrangeComponent implements OnInit {
     } else {
       this.draggedItems = [];
     }
-  }
-
-  updateItemStates(): void {
-    this.sections.forEach(
-      (section: { items: { disableUp: boolean; disableDown: boolean }[] }) => {
-        section.items.forEach(
-          (
-            item: { disableUp: boolean; disableDown: boolean },
-            index: number
-          ) => {
-            item.disableUp = index === 0;
-            item.disableDown = index === section.items.length - 1;
-          }
-        );
-      }
-    );
   }
 
   onSelect(item: { id: string; name: string }) {

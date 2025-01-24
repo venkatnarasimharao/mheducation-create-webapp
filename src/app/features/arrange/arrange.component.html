@@ -25,7 +25,7 @@
                                     } @else if (projectList.length === 0 && !isLoading) {
                                         <div class="dropdown-item">No projects found</div>
                                     } @else {
-                                        @for(item of projectList; track item.id) {
+                                        @for(item of projectList; track $index) {
                                             <button type="button" 
                                                     class="dropdown-item" 
                                                     role="menuitem"
