@@ -1,10 +1,9 @@
-import { ApiService } from './../../core/services/api/api.service';
 import { Component, OnInit } from '@angular/core';
 import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { NgbDropdownToggleNoCaretDirective } from '../../shared/directives/dropdown-toggle-css.directive';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { combineLatest, map } from 'rxjs';
 import { ImageGalleryService } from '../../core/services/image-gallery/image-gallery.service';
 import { TranslateModule } from '@ngx-translate/core';
@@ -51,8 +50,6 @@ export class SearchFindContentComponent implements OnInit {
   arrangeHeading: string = '86 pgs / $12.46 est';
 
   constructor(private route: ActivatedRoute, private readonly imageService: ImageGalleryService,
-    private ApiService: ApiService,
-    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -77,10 +74,5 @@ export class SearchFindContentComponent implements OnInit {
 
   onSelected(item: { id: number; name: string }) {
     this.selectFormatTitle = item.name;
-  }
-  openBookDetails() {
-    this.router.navigate(['/preview'], {
-      queryParams: { guid: "99c9fd84-bc04-37a0-ab66-4a43927a421e" }
-    });
   }
 }

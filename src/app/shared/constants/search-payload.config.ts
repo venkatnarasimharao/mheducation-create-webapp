@@ -351,7 +351,7 @@ export const BOOK_COVER_IMAGES = {
         "display": "true"
     }
 }
-export const search_inside_config = {
+export const SEARCH_INSIDE_CONFIG = {
     "search": {
         "token": "",
         "guid": "",

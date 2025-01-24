@@ -1,3 +1,5 @@
+import { CommonStateService } from './../common-state/common-state.service';
+
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -9,17 +11,13 @@ import { CookieService } from 'ngx-cookie-service';
   providedIn: 'root'
 })
 export class ApiService {
-  JSESSIONID_CRT = "hviTFBQu-htMwC8ZmlZmSu27DgjnjP5eheMPhd4zthzuTb76czur! - 2070150201";
-
   constructor(
     private http: HttpClient,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private commonStateService: CommonStateService
   ) { }
 
-  public isAnonymous(): boolean {
-    const paris_user_id = this.cookieService.get('paris_user_id');
-    return paris_user_id ? false : true;
-  }
+
   getSearchListing() {
     const finalPay = USER_SEARCH_CONFIG
     let languages: any = sessionStorage.getItem('languages');
@@ -103,7 +101,6 @@ export class ApiService {
     const userId = this.cookieService.get("paris_user_id");  // Example user ID
     const url = `/users/${userId}/preview/${payload.guid}/${payload.pageNumber}`;
     const headers = new HttpHeaders({
-      'jcookie': `JSESSIONID_CRT=${this.JSESSIONID_CRT}`,
       'X-Response-Type': 'arraybuffer',
     });
     const params = {
@@ -112,25 +109,21 @@ export class ApiService {
     return this.apiMethodService({
       url,
       method: "GET_IMAGE",
-      options: { headers },
       params,
+      headers
     });
   }
   getSearchInsideList(payload: any) {
     let user = "anonymous";
-    if (!this.isAnonymous()) {
+    if (!this.commonStateService.isAnonymous()) {
       user = this.cookieService.get("paris_user_id");
     }
-    const headers = new HttpHeaders({
-      'jcookie': `JSESSIONID_CRT=${this.JSESSIONID_CRT}`,
-      'X-Response-Type': 'arraybuffer',
-    });
     return this.apiMethodService({
       url: `/p/users/${user}/searchinside`,
       method: 'POST',
       body: payload,
       options: {
-        responseType: 'text', headers
+        responseType: 'text'
       }
     })
   }

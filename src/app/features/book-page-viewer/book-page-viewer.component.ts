@@ -1,3 +1,4 @@
+import { CommonStateService } from './../../core/services/common-state/common-state.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoginComponent } from '../../shared/components/login/login.component';
 import { ApiService } from './../../core/services/api/api.service';
@@ -23,15 +24,16 @@ export class BookPageViewerComponent implements OnInit, OnChanges {
   prevButtonVisible: boolean = false;
   nextButtonVisible: boolean = false;
   isPreviousPage: boolean = false;
-  constructor(private AuthService: AuthService,
+  constructor(private authService: AuthService,
     private ApiService: ApiService,
+    private commonStateService: CommonStateService,
     private modalService: NgbModal
   ) { }
   ngOnInit(): void {
-    this.isAnonymous = this.ApiService.isAnonymous();
+    this.isAnonymous = this.commonStateService.isAnonymous() ? true : false;
     this.pageCount = this.currentChapter.pageCount;
     this.fetchBookPageView();
-    this.AuthService.loginStatus$.subscribe((status) => {
+    this.authService.loginStatus$.subscribe((status) => {
       if (status === 'success') {
         this.isAnonymous = false;
         this.fetchBookPageView();
@@ -52,7 +54,7 @@ export class BookPageViewerComponent implements OnInit, OnChanges {
   handleSign() {
     const modalRef = this.modalService.open(LoginComponent, { centered: false });
     modalRef.result.then(() => {
-      this.isAnonymous = this.ApiService.isAnonymous();
+      this.isAnonymous = this.commonStateService.isAnonymous() ? true : false;
       if (!this.isAnonymous) {
         this.fetchBookPageView();
       }

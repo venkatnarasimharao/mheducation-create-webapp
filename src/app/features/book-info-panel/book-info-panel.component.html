@@ -82,9 +82,11 @@
                                                     {{ item?.title }}
                                                 </span>
                                                 }
+                                                @if(item?.pageCount){
                                                 <span class="badge bg-primary rounded-pill">
-                                                    {{ item?.pageCount ? (item?.pageCount+'pp'):"" }}
+                                                    {{ item?.pageCount+'pp'}}
                                                 </span>
+                                                }
                                             </li>
                                             }
                                         </ul>
@@ -166,7 +168,7 @@
             </ng-template>
         </li>
         </ul>
-        <div [ngbNavOutlet]="nav" class="mt-2"></div>
+        <div [ngbNavOutlet]="nav"></div>
     </div>
 </div>
 <hec-book-page-viewer class="book-page-viewer" [currentChapter]="currentChapter"></hec-book-page-viewer>

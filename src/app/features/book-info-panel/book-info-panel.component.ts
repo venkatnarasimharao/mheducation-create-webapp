@@ -1,8 +1,9 @@
+import { CommonStateService } from './../../core/services/common-state/common-state.service';
 import { AuthService } from './../../core/services/auth/auth.service';
 import { ApiService } from './../../core/services/api/api.service';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { search_inside_config } from '../../shared/constants/search-payload.config';
+import { SEARCH_INSIDE_CONFIG } from '../../shared/constants/search-payload.config';
 import { LoginComponent } from '../../shared/components/login/login.component';
 import { NgbAccordionModule, NgbModal, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
@@ -39,19 +40,21 @@ export class BookInfoPanelComponent implements OnInit {
 
   constructor(private apiService: ApiService,
     private modalService: NgbModal,
-    private AuthService: AuthService,
+    private authService: AuthService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private commonStateService
+      : CommonStateService
   ) {
 
   }
   ngOnInit(): void {
-    this.isAnonymous = this.apiService.isAnonymous();
+    this.isAnonymous = this.commonStateService.isAnonymous() ? true : false;
     let previousGuid: string | null = null;
     this.route.queryParams.subscribe(params => {
       const currentGuid = params['guid'];
       const currentPart = params['part'];
-      const currentChapter = params['Chapter'];
+      const currentChapter = params['chapter'];
       if (currentGuid && currentGuid !== previousGuid) {
         previousGuid = currentGuid;
         this.fetchBookData(currentGuid);
@@ -59,9 +62,8 @@ export class BookInfoPanelComponent implements OnInit {
       else if (currentPart && currentChapter) {
         this.setCurrentChapter(currentPart, currentChapter);
       }
-      // this.fetchBookData(params['guid']);
     });
-    this.AuthService.loginStatus$.subscribe((status) => {
+    this.authService.loginStatus$.subscribe((status) => {
       if (status === 'success') {
         this.isAnonymous = false;
       }
@@ -104,13 +106,12 @@ export class BookInfoPanelComponent implements OnInit {
     this.bookSummary = (this.bookData?.year ? (" © " + this.bookData?.year) : "") + (this.bookData?.authors ? " | " + this.bookData.authors : "") + (this.bookData?.source ? " | " + this.bookData?.source : "");
     this.bookImage = `https://createqa.mheducation.com/covers/${this.bookData.isbn}.jpeg`;
   }
-  setCurrentChapter(part: any, Chapter: any) {
-    this.currentChapter = this.tocList[part][Chapter];
+  setCurrentChapter(part: any, chapter: any) {
+    this.currentChapter = this.tocList[part][chapter];
     this.router.navigate([], {
-      queryParams: { part, Chapter },
-      queryParamsHandling: 'merge', // Keeps existing query params and updates the specified ones
+      queryParams: { part, chapter },
+      queryParamsHandling: 'merge',
     });
-    console.log(`Current Chapter`);
 
   }
   groupTocList(items: any): void {
@@ -173,7 +174,6 @@ export class BookInfoPanelComponent implements OnInit {
   loadDetailsTabData() {
     this.relatedBookList = this.bookData.relationships.relationship;
     this.bookDescription = this.bookData.description;
-    // console.log(this.bookInsideData, "hey");
   }
   setActiveTab(tab: string): void {
     this.currentTab = tab;
@@ -185,52 +185,12 @@ export class BookInfoPanelComponent implements OnInit {
     return this.currentTab === tab;
   }
   handleSearchInside(token: number): void {
-    const payload = JSON.parse(JSON.stringify(search_inside_config));
+    const payload = JSON.parse(JSON.stringify(SEARCH_INSIDE_CONFIG));
     payload.search.query = this.searchInsideQuery;
     payload.search.token = token;
     console.log(this.bookData);
     payload.search.guid = this.bookData.guid;
     this.isSearchInsideLoader = true;
-
-
-    //   this.apiService.getSearchInsideList(payload)
-    //     .pipe(
-    //       map((response: any) => {
-    //         const parsedResponse = JSON.parse(response.body);
-    //         // Process the 'result' data here if needed
-    //         const formattedResult = parsedResponse.result.map((item: any) => {
-    //           if (item.content) {
-    //             console.log(item.content);
-    //             if (typeof item.content.para === 'string') {
-    //               // Handle plain strings
-    //               console.log(item.content.para)
-    //               return item;
-    //             } else if (item.content.para?.__text && item.content.para.match) {
-    //               // Replace \n with .match in bold
-    //               const boldMatch = Array.isArray(item.content.para.match) ? item.content.para.match[0] : item.content.para.match;
-    //               return item.content.para.__text.replace(/\n/g, ` <b>${boldMatch}</b> `);
-    //             } else if (item.content.para?.__text) {
-    //               // If only __text is present
-    //               return item.__text;
-    //             }
-    //             return '';
-    //           }
-    //         }).filter((line: string) => line.trim() !== ''); // Remove empty lines
-
-    //         return formattedResult;
-    //       })
-    //     )
-    //     .subscribe(
-    //       (bookInsideData: any) => {
-    //         this.bookInsideData = bookInsideData;
-    //         console.log('Book inside data fetched successfully:', this.bookInsideData);
-    //       },
-    //       (error: any) => {
-    //         console.error('Error inside fetching book data:', error);
-    //       }
-    //     );
-
-    // 
     this.apiService.getSearchInsideList(payload).subscribe((res) => {
       this.isSearchInsideLoader = false;
       if (res.ok) {
@@ -271,7 +231,7 @@ export class BookInfoPanelComponent implements OnInit {
     }
     const element = event.target;
     if (element.scrollHeight - element.scrollTop <= element.clientHeight + 2) {
-      this.handleSearchInside(this.bookInsideData.length + 1); // Fetch more data
+      this.handleSearchInside(this.bookInsideData.length + 1);
     }
 
   }

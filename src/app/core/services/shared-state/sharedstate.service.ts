@@ -1,3 +1,4 @@
+import { CookieService } from 'ngx-cookie-service';
 import { Injectable, signal } from '@angular/core';
 import { ApiService } from '../api/api.service';
 
@@ -8,7 +9,7 @@ export class SharedstateService {
   private languages = signal<string[] | null>(null);
 
   constructor(
-    private apiService: ApiService
+    private apiService: ApiService,
   ) {
     const savedLanguages = sessionStorage.getItem('languages');
     if (savedLanguages) {
