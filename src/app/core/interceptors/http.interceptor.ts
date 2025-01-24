@@ -1,22 +1,25 @@
 import { HttpErrorResponse, HttpInterceptorFn, HttpResponse } from '@angular/common/http';
 import { catchError, map, throwError } from 'rxjs';
 import { XmlTransformerUtil } from '../../shared/utils/xml-transformer/xml-transformer.util';
+import { CookieService } from 'ngx-cookie-service';
+import { inject } from '@angular/core';
 
 export const httpInterceptor: HttpInterceptorFn = (request, next) => {
-  const token = sessionStorage.getItem('token');
-
+  const cookieService = inject(CookieService);
+  const JSESSIONID_CRT = cookieService.get('JSESSIONID_CRT');
   let transformedReq = request
-  if (token) {
-    transformedReq = request.clone({
-      headers: request.headers.set('Authorization', `Bearer ${token}`),
+  if (JSESSIONID_CRT) {
+    // TODO jcookie -> Cookie
+    transformedReq = transformedReq.clone({
+      headers: transformedReq.headers.set('jcookie', `JSESSIONID_CRT=${JSESSIONID_CRT}`),
     })
   }
 
-  if (request.body && typeof request.body === 'object') {
-    const xmlBody = XmlTransformerUtil.jsonToXml(request.body);
-    transformedReq = request.clone({
+  if (transformedReq.body && typeof transformedReq.body === 'object') {
+    const xmlBody = XmlTransformerUtil.jsonToXml(transformedReq.body);
+    transformedReq = transformedReq.clone({
       body: xmlBody,
-      headers: request.headers.set('Content-Type', 'application/xml'),
+      headers: transformedReq.headers.set('Content-Type', 'application/xml'),
     });
   }
 
