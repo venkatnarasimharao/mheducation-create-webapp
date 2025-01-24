@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import { USER_SEARCH_CONFIG } from '../../constants/search-payload.config';
 import { ApiService } from '../../../core/services/api/api.service';
 import { SearchService } from '../../../core/services/search/search.service';
-import { PayloadService } from '../../../core/services/payload/payload.service';
 
 @Component({
   selector: 'hec-filter-accordion',
@@ -18,7 +17,6 @@ export class FilterAccordionComponent implements OnInit {
   translate: TranslateService = inject(TranslateService);
   private apiService = inject(ApiService);
   private searchService = inject(SearchService);
-  private payloadService = inject(PayloadService);
 
   @Input() collectionfilterData: any[] = [];
   selectedCheckboxes: { [header: string]: number } = {};
@@ -59,7 +57,7 @@ export class FilterAccordionComponent implements OnInit {
 
     // Sync with new API response
     this.collectionfilterData.forEach((list) => { 
-        const currentPayload = this.payloadService.getPayload() || USER_SEARCH_CONFIG; 
+        const currentPayload = this.searchService.getPayload() || USER_SEARCH_CONFIG; 
         const normalizedHeader = this.normalizeHeader(list.header); 
    
         const payloadFacet = currentPayload.search.facets.facet.find( 
@@ -121,7 +119,7 @@ export class FilterAccordionComponent implements OnInit {
 
   // New method to sync selection states from payload
   private syncSelectionStatesFromPayload(): void {
-    const currentPayload = this.payloadService.getPayload() || USER_SEARCH_CONFIG;
+    const currentPayload = this.searchService.getPayload() || USER_SEARCH_CONFIG;
    
     
     this.collectionfilterData.forEach(list => {
@@ -158,7 +156,7 @@ export class FilterAccordionComponent implements OnInit {
     return item.selected === 'true' || item.selected === true;
   }
 
-  onCheckBoxChange(event: Event, item: any, header: string): void {
+ onCheckBoxChange(event: Event, item: any, header: string): void {
     const isChecked = (event.target as HTMLInputElement).checked;
 
   // If unchecking, ensure at least one checkbox remains selected for "Content Type"
@@ -185,7 +183,7 @@ export class FilterAccordionComponent implements OnInit {
     }
     this.selectedCheckboxes[header] += isChecked ? 1 : -1;
   
-    let finalPayload = this.payloadService.getPayload() || JSON.parse(JSON.stringify(USER_SEARCH_CONFIG));
+    let finalPayload = this.searchService.getPayload() || JSON.parse(JSON.stringify(USER_SEARCH_CONFIG));
     console.log('Initial Payload filters:', finalPayload); 
   
     // Find the correct facet in the payload
@@ -252,10 +250,9 @@ export class FilterAccordionComponent implements OnInit {
       finalPayload.search.findable = this.searchPayload.findable;
     }
   
-    // Use updatePayload to merge changes
     console.log('final payload filters-', finalPayload);
-    this.payloadService.updatePayload(finalPayload);
-    
+    this.searchService.updateSearchQuery(finalPayload);
+  
     //to start the loader
     this.searchService.startSearch();
   

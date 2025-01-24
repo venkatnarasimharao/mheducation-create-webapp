@@ -19,8 +19,6 @@ export class ApiService {
       return paris_user_id ? false : true;
     }
 
-    
-
   getSearchListing(finalPayload: any) {
     const finalPay = JSON.parse(JSON.stringify(finalPayload));
 
@@ -29,11 +27,11 @@ export class ApiService {
     if(!this.isAnonymous()){
         user = this.cookieService.get('paris_user_id');
     }
+    
     const headers = new HttpHeaders({
       'jcookie': `JSESSIONID_CRT=2reSopI07Vk2Po5iS-00SDVN5TwRvE1heNc0fZG0NAIW5A5nowfH!-2070150201`,
       'X-Response-Type': 'arraybuffer',
     });
- 
 
     // let languages: any = sessionStorage.getItem('languages');
     // if (languages) {
@@ -95,6 +93,7 @@ export class ApiService {
     const languageCode = 'en_US'
     return this.apiMethodService({ url: `/locale/${languageCode}/props.json`, method: 'GET' });
   }
+  
 
   apiMethodService<T>({ url, method, body, params = {}, options = {} }: any): Observable<any> {
     url = environment.apiUrl + url;
@@ -124,4 +123,5 @@ export class ApiService {
         return this.http.get(url, options);
     }
   }
+  
 }

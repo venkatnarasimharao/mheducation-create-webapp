@@ -31,3 +31,11 @@ export interface SearchCollectionInterface {
   image: string;
   name?: string;
 }
+
+export interface SearchState {
+  loading: boolean;
+  result?: any;
+  query: string;
+  textType: string[];
+  findable: boolean;
+}

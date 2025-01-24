@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-import { PayloadService } from '../../../core/services/payload/payload.service';
 import { ApiService } from '../../../core/services/api/api.service';
 import { SearchService } from '../../../core/services/search/search.service';
 
@@ -16,7 +15,6 @@ export class SortbyComponent implements OnInit {
 
 
   constructor(
-    private payloadService: PayloadService,
     private apiService: ApiService,
     private searchService: SearchService
   ) {}
@@ -30,14 +28,14 @@ export class SortbyComponent implements OnInit {
   private updatePayloadWithDefaultSort(): void {
     const defaultSortFieldDetails = this.getSortFieldDetails('relevance');
     const currentPayload = {
-      ...this.payloadService.getPayload() || {}, // Ensure payload is at least an empty object
+      ...this.searchService.getPayload() || {}, // Ensure payload is at least an empty object
       search: {
-        ...this.payloadService.getPayload()?.search || {}, // Preserve other search attributes
+        ...this.searchService.getPayload()?.search || {}, // Preserve other search attributes
         sortfield: defaultSortFieldDetails
       }
     };
 
-    this.payloadService.updatePayload(currentPayload);
+    this.searchService.updateSearchQuery(currentPayload);
     console.log('Payload with default sort option:', currentPayload);
   }
 
@@ -47,8 +45,8 @@ export class SortbyComponent implements OnInit {
     this.selectedSortOption = formattedSortOption; // Update the selected sort option
     console.log('Selected sort option:', this.selectedSortOption);
 
-    // Get the current payload from the PayloadService
-    let currentPayload = this.payloadService.getPayload() || {}; // Ensure payload is at least an empty object
+  
+    let currentPayload = this.searchService.getPayload() || {}; // Ensure payload is at least an empty object
     console.log('Current Payload:', currentPayload);
 
     // Get the new sort field details based on the selected option
@@ -63,8 +61,7 @@ export class SortbyComponent implements OnInit {
       }
     };
 
-    // Update the PayloadService with the new payload
-    this.payloadService.updatePayload(currentPayload);
+    this.searchService.updateSearchQuery(currentPayload);
 
     // Log the updated payload
     console.log('Updated Payload:', currentPayload);

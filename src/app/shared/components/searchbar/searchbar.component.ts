@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
-import { PayloadService } from '../../../core/services/payload/payload.service';
 import { USER_SEARCH_CONFIG } from '../../constants/search-payload.config';
 import { ApiService } from '../../../core/services/api/api.service';
 import { SearchService } from '../../../core/services/search/search.service';
@@ -24,7 +23,7 @@ export class SearchbarComponent {
   translate: TranslateService = inject(TranslateService);
   private apiService = inject(ApiService);
   private searchService = inject(SearchService);
-  private payloadService = inject(PayloadService); 
+  
 
   constructor(private router: Router) {}
 
@@ -45,7 +44,7 @@ export class SearchbarComponent {
     this.getDropdownLabel();
 
     // Subscribe to payload service
-    const payload = this.payloadService.getPayload();
+    const payload = this.searchService.getPayload();
 
     if (payload) {
       this.searchTerm = payload.search.query || '';
@@ -128,7 +127,7 @@ export class SearchbarComponent {
     }
   
     // Fetch the query from the payload
-    const payload = this.payloadService.getPayload();
+    const payload = this.searchService.getPayload();
     const searchQuery = payload?.query || this.searchTerm; // Default to the search term in the input field if no query in payload
   
     // Construct the final payload for the search request
@@ -155,10 +154,10 @@ export class SearchbarComponent {
     console.log('Final Payload:', finalPayload);
   
     // Save the updated payload in the PayloadService
-    this.payloadService.setPayload(finalPayload);
+    this.searchService.setPayload(finalPayload);
   
     // Update the search service with the latest data
-    this.searchService.updateSearchQuery(finalPayload.search.query, finalPayload.search.textTypes.textType, finalPayload.search.findable);
+    this.searchService.updateSearchQuery(finalPayload);
   
     // Trigger the search process
     this.searchService.startSearch();

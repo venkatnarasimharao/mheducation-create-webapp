@@ -15,9 +15,7 @@ import { ApiService } from '../../core/services/api/api.service';
 import { ImageCardComponent } from '../../shared/components/image-card/image-card.component';
 import { SearchbarComponent } from '../../shared/components/searchbar/searchbar.component';
 import { SearchService } from '../../core/services/search/search.service';
-import { PayloadService } from '../../core/services/payload/payload.service';
 import { SortbyComponent } from '../../shared/components/sortby/sortby.component';
-import { USER_SEARCH_CONFIG } from '../../shared/constants/search-payload.config';
 
 @Component({
   selector: 'hec-search-find-content',
@@ -48,7 +46,7 @@ export class SearchFindContentComponent implements OnInit {
   totalResults: number = 0;
 
   private apiService: ApiService = inject(ApiService);
-  private payloadService: PayloadService = inject(PayloadService);
+
 
   collections: any[] = [];
   selectProjectItems: any[] = [
@@ -85,7 +83,7 @@ export class SearchFindContentComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const payload = this.payloadService.getPayload();
+    const payload = this.searchService.getPayload();
 
     this.searchService.searchResults.subscribe((state) => {
       this.loading = state.loading;
@@ -154,8 +152,7 @@ export class SearchFindContentComponent implements OnInit {
   onPageChange(newPage: number): void {
     this.currentPage = newPage;
 
-    // Retrieve the latest payload from PayloadService
-    const finalPayload = this.payloadService.getPayload();
+    const finalPayload = this.searchService.getPayload();
 
     if (finalPayload) {
       // Adjust the 'start' value for pagination

@@ -27,15 +27,25 @@ describe('ApiService', () => {
 
   it('should call getSearchListing and return response', () => {
     const mockResponse = { data: 'mock data' };
+  
+    // Create a mock finalPayload object (you can customize it based on the actual payload structure expected by the method)
+    const finalPayload = { query: 'test query', textType: ['type1'], findable: true };
+  
+    // Spy on sessionStorage to return mock data
     spyOn(sessionStorage, 'getItem').and.returnValue(JSON.stringify([{ displayValue: { _text: 'English' }, name: { _text: 'en' }, enabled: { _text: 'true' } }]));
-    service.getSearchListing().subscribe(response => {
-      expect(response.body).toEqual(JSON.stringify(mockResponse));
+  
+    // Call getSearchListing with the finalPayload parameter
+    service.getSearchListing(finalPayload).subscribe(response => {
+      expect(response.body).toEqual(mockResponse);  // Expect response body to be equal to mockResponse
     });
+  
+    // Mock the HTTP request
     const req = httpMock.expectOne(`${environment.apiUrl}/p/users/anonymous/search`);
     expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual(USER_SEARCH_CONFIG);
-    req.flush(mockResponse);
+    expect(req.request.body).toEqual(USER_SEARCH_CONFIG);  // Ensure correct body is sent
+    req.flush(mockResponse);  // Return the mock response
   });
+  
 
   xit('should call userLogin and return response', () => {
     const mockResponse = { message: 'Login successful' };

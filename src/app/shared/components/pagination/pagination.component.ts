@@ -1,7 +1,8 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { PayloadService } from '../../../core/services/payload/payload.service';
+import { SearchService } from '../../../core/services/search/search.service';
+
 
 @Component({
   selector: 'hec-pagination',
@@ -18,10 +19,11 @@ export class PaginationComponent {
   @Output() pageChange: EventEmitter<number> = new EventEmitter<number>();
 
   translate: TranslateService = inject(TranslateService);
-  private payloadService: PayloadService = inject(PayloadService);
 
   // Set the page size to 1 so each page corresponds to one "unit"
   pageSize: number = 1;
+
+  constructor( private searchService: SearchService){}
 
   onPageChange(page: number) {
     if (page >= 1 && page <= this.totalPages) {
@@ -40,7 +42,7 @@ export class PaginationComponent {
 
   private updatePayloadStart(startValue: number) {
     // Get the current payload
-    const currentPayload = this.payloadService.getPayload();
+    const currentPayload = this.searchService.getPayload();
 
     if (currentPayload) {
       // Directly update the 'start' value in the payload object
@@ -51,7 +53,7 @@ export class PaginationComponent {
       }
 
       // Update the payload in the service
-      this.payloadService.updatePayload(currentPayload);
+      this.searchService.updateSearchQuery(currentPayload);
       console.log('Payload updated with new start value:', currentPayload);
     } else {
       console.warn('No payload found to update.');
