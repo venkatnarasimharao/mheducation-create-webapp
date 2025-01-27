@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { ApiService } from './../../core/services/api/api.service';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'hec-favourites',
@@ -7,6 +8,17 @@ import { Component } from '@angular/core';
   templateUrl: './favourites.component.html',
   styleUrl: './favourites.component.scss'
 })
-export class FavouritesComponent {
+export class FavouritesComponent implements OnInit {
+  constructor(private apiService: ApiService) {
 
+  }
+
+  ngOnInit(): void {
+    this.fetchFavouritesList();
+  }
+  fetchFavouritesList(): void {
+    this.apiService.getFavouritesList().subscribe((Response) => {
+      console.log('Favourites List:', Response);
+    })
+  }
 }

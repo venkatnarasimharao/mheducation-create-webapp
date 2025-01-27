@@ -1,3 +1,4 @@
+import { BookPageViewerComponent } from './../../../features/book-page-viewer/book-page-viewer.component';
 import { CommonStateService } from './../common-state/common-state.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -112,12 +113,7 @@ export class ApiService {
       options: { headers }
     });
   }
-  getBadPreviewPage() {
-    return "https://createqa.mheducation.com/createonline/images/bad_preview.jpg";
-  }
-  getBookCoverImage(isbn: string): string {
-    return `https://createqa.mheducation.com/covers/${isbn}.jpeg`;
-  }
+
   getSearchInsideList(payload: any) {
     let user = "anonymous";
     if (!this.commonStateService.isAnonymous()) {
@@ -130,6 +126,28 @@ export class ApiService {
       options: {
         responseType: 'text'
       }
+    })
+  }
+  getFavouritesList() {
+    const params = {
+      nocacheTimestamp: Date.now(),
+    };
+    return this.apiMethodService({
+      url: `/p/users/${this.commonStateService.getUserId()}/specialsearch/favorites`,
+      method: 'GET_PARMS',
+      params: params,
+    })
+  }
+  getProjectList(projectType: string) {
+    const userId = this.commonStateService.getUserId();
+    const params = {
+      nocacheTimestamp: Date.now(),
+      state: projectType
+    }
+    return this.apiMethodService({
+      url: `/p/users/${userId}/projects`,
+      method: 'GET_PARMS',
+      params
     })
   }
 
