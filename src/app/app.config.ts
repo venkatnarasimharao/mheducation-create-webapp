@@ -9,6 +9,7 @@ import { ApiService } from './core/services/api/api.service';
 import { SharedstateService } from './core/services/shared-state/sharedstate.service';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from './core/services/auth/auth.service';
+import { CommonStateService } from './core/services/common-state/common-state.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -34,8 +35,8 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     ApiService,
     SharedstateService,
-    CookieService,
-    AuthService
+    AuthService,
+    CommonStateService
   ]
 };
 
