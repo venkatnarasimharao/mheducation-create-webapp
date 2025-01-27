@@ -174,6 +174,6 @@ export class SearchbarComponent {
         console.error('API Error:', err);
       }
     });
-  }
+  } 
   
 }

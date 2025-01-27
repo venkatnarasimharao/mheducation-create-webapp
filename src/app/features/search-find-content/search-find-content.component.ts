@@ -35,7 +35,7 @@ import { SortbyComponent } from '../../shared/components/sortby/sortby.component
     SortbyComponent,
   ],
   templateUrl: './search-find-content.component.html',
-  styleUrls: ['./search-find-content.component.scss'],
+  styleUrl: './search-find-content.component.scss',
 })
 export class SearchFindContentComponent implements OnInit {
   translate: TranslateService = inject(TranslateService);
@@ -44,6 +44,7 @@ export class SearchFindContentComponent implements OnInit {
   selectArrangeTitle: string = 'Arrange';
   collectionDetails: SearchCollectionInterface | null = null;
   totalResults: number = 0;
+  Math = Math;
 
   private apiService: ApiService = inject(ApiService);
 
@@ -70,8 +71,8 @@ export class SearchFindContentComponent implements OnInit {
   pagePerItem: number = 5;
   resultsPerPage: number = 20;
 
-  startValue: number = 1; // Start value for the current page
-  endValue: number = this.startValue + this.resultsPerPage - 1; // End value (start + resultsPerPage - 1)
+  startValue: number = 1; 
+  endValue: number = 20;
   loading: boolean = false;
   sfcloading: boolean = true;
   searchedTerm: string = '';
@@ -92,9 +93,6 @@ export class SearchFindContentComponent implements OnInit {
         if (estimate) {
           this.totalPagesCount = Math.ceil(Number(estimate) / this.resultsPerPage);
           this.totalResults = state.result?.estimate || 0;
-
-          // Update end value when totalResults change
-          this.updateRange();
         }
       }
     });  
@@ -113,9 +111,9 @@ export class SearchFindContentComponent implements OnInit {
       next: (response) => {
         this.sfcloading = false
         if(response.ok){
-          if (response?.body) {
             const parsedBody = JSON.parse(response.body);
-  
+            console.log('parsedBody', parsedBody)
+
             if (parsedBody?.search?.valuefacets?.facet) {
               this.collections = parsedBody.search.valuefacets.facet.map((facet: any) => {
                 const items = Array.isArray(facet.item) ? facet.item : [facet.item].filter(Boolean);
@@ -130,7 +128,7 @@ export class SearchFindContentComponent implements OnInit {
                 };
               });
             }
-          }
+          
         }
        
       },
@@ -159,9 +157,6 @@ export class SearchFindContentComponent implements OnInit {
       this.startValue = (newPage - 1) * this.resultsPerPage + 1;
       finalPayload.search.start = this.startValue;
 
-      // Update range (x to y)
-      this.updateRange();
-
       this.searchService.startSearch();
 
       // Call the API to fetch updated results based on the new page
@@ -176,9 +171,5 @@ export class SearchFindContentComponent implements OnInit {
         },
       });
     }
-  }
-
-  private updateRange(): void {
-    this.endValue = Math.min(this.startValue + this.resultsPerPage - 1, this.totalResults);
   }
 }

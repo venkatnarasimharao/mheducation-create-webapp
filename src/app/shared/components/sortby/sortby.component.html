@@ -1,16 +1,20 @@
-
 <div ngbDropdown class="d-inline-block mb-1 mt-1">
-    <button type="button" ngbDropdownToggle class="btn btn-outline-dark text-dark bg-transparent" aria-label="Sort by">
-      {{ selectedSortOption || 'Sort By'}} <!-- Display the selected sort option -->
+  <button
+    type="button"
+    ngbDropdownToggle
+    class="btn btn-outline-dark text-dark bg-transparent"
+    aria-label="Sort by"
+  >
+    {{ selectedSortOption || 'Sort By' }}
+  </button>
+  <div ngbDropdownMenu aria-labelledby="dropdown-basic">
+    <button
+      *ngFor="let option of sortOptions"
+      ngbDropdownItem
+      (click)="onSortChange(option)"
+      class="dropdown-item"
+    >
+      {{ option.label }}
     </button>
-    <div ngbDropdownMenu aria-labelledby="dropdown-basic">
-      <button ngbDropdownItem (click)="onSortChange('relevance')" class="dropdown-item">Relevance</button>
-      <button ngbDropdownItem (click)="onSortChange('author_asc')" class="dropdown-item">Author (a-z)</button>
-      <button ngbDropdownItem (click)="onSortChange('author_desc')" class="dropdown-item">Author (z-a)</button>
-      <button ngbDropdownItem (click)="onSortChange('year_newest')" class="dropdown-item">Year (newest first)</button>
-      <button ngbDropdownItem (click)="onSortChange('year_oldest')" class="dropdown-item">Year (oldest first)</button>
-      <button ngbDropdownItem (click)="onSortChange('title_asc')" class="dropdown-item">Title (a-z)</button>
-      <button ngbDropdownItem (click)="onSortChange('title_desc')" class="dropdown-item">Title (z-a)</button>
-    </div>
   </div>
-  
+</div>

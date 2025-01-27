@@ -58,6 +58,7 @@ export class FilterAccordionComponent implements OnInit {
     // Sync with new API response
     this.collectionfilterData.forEach((list) => { 
         const currentPayload = this.searchService.getPayload() || USER_SEARCH_CONFIG; 
+        console.log('CurrentPayload', currentPayload)
         const normalizedHeader = this.normalizeHeader(list.header); 
    
         const payloadFacet = currentPayload.search.facets.facet.find( 

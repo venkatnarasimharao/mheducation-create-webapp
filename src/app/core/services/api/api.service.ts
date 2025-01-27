@@ -77,6 +77,10 @@ export class ApiService {
     const languageCode = 'en_US'
     return this.apiMethodService({ url: `/locale/${languageCode}/props.json`, method: 'GET' });
   }
+
+  getImageUrl(endPointUrl: string): string{
+    return environment.apiUrl + endPointUrl;
+  }
   
 
   apiMethodService<T>({ url, method, body, params = {}, options = {} }: any): Observable<any> {

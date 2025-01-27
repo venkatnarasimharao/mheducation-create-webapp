@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { SearchService } from '../../../core/services/search/search.service';
+import { ApiService } from '../../../core/services/api/api.service';
 
 @Component({
   selector: 'hec-search-results',
@@ -13,7 +14,7 @@ export class SearchResultsComponent implements OnInit {
   searchResults: any[] = [];
   loading: boolean = false;
 
-  constructor(private searchService: SearchService) {}
+  constructor(private searchService: SearchService, private apiService: ApiService) {}
 
   ngOnInit() {
     this.searchService.searchResults.subscribe({
@@ -33,6 +34,7 @@ export class SearchResultsComponent implements OnInit {
             isbn: item.isbn,
             description: item.description,
             enableAddButton: item.enableAddButton,
+            imageUrl: this.apiService.getImageUrl(`covers/${item.isbn}.jpeg`)
           }));
         } else {
           this.searchResults = [];
