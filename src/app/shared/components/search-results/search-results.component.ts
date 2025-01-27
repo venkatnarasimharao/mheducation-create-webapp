@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, OnInit } from '@angular/core';
 import { SearchService } from '../../../core/services/search/search.service';
 import { ApiService } from '../../../core/services/api/api.service';
@@ -6,7 +6,7 @@ import { ApiService } from '../../../core/services/api/api.service';
 @Component({
   selector: 'hec-search-results',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './search-results.component.html',
   styleUrl: './search-results.component.scss',
 })
