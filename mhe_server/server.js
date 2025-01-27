@@ -15,15 +15,9 @@ app.use(bodyParser.raw({
 app.use(express.json({ limit: '12mb', parameterLimit: '12mb' }));
 app.use(express.urlencoded({ extended: false, limit: '12mb' }));
 
-const corsOptions = {
-    origin: 'http://localhost:8081',
-    methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
-    credentials: true,
-};
 // Enable CORS
 app.use(cors());
-app.options('*', cors(corsOptions));
+app.options('*', cors());
 
 app.get('/', (req, res) => {
     console.log('In Default API');
