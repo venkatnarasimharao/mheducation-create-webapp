@@ -1,7 +1,6 @@
-import { CookieService } from 'ngx-cookie-service';
 import { Injectable } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 import { environment } from '../../../../environments/environment';
-import { clientUrl } from '../../../../assets/env';
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +18,13 @@ export class CommonStateService {
     }
     return this.cookieService.get('paris_user_id');
   }
-  getDynamicUrl(endPointUrl: string): string {
 
-    return clientUrl.apiUrl + endPointUrl;
+  getImageUrl(endPointUrl: string, nonDev = true): string {
+    console.log(environment.apiUrl, 'check this')
+    if (nonDev) {
+      return environment.apiUrl + endPointUrl;
+    }
+    // TODO currently pointing to qa
+    return 'https://createqa.mheducation.com' + endPointUrl;
   }
 }

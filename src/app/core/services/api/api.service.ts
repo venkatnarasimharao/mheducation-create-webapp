@@ -134,7 +134,8 @@ export class ApiService {
   }
 
   apiMethodService<T>({ url, method, body, params = {}, options = {} }: any): Observable<any> {
-    url = environment.apiUrl + url;
+    const pathName = window.location.pathname?.includes('createonline') ? window.location.pathname : '/createonline'
+    url = environment.apiUrl + pathName + url;
     if (!options['responseType'] && method !== 'GET_IMAGE') {
       options['responseType'] = 'text';
     }

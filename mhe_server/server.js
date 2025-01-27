@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
     res.send('Server is working');
 });
 
-app.all('/proxy/createonline/*', async (req, res) => {
+app.all('/proxy/*', async (req, res) => {
     try {
         let response = ``
         const dynamicEndpoint = req.originalUrl.replace('/proxy', '');
