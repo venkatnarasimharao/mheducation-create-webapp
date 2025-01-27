@@ -35,6 +35,7 @@ export interface ProjectItem {
   guid: string;
   name: string;
   pages: number;
+  computedtitle?: string; 
   price: string;
   checked: boolean;
   disableUp: boolean;

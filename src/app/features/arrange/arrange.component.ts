@@ -6,7 +6,7 @@ import {
   transferArrayItem,
   CdkDropList,
 } from '@angular/cdk/drag-drop';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbCollapseModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../../core/services/api/api.service';
@@ -152,6 +152,9 @@ export class ArrangeComponent implements OnInit {
           } else if (row.subtype === 'backmatter') {
             this.sections[2].items = row.entry;
           }
+          else {
+            this.sections[3].items = row.entry;
+          }
         }
       }
     });
@@ -208,18 +211,6 @@ export class ArrangeComponent implements OnInit {
     this.isCollapsed[sectionId] = !this.isCollapsed[sectionId];
   }
 
-  toggleAllCheckboxes(section: any) {
-    section.items.forEach((item: any) => {
-      item.checked = section.selectAllChecked;
-    });
-    this.checkIfAnySelected();
-  }
-
-  checkIfAllSelected(section: any) {
-    section.selectAllChecked = section.items.every((item: any) => item.checked);
-    this.checkIfAnySelected();
-  }
-
   checkIfAnySelected() {
     this.isAnyCheckboxSelected = this.sections.some((section) =>
       section.items.some((item: { checked: boolean }) => item.checked)
@@ -228,12 +219,6 @@ export class ArrangeComponent implements OnInit {
       'isAnyCheckboxSelected: checked triggered',
       this.isAnyCheckboxSelected
     );
-  }
-
-  toggleCheckbox(item: any) {
-    item.checked = !item.checked;
-    console.log('Checkbox toggled:', item);
-    this.checkIfAnySelected();
   }
 
   deleteSelectedItems() {
@@ -245,100 +230,86 @@ export class ArrangeComponent implements OnInit {
     this.checkIfAnySelected();
   }
 
-  getConnectedDropLists(): string[] {
-    return this.sections.map((section) => section.id);
-  }
-
   drop(event: CdkDragDrop<ProjectItem[]>) {
+    const sourceSection = this.sections.find(s => s.id === event.previousContainer.id);
+    const targetSection = this.sections.find(s => s.id === event.container.id);
+  
+    if (!sourceSection || !targetSection) return;
+
+    const selectedItems = sourceSection.items.filter((item: ProjectItem) => item.checked);
+    const itemsToMove = selectedItems.length > 0 ? selectedItems : [sourceSection.items[event.previousIndex] as ProjectItem];
+
     if (event.previousContainer === event.container) {
-      const sourceSection = this.sections.find(
-        (s) => s.id === event.container.id
-      );
-      if (!sourceSection) return;
-
-      if (this.draggedItems.length > 0) {
-        const selectedItems = sourceSection.items.filter(
-          (item: ProjectItem) => item.checked
-        );
-        const draggedIndexes = selectedItems.map((item: ProjectItem) =>
-          sourceSection.items.indexOf(item)
-        );
-
-        draggedIndexes.sort((a: number, b: number) => b - a);
-
-        const itemsToMove = draggedIndexes
-          .map((index: number) => {
-            const [removed] = sourceSection.items.splice(index, 1);
-            return removed;
-          })
-          .reverse();
-
-        sourceSection.items.splice(event.currentIndex, 0, ...itemsToMove);
-      } else {
-        moveItemInArray(
-          event.container.data,
-          event.previousIndex,
-          event.currentIndex
-        );
-      }
+  
+      const unselectedItems = sourceSection.items.filter((item: ProjectItem) => !item.checked);
+      sourceSection.items = [
+        ...unselectedItems.slice(0, event.currentIndex),
+        ...itemsToMove,
+        ...unselectedItems.slice(event.currentIndex)
+      ];
     } else {
-      const sourceSection = this.sections.find(
-        (s) => s.id === event.previousContainer.id
+
+      sourceSection.items = sourceSection.items.filter((item: ProjectItem) => 
+        !itemsToMove.includes(item)
       );
-      const targetSection = this.sections.find(
-        (s) => s.id === event.container.id
-      );
-
-      if (!sourceSection || !targetSection) return;
-
-      if (this.draggedItems.length > 0) {
-        const selectedItems = sourceSection.items.filter(
-          (item: ProjectItem) => item.checked
-        );
-        const draggedIndexes = selectedItems.map((item: ProjectItem) =>
-          sourceSection.items.indexOf(item)
-        );
-
-        draggedIndexes.sort((a: number, b: number) => b - a);
-
-        const itemsToMove = draggedIndexes
-          .map((index: number) => {
-            const [removed] = sourceSection.items.splice(index, 1);
-            return removed;
-          })
-          .reverse();
-
-        targetSection.items.splice(event.currentIndex, 0, ...itemsToMove);
-      } else {
-        transferArrayItem(
-          event.previousContainer.data,
-          event.container.data,
-          event.previousIndex,
-          event.currentIndex
-        );
-      }
+      
+      targetSection.items.splice(event.currentIndex, 0, ...itemsToMove);
     }
 
-    this.draggedItems = [];
     this.sections.forEach((section: Section) => {
-      section.items.forEach((item: ProjectItem) => (item.checked = false));
+      section.items.forEach((item: ProjectItem) => item.checked = false);
       section.selectAllChecked = false;
     });
-    this.isAnyCheckboxSelected = false;
-    
-  }
 
-  onDragStarted(event: any, item: ProjectItem) {
-    const section = this.sections.find((s: Section) => s.items.includes(item));
-    if (!section) return;
+    this.draggedItems = [];
+}
+  
 
-    if (item.checked) {
-      this.draggedItems = section.items.filter((i: ProjectItem) => i.checked);
-    } else {
-      this.draggedItems = [];
+  handleKeyboardDrag = (event: KeyboardEvent, currentSection: Section, item: ProjectItem) => {
+    if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown') return;
+    event.preventDefault();
+  
+    const currentSectionIndex = this.sections.indexOf(currentSection);
+    const currentIndex = currentSection.items.indexOf(item);
+  
+    if (currentIndex === -1) return;
+  
+    let newIndex = currentIndex;
+    let targetSectionIndex = currentSectionIndex;
+  
+    if (event.key === 'ArrowUp') {
+      if (currentIndex === 0 && currentSectionIndex > 0) {
+        targetSectionIndex = currentSectionIndex - 1;
+        newIndex = this.sections[targetSectionIndex].items.length - 1;
+      } else {
+        newIndex = Math.max(0, currentIndex - 1);
+      }
+    } else if (event.key === 'ArrowDown') {
+      if (currentIndex === currentSection.items.length - 1 && currentSectionIndex < this.sections.length - 1) {
+        targetSectionIndex = currentSectionIndex + 1;
+        newIndex = 0;
+      } else {
+        newIndex = Math.min(currentSection.items.length - 1, currentIndex + 1);
+      }
     }
-  }
+  
 
+    if (currentSectionIndex === targetSectionIndex) {
+      currentSection.items.splice(currentIndex, 1);
+      currentSection.items.splice(newIndex, 0, item);
+    } else {
+      currentSection.items.splice(currentIndex, 1);
+      this.sections[targetSectionIndex].items.splice(newIndex, 0, item);
+    }
+    setTimeout(() => {
+      const dragButtons = document.querySelectorAll('.bi-arrows-expand');
+      if (dragButtons && dragButtons[newIndex]) {
+        (dragButtons[newIndex] as HTMLElement).focus();
+      }
+    });
+  };
+  
+ 
   onSelect(item: { id: string; name: string }) {
     this.selectedProject = item;
     this.projectLoadError = null;
