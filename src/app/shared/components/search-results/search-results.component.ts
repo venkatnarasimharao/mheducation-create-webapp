@@ -32,6 +32,7 @@ export class SearchResultsComponent implements OnInit {
             authors: item.authors,
             year: item.year,
             isbn: item.isbn,
+            guid: item.guid,
             description: item.description,
             enableAddButton: item.enableAddButton,
             imageUrl: this.apiService.getImageUrl(`covers/${item.isbn}.jpeg`)

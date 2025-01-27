@@ -8,13 +8,14 @@
     {{ selectedSortOption || 'Sort By' }}
   </button>
   <div ngbDropdownMenu aria-labelledby="dropdown-basic">
-    <button
-      *ngFor="let option of sortOptions"
-      ngbDropdownItem
-      (click)="onSortChange(option)"
-      class="dropdown-item"
-    >
-      {{ option.label }}
-    </button>
+    @for (option of sortOptions; track option.value) {
+      <button
+        ngbDropdownItem
+        (click)="onSortChange(option)"
+        class="dropdown-item"
+      >
+        {{ option.label }}
+      </button>
+    }
   </div>
 </div>
