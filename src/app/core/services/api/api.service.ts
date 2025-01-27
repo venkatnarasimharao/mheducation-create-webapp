@@ -79,7 +79,6 @@ export class ApiService {
   }
 
   getProjectList(): Observable<any> {
-  const cookie = this.cookieService.get('jsessionid');
   const uid = this.cookieService.get('paris_user_id');
   const headers = new HttpHeaders({
     'jcookie': this.session
@@ -92,7 +91,6 @@ export class ApiService {
   })
 }
   getProjectData(projectId: string): Observable<any> {
-    const cookie = this.cookieService.get('jsessionid');
     const paris_user_id = this.cookieService.get('paris_user_id');
     const headers = new HttpHeaders({
       'jcookie':this.session
