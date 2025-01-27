@@ -14,7 +14,6 @@ export class ApiService {
     private cookieService: CookieService
   ) {
   }
-  session = 'JSESSIONID_CRT=dV-nOJ-X_gBsX73tfFfbMmpy08ERlAthYDL9UclSmNrB6bwl0zni!-1470579053'
   getSearchListing() {
     const finalPay = USER_SEARCH_CONFIG
     let languages: any = sessionStorage.getItem('languages');
@@ -80,66 +79,46 @@ export class ApiService {
 
   getProjectList(): Observable<any> {
   const uid = this.cookieService.get('paris_user_id');
-  const headers = new HttpHeaders({
-    'jcookie': this.session
-  });
-
   return this.apiMethodService({
     url: `/users/${uid}/listprojects?nocacheTimestamp=1737022264852&state=active`,
-    method: 'GET',
-    options: { headers }
+    method: 'GET'
   })
 }
   getProjectData(projectId: string): Observable<any> {
     const paris_user_id = this.cookieService.get('paris_user_id');
-    const headers = new HttpHeaders({
-      'jcookie':this.session
-    });
- 
     return this.apiMethodService({
       url: `/p/users/${paris_user_id}/projects/${projectId}`,
-      options: { headers },
       method: 'GET',
     })
   }
 
 
   saveProjectData(projectId: string, payload: any): Observable<any> {
-    const cookie = this.cookieService.get('jsessionid');
     const paris_user_id = this.cookieService.get('paris_user_id');
-    const headers = new HttpHeaders({
-      'jcookie': this.session
-    });
-    
+    const JSESSIONID_CRT = this.cookieService.get('JSESSIONID_CRT')
     return this.apiMethodService({
-      url: `/users/${paris_user_id}/saveproject/${projectId};jsessionid=Gj6NvVUVcSIMGkSqJ4bVcXNP0lOtJp5azb9QwKx5AVUMN3OBR3iM!-2070150201!1737544783125?returnpricing=false`,
+      url: `/users/${paris_user_id}/saveproject/${projectId};jsessionid=${JSESSIONID_CRT}?returnpricing=false`,
       method: 'POST',
       body: payload,
-      options: {headers}
     })
   }
   getProjectPricing(projectId:any): Observable<any> {
-    const cookie = this.cookieService.get('jsessionid');
     const paris_user_id = this.cookieService.get('paris_user_id');
-    const headers = new HttpHeaders({
-      'jcookie': this.session
-    });
     return this.apiMethodService({
       url: `/users/${paris_user_id}/getprojectpricing/${projectId}`,
       method: 'GET',
       body: null,
-      options: {headers}
     })
   }
 
   apiMethodService<T>({ url, method, body, params = {}, options = {} }: any): Observable<any> {
     url = environment.apiUrl + url;
-    options = {
-      responseType: 'text',
-      observe: 'response',
-      ...options
-    };
-    console.log(options, '111111111111111')
+    if (!options['responseType']) {
+      options['responseType'] = 'text';
+    }
+    if (!options['observe']) {
+      options['observe'] = 'response';
+    }
 
     switch (method?.toUpperCase()) {
       case 'GET':
