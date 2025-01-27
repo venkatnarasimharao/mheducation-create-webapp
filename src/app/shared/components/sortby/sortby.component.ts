@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../../../core/services/api/api.service';
 import { SearchService } from '../../../core/services/search/search.service';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'hec-sortby',
   standalone: true,
-  imports: [NgbDropdownModule, CommonModule],
+  imports: [NgbDropdownModule],
   templateUrl: './sortby.component.html',
   styleUrls: ['./sortby.component.scss'],
 })
