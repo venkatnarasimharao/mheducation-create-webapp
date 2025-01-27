@@ -6,14 +6,14 @@ import { FormsModule } from '@angular/forms';
 import { SEARCH_INSIDE_CONFIG } from '../../shared/constants/search-payload.config';
 import { LoginComponent } from '../../shared/components/login/login.component';
 import { NgbAccordionModule, NgbModal, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
-import { CommonModule } from '@angular/common';
 import { BookPageViewerComponent } from '../book-page-viewer/book-page-viewer.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'hec-book-info-panel',
   standalone: true,
-  imports: [FormsModule, NgbAccordionModule, CommonModule, BookPageViewerComponent, NgbNavModule],
+  imports: [FormsModule, NgbAccordionModule, BookPageViewerComponent, NgbNavModule, CommonModule],
   templateUrl: './book-info-panel.component.html',
   styleUrl: './book-info-panel.component.scss'
 })

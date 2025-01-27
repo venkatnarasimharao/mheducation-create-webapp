@@ -42,8 +42,8 @@
                         [class.text-white]="currentTab !== 'contents'">Contents</button>
                     <ng-template ngbNavContent>
                         <div class="scrollable-container" ngbAccordion #accordion="ngbAccordion">
-                            <div *ngFor="let entry of getObjectKey(tocList); let i = index"
-                                [ngbAccordionItem]="'panel-' + i" [collapsed]='false'>
+                            @for(entry of getObjectKey(tocList); track i; let i = $index) {
+                            <div [ngbAccordionItem]="'panel-' + i" [collapsed]='false'>
                                 @if(entry !== "individual"){
                                 <h2 ngbAccordionHeader>
                                     <button ngbAccordionButton>
@@ -59,22 +59,21 @@
                                 <div ngbAccordionCollapse>
                                     <div ngbAccordionBody>
                                         <ul class="list-group">
-                                            @for(item of getObjectValue(tocList, i); track $index){
+                                            @for(item of getObjectValue(tocList, i); track $index) {
                                             <li class="list-group-item d-flex justify-content-between align-items-center"
                                                 (click)="setCurrentChapter(entry, $index)">
-                                                @if(item?.originalNumber){
+                                                @if(item?.originalNumber) {
                                                 <span>
-                                                    @if(!isAnonymous && item?.title){
+                                                    @if(!isAnonymous && item?.title) {
                                                     <button class="bg-transparent border-0">
                                                         <i class="bi bi-plus-square fs-3"></i>
                                                     </button>
                                                     }
                                                     {{item?.originalNumber }}. {{ item?.title }}
                                                 </span>
-                                                }
-                                                @else{
+                                                } @else {
                                                 <span>
-                                                    @if(!isAnonymous && item?.title){
+                                                    @if(!isAnonymous && item?.title) {
                                                     <button class="bg-transparent border-0">
                                                         <i class="bi bi-plus-square fs-3"></i>
                                                     </button>
@@ -82,7 +81,7 @@
                                                     {{ item?.title }}
                                                 </span>
                                                 }
-                                                @if(item?.pageCount){
+                                                @if(item?.pageCount) {
                                                 <span class="badge bg-primary rounded-pill">
                                                     {{ item?.pageCount+'pp'}}
                                                 </span>
@@ -93,6 +92,7 @@
                                     </div>
                                 </div>
                             </div>
+                            }
                         </div>
                     </ng-template>
                 </li>
