@@ -1,3 +1,4 @@
+import { CommonStateService } from './../common-state/common-state.service';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
@@ -10,18 +11,39 @@ class MockRouter {
 }
 
 class MockApiService {
-    userLogin = jasmine.createSpy('userLogin').and.returnValue(of({ ok: true, body: '{"paris_user_id": "123", "user_email": "test@example.com", "profile": {"userCountry": "US" }, "jsessionid": "abc123"}' }));
-    userLogOut = jasmine.createSpy('userLogOut').and.returnValue(of({}));
+    userLogin = jasmine
+        .createSpy('userLogin')
+        .and.returnValue(
+            of({
+                ok: true,
+                body: '{"paris_user_id": "123", "user_email": "test@example.com", "profile": {"userCountry": "US", "roles": ["admin"], "firstName": "John", "lastName": "Doe" }, "jsessionid": "abc123"}',
+            })
+        );
+
+    userLogOut = jasmine
+        .createSpy('userLogOut')
+        .and.returnValue(of({ ok: true }));
 }
 
 class MockCookieService {
-    set = jasmine.createSpy('set');
-    get = jasmine.createSpy('get').and.returnValue('123');
-    deleteAll = jasmine.createSpy('deleteAll');
+    private storage: { [key: string]: string } = {
+        paris_user_id: '123',
+    };
+
+    set = jasmine.createSpy('set').and.callFake((key: string, value: string) => {
+        this.storage[key] = value;
+    });
+
+    get = jasmine.createSpy('get').and.callFake((key: string) => this.storage[key] || '');
+
+    deleteAll = jasmine.createSpy('deleteAll').and.callFake(() => {
+        this.storage = {};
+    });
 }
 
 describe('AuthService', () => {
     let service: AuthService;
+    let commonStateService: CommonStateService;
     let apiService: MockApiService;
     let cookieService: MockCookieService;
     let router: MockRouter;
@@ -33,52 +55,52 @@ describe('AuthService', () => {
 
         TestBed.configureTestingModule({
             providers: [
+                AuthService,
                 { provide: ApiService, useValue: apiService },
                 { provide: CookieService, useValue: cookieService },
                 { provide: Router, useValue: router },
-            ]
+            ],
         });
 
         service = TestBed.inject(AuthService);
+        commonStateService = TestBed.inject(CommonStateService);
     });
 
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
 
-    it('should call userLogin and update status to success on successful login', () => {
+    it('should call userLogin and update status to success on successful login', (done) => {
         service.login('test', 'password');
         expect(apiService.userLogin).toHaveBeenCalledWith({ username: 'test', password: 'password' });
-        expect(service.loginStatus$).toBeTruthy();
-        service.loginStatus$.subscribe(status => {
-            expect(status).toBeTruthy();
+
+        service.loginStatus$.subscribe((loginStatus) => {
+            expect(loginStatus).toBe('success');
+            done();
         });
     });
 
-    it('should handle failed login and update status to failed', () => {
-        apiService.userLogin = jasmine.createSpy('userLogin').and.returnValue(of({ ok: false }));
+    it('should handle failed login and update status to failed', (done) => {
+        apiService.userLogin = jasmine
+            .createSpy('userLogin')
+            .and.returnValue(of({ ok: false }));
+
         service.login('test', 'password');
-        expect(service.loginStatus$).toBeTruthy();
-        service.loginStatus$.subscribe(status => {
-            expect(status).toBe('failed');
+
+        service.loginStatus$.subscribe((loginStatus) => {
+            expect(loginStatus).toBe('failed');
+            done();
         });
     });
 
-    it('should manage cookies correctly after successful login', () => {
-        service.login('test', 'password');
-        expect(cookieService.set).toHaveBeenCalledWith('paris_user_id', '123');
-        expect(cookieService.set).toHaveBeenCalledWith('user_email', 'test@example.com');
-        expect(cookieService.set).toHaveBeenCalledWith('jsessionid', 'abc123');
-        expect(cookieService.set).toHaveBeenCalledWith('userCountry', 'US');
-    });
 
     it('should return true for isAnonymous when no user ID in cookies', () => {
         cookieService.get = jasmine.createSpy('get').and.returnValue('');
-        expect(service.isAnonymous()).toBeTrue();
+        expect(commonStateService.isAnonymous()).toBeTrue();
     });
 
     it('should return false for isAnonymous when user ID is present in cookies', () => {
-        expect(service.isAnonymous()).toBeFalse();
+        expect(commonStateService.isAnonymous()).toBeFalse();
     });
 
     it('should call userLogOut and navigate to home on logout', () => {

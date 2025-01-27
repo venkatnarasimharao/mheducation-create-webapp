@@ -71,4 +71,11 @@ export const routes: Routes = [
         (m) => m.SpecialCollectionComponent
       ),
   },
+  {
+    path: 'preview',
+    loadComponent: () =>
+      import('./features/book-info-panel/book-info-panel.component').then(
+        (m) => m.BookInfoPanelComponent
+      ),
+  }
 ];
