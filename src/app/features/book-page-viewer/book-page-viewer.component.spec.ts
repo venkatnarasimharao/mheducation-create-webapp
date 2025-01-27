@@ -10,7 +10,7 @@ describe('BookPageViewerComponent', () => {
     await TestBed.configureTestingModule({
       imports: [BookPageViewerComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(BookPageViewerComponent);
     component = fixture.componentInstance;

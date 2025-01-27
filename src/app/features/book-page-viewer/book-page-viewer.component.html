@@ -16,18 +16,19 @@
     @if(isPreviousPage){
     <div class="">
         <div class="preview-parent d-flex align-items-center justify-content-center p-2">
-            @if(prevButtonVisible){
-            <button class="border-0 bg-transparent start-0 position-absolute" (click)="handleChangePage(-1)">
+            <button class="border-0 bg-transparent start-0 position-absolute" (click)="handleChangePage(-1)"
+                [disabled]="!prevButtonVisible">
                 <i class="bi bi-caret-left-fill fs-1"></i>
             </button>
-            }
+
             <img class="img-fluid position-absolute top-0 w-90 mh-100" [src]="imageUrl" alt="Book Image" />
-            @if(nextButtonVisible){
-            <button class="border-0 bg-transparent end-0 position-absolute" (click)="handleChangePage(1)">
+
+            <button class="border-0 bg-transparent end-0 position-absolute" (click)="handleChangePage(1)"
+                [disabled]="!nextButtonVisible">
                 <i class="bi bi-caret-right-fill fs-1"></i>
             </button>
-            }
         </div>
+
         <div>
             <form #searchForm="ngForm" (ngSubmit)="setPageNumber()">
                 <div class="p-2 d-flex justify-content-center">

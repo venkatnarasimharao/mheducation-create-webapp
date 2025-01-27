@@ -1,5 +1,7 @@
 import { CookieService } from 'ngx-cookie-service';
 import { Injectable } from '@angular/core';
+import { environment } from '../../../../environments/environment';
+import { clientUrl } from '../../../../assets/env';
 
 @Injectable({
   providedIn: 'root'
@@ -16,5 +18,9 @@ export class CommonStateService {
       return "";
     }
     return this.cookieService.get('paris_user_id');
+  }
+  getDynamicUrl(endPointUrl: string): string {
+
+    return clientUrl.apiUrl + endPointUrl;
   }
 }

@@ -1,5 +1,4 @@
 import { CommonStateService } from './../common-state/common-state.service';
-
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -101,7 +100,7 @@ export class ApiService {
     const userId = this.commonStateService.getUserId();
     const url = `/users/${userId}/preview/${payload.guid}/${payload.pageNumber}`;
     const headers = new HttpHeaders({
-      'X-Response-Type': 'arraybuffer',
+      'X-Response-Type': 'arraybuffer'
     });
     const params = {
       nocacheTimestamp: Date.now(),
@@ -110,8 +109,14 @@ export class ApiService {
       url,
       method: "GET_IMAGE",
       params,
-      headers
+      options: { headers }
     });
+  }
+  getBadPreviewPage() {
+    return "https://createqa.mheducation.com/createonline/images/bad_preview.jpg";
+  }
+  getBookCoverImage(isbn: string): string {
+    return `https://createqa.mheducation.com/covers/${isbn}.jpeg`;
   }
   getSearchInsideList(payload: any) {
     let user = "anonymous";

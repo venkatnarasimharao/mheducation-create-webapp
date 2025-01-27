@@ -72,8 +72,8 @@ export class BookInfoPanelComponent implements OnInit {
 
   private fetchBookData(guid: string): void {
     this.bookDataLoader = true;
-    this.apiService.getBookDetails(guid).subscribe(
-      (response: any) => {
+    this.apiService.getBookDetails(guid).subscribe({
+      next: (response: any) => {
         if (response.ok) {
           this.bookDataLoader = false;
           this.isDataFetched = true;
@@ -85,15 +85,15 @@ export class BookInfoPanelComponent implements OnInit {
           this.setCurrentChapter(Object.keys(this.tocList)[0], 0);
           // TODO: having in route
         }
-
       },
-      (error: any) => {
+      error: (error: any) => {
         this.bookDataLoader = false;
-        this.router.navigate([''])
+        this.router.navigate(['']);
         console.error('Error fetching book data:', error);
-      }
-    );
+      },
+    });
   }
+
   getObjectKey(item: any) {
     return Object.keys(item);
   }
@@ -104,7 +104,7 @@ export class BookInfoPanelComponent implements OnInit {
   setBookCardData() {
     this.bookTitle = this.bookData?.title;
     this.bookSummary = (this.bookData?.year ? (" © " + this.bookData?.year) : "") + (this.bookData?.authors ? " | " + this.bookData.authors : "") + (this.bookData?.source ? " | " + this.bookData?.source : "");
-    this.bookImage = `https://createqa.mheducation.com/covers/${this.bookData.isbn}.jpeg`;
+    this.bookImage = this.commonStateService.getDynamicUrl(`/covers/${this.bookData.isbn}.jpeg`);
   }
   setCurrentChapter(part: any, chapter: any) {
     this.currentChapter = this.tocList[part][chapter];

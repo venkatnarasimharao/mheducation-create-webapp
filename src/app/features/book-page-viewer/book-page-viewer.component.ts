@@ -16,16 +16,15 @@ import { CommonModule } from '@angular/common';
 export class BookPageViewerComponent implements OnInit, OnChanges {
   isAnonymous: boolean = true;
   imageUrl: any;
-  bookData: any = {};
   pageNumber: number = 1;
-  pageCount: number = 0;
+  pageCount: number = 1;
   @Input() currentChapter: any;
   pageViewLoading: boolean = false;
   prevButtonVisible: boolean = false;
   nextButtonVisible: boolean = false;
   isPreviousPage: boolean = false;
   constructor(private authService: AuthService,
-    private ApiService: ApiService,
+    private apiService: ApiService,
     private commonStateService: CommonStateService,
     private modalService: NgbModal
   ) { }
@@ -91,8 +90,8 @@ export class BookPageViewerComponent implements OnInit, OnChanges {
     }
     this.pageViewLoading = true;
     const payload = { guid: this.currentChapter.guid, pageNumber: this.pageNumber };
-    this.ApiService.getBookPageView(payload).subscribe(
-      (response: any) => {
+    this.apiService.getBookPageView(payload).subscribe({
+      next: (response: any) => {
         if (response.ok) {
           this.pageViewLoading = false;
           this.isPreviousPage = true;
@@ -101,17 +100,18 @@ export class BookPageViewerComponent implements OnInit, OnChanges {
             this.imageUrl = blobUrl;
           } else {
             console.error('Invalid image type:', response.body?.type);
-            this.imageUrl = "https://createqa.mheducation.com/createonline/images/bad_preview.jpg"
+            this.imageUrl = this.commonStateService.getDynamicUrl('/images/bad_preview.jpg');
           }
         }
       },
-      (error: any) => {
+      error: (error: any) => {
         this.pageViewLoading = false;
         this.isPreviousPage = true;
-        this.imageUrl = "https://createqa.mheducation.com/createonline/images/bad_preview.jpg"
+        this.imageUrl = this.commonStateService.getDynamicUrl("/images/bad_preview.jpg");
         console.error('Error fetching book data:', error);
-      }
-    );
+      },
+    });
+
   }
 
 }
