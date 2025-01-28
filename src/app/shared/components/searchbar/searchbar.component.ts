@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { USER_SEARCH_CONFIG } from '../../constants/search-payload.config';
 import { ApiService } from '../../../core/services/api/api.service';
 import { SearchService } from '../../../core/services/search/search.service';
@@ -23,9 +23,8 @@ export class SearchbarComponent {
   translate: TranslateService = inject(TranslateService);
   private apiService = inject(ApiService);
   private searchService = inject(SearchService);
-  
-
-  constructor(private router: Router) {}
+    private router = inject(Router);
+    private route = inject(ActivatedRoute);
 
   searchCategories = [
     { label: 'SearchAll', checked: true, id: 'all' },
@@ -109,34 +108,21 @@ export class SearchbarComponent {
   }
 
   onSearch() {
-    // Check if the current route is already '/search-content'
-    if (this.router.url !== '/search-content') {
-      this.router.navigate(['/search-content']);
-    }
+    const payload = this.searchService.getPayload();
+    const searchQuery = payload?.query || this.searchTerm;
   
     let selectedCategories: string[];
-  
     const searchAll = this.searchCategories.find((cat) => cat.id === 'all');
-    
+  
     if (searchAll?.checked) {
-      // If "Search All" is checked, select all categories except "Search All"
       selectedCategories = ['all'];
     } else {
-      // Otherwise, use the selected options
       selectedCategories = this.checkedOptions.map((opt) => opt.id);
     }
   
-    // Fetch the query from the payload
-    const payload = this.searchService.getPayload();
-    const searchQuery = payload?.query || this.searchTerm; // Default to the search term in the input field if no query in payload
-  
-    // Construct the final payload for the search request
     const finalPayload = JSON.parse(JSON.stringify(USER_SEARCH_CONFIG));
-  
-    // Update the query in the final payload
     finalPayload.search.query = searchQuery;
   
-    // Handle the textTypes based on the selected categories
     if (selectedCategories.includes('all')) {
       finalPayload.search.textTypes = { textType: ['all'] };
     } else {
@@ -144,25 +130,38 @@ export class SearchbarComponent {
       finalPayload.search.textNamespace = 'http://mhhe.com/primis/meta/resolved';
     }
   
-    // Set the 'findable' field based on the length of textType
-    if (finalPayload.search.textTypes.textType.length === 3) {
-      finalPayload.search.findable = true;
-    } else {
-      finalPayload.search.findable = false;
-    }
+    finalPayload.search.findable = finalPayload.search.textTypes.textType.length === 3;
   
-    console.log('Final Payload:', finalPayload);
+    // Get current query parameters
+    this.route.queryParams.subscribe(currentParams => {
+      // Create new query params object with existing params
+      const updatedParams = {
+        ...currentParams,  // Preserve existing parameters
+        query: searchQuery,
+        textType: selectedCategories.join(',')
+      };
+
+      // Check if current URL is search-content
+      if (this.router.url.includes('/search-content')) {
+        // Update only query parameters
+        this.router.navigate([], {
+          relativeTo: this.route,
+          queryParams: updatedParams,
+          queryParamsHandling: 'merge'
+        });
+      } else {
+        // Navigate to search-content with combined parameters
+        this.router.navigate(['/search-content'], {
+          queryParams: updatedParams,
+          queryParamsHandling: 'merge'
+        });
+      }
+    }).unsubscribe();  // Unsubscribe after first emission
   
-    // Save the updated payload in the PayloadService
-    this.searchService.setPayload(finalPayload);
-  
-    // Update the search service with the latest data
+    // Update search service and make API call
     this.searchService.updateSearchQuery(finalPayload);
-  
-    // Trigger the search process
     this.searchService.startSearch();
   
-    // Call the API to get the search listing
     this.apiService.getSearchListing(finalPayload).subscribe({
       next: (response) => {
         if (response.ok) {
@@ -172,8 +171,8 @@ export class SearchbarComponent {
       },
       error: (err) => {
         console.error('API Error:', err);
-      }
+      },
     });
-  } 
-  
+  }
 }
+  

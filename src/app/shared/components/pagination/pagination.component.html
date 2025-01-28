@@ -7,7 +7,14 @@
   aria-label="Page navigation"
   (pageChange)="onPageChange($event)"
 >
-  <ng-template ngbPaginationPrevious aria-label="Previous">{{ 'Previous' | translate }}</ng-template>
+
+  <ng-template ngbPaginationPrevious aria-label="Previous">
+    <span class="d-none d-sm-inline">{{ 'Previous' | translate }}</span>
+    <span class="d-inline d-sm-none"><i class="bi bi-arrow-left"></i></span>
+  </ng-template>
+  <ng-template ngbPaginationNext aria-label="Next">
+    <span class="d-none d-sm-inline">{{ 'Next' | translate }}</span>
+    <span class="d-inline d-sm-none"><i class="bi bi-arrow-right"></i></span>
+  </ng-template>
   <ng-template ngbPaginationNumber let-p>{{ p }}</ng-template>
-  <ng-template ngbPaginationNext aria-label="Next">{{ 'Next' | translate }}</ng-template>
 </ngb-pagination>

@@ -23,7 +23,7 @@
                         [name]="item.label"
                         [checked]="isItemSelected(item)"
                         (change)="onCheckBoxChange($event, item, list.header)"
-                        [id]="item.label"
+                        [id]="item.label" 
                       />
                       <label class="form-check-label" [for]="item.label">
                         {{ item.label | translate }}

@@ -1,10 +1,11 @@
 import { Component, inject, Input, SimpleChanges, OnInit } from '@angular/core';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { CommonModule } from '@angular/common';
 import { USER_SEARCH_CONFIG } from '../../constants/search-payload.config';
 import { ApiService } from '../../../core/services/api/api.service';
 import { SearchService } from '../../../core/services/search/search.service';
+import { CommonModule } from '@angular/common';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'hec-filter-accordion',
@@ -17,123 +18,154 @@ export class FilterAccordionComponent implements OnInit {
   translate: TranslateService = inject(TranslateService);
   private apiService = inject(ApiService);
   private searchService = inject(SearchService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   @Input() collectionfilterData: any[] = [];
   selectedCheckboxes: { [header: string]: number } = {};
   facetsData: any[] = [];
 
-
   searchPayload: { query: string; textType: string[]; findable: boolean } | undefined;
 
   ngOnInit(): void {
+    // Subscribe to queryParams and update checkbox states
+    this.route.queryParams.subscribe((params) => {
+      this.initializeFromQueryParams(params);
+      this.updateSelectedCounts();
+    });
+
+    // Subscribe to search results and sync facets
     this.searchService.searchResults.subscribe((state) => {
       this.searchPayload = {
         query: state.query,
         textType: state.textType,
         findable: state.findable
       };
-  
-      // Call the function to sync facets with the API response
       this.syncFacetsWithApiResponse(state.result?.['s:facets']?.['s:facet'] || []);
     });
-  
-    // Initialize selection states from payload
+
     this.syncSelectionStatesFromPayload();
-    console.log(this.collectionfilterData, 'Collection data');
   }
-  
-  // New method to sync facets with the API response
-  private syncFacetsWithApiResponse(apiFacets: any[]): void { 
-    // Clear existing data for all collection filter lists
-    this.collectionfilterData.forEach((list) => {
-        if (list.collectionTypes) {
-            list.collectionTypes = list.collectionTypes.map((item:any) => ({
-                ...item,
-                selected: false,
-                count: 0
-            }));  
+
+  private initializeFromQueryParams(params: any): void {
+    // Apply selections from query params
+    Object.keys(params).forEach((paramKey) => {
+      const values = params[paramKey].split(',');
+      this.collectionfilterData.forEach((list) => {
+        if (this.normalizeHeader(list.header) === paramKey) {
+          list.collectionTypes?.forEach((item: any) => {
+            if (values.includes(item.value)) {
+              item.selected = 'true';
+            }
+          });
         }
+      });
+    });
+  }
+
+  private updateQueryParams(): void {
+    const queryParams: { [key: string]: string } = {};
+
+    this.collectionfilterData.forEach((list) => {
+      const selectedItems = list.collectionTypes?.filter(
+        (item: any) => item.selected === 'true' || item.selected === true
+      );
+
+      if (list.header === 'Copyright Year') {
+        console.log('Selected items for Copyright Year:', selectedItems); // Debug log
+      }
+
+      if (selectedItems?.length) {
+        const normalizedHeader = this.normalizeHeader(list.header);
+        queryParams[normalizedHeader] = selectedItems.map((item: any) => item.value).join(',');
+      }
     });
 
-    // Sync with new API response
-    this.collectionfilterData.forEach((list) => { 
-        const currentPayload = this.searchService.getPayload() || USER_SEARCH_CONFIG; 
-        console.log('CurrentPayload', currentPayload)
-        const normalizedHeader = this.normalizeHeader(list.header); 
-   
-        const payloadFacet = currentPayload.search.facets.facet.find( 
-            (f: any) => this.normalizeHeader(f._label) === normalizedHeader 
-        ); 
-   
-        if (payloadFacet && list.collectionTypes) { 
-            const payloadItems = Array.isArray(payloadFacet.item) 
-                ? payloadFacet.item 
-                : [payloadFacet.item]; 
-   
-            const apiFacetValues = apiFacets 
-                .find((facet: any) => this.normalizeHeader(facet.name) === normalizedHeader) 
-                ?.['s:facet-value'] || []; 
-   
-            list.collectionTypes.forEach((item: any) => { 
-                const payloadItem = payloadItems.find( 
-                    (pi: any) => pi._label === item.label || pi._value === item.value 
-                ); 
-   
-                if (payloadItem) { 
-                    item.selected = payloadItem._selected; 
-   
-                    // Find matching facet value 
-                    const matchingFacetValue = apiFacetValues.find( 
-                        (facetValue: any) => 
-                            facetValue.name === payloadItem._value || facetValue.name === payloadItem._label 
-                    ); 
-   
-                    if (matchingFacetValue) { 
-                        item.count = matchingFacetValue.count; // Update count 
-                    }  
-                }  
-            }); 
-        } 
-    }); 
-}
-  
+    console.log('Query Params:', queryParams);
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams,
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  private syncFacetsWithApiResponse(apiFacets: any[]): void {
+    this.collectionfilterData.forEach((list) => {
+      if (list.collectionTypes) {
+        list.collectionTypes = list.collectionTypes.map((item: any) => ({
+          ...item,
+          count: 0
+        }));
+      }
+    });
+
+    this.collectionfilterData.forEach((list) => {
+      const currentPayload = this.searchService.getPayload() || USER_SEARCH_CONFIG;
+      const normalizedHeader = this.normalizeHeader(list.header);
+
+      const payloadFacet = currentPayload.search.facets.facet.find(
+        (f: any) => this.normalizeHeader(f._label) === normalizedHeader
+      );
+
+      if (payloadFacet && list.collectionTypes) {
+        const payloadItems = Array.isArray(payloadFacet.item)
+          ? payloadFacet.item
+          : [payloadFacet.item];
+
+        const apiFacetValues = apiFacets
+          .find((facet: any) => this.normalizeHeader(facet.name) === normalizedHeader)
+          ?.['s:facet-value'] || [];
+
+        list.collectionTypes.forEach((item: any) => {
+          const payloadItem = payloadItems.find(
+            (pi: any) => pi._label === item.label || pi._value === item.value
+          );
+
+          if (payloadItem) {
+            const matchingFacetValue = apiFacetValues.find(
+              (facetValue: any) =>
+                facetValue.name === payloadItem._value || facetValue.name === payloadItem._label
+            );
+
+            if (matchingFacetValue) {
+              item.count = matchingFacetValue.count;
+            }
+          }
+        });
+      }
+    });
+  }
+
   private normalizeHeader(header: string): string {
     const headerMap: { [key: string]: string } = {
       "Content Type": "ContentType",
       "Copyright Year": "CopyrightYear",
       "Trim Size": "TrimSize",
     };
-  
+
     return headerMap[header] || header.replace(/\s+/g, '');
   }
-  
-  
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['collectionfilterData']) {
       this.syncSelectionStatesFromPayload();
       this.updateSelectedCounts();
     }
-    console.log('Recieved Collections-', this.collectionfilterData)
-    
   }
 
-  // New method to sync selection states from payload
   private syncSelectionStatesFromPayload(): void {
     const currentPayload = this.searchService.getPayload() || USER_SEARCH_CONFIG;
-   
-    
+
     this.collectionfilterData.forEach(list => {
       const payloadFacet = currentPayload.search.facets.facet.find((f: any) => f._label === list.header);
       if (payloadFacet && list.collectionTypes) {
         const payloadItems = Array.isArray(payloadFacet.item) ? payloadFacet.item : [payloadFacet.item];
-        
+
         list.collectionTypes.forEach((item: any) => {
-          const payloadItem = payloadItems.find((pi: any) => 
+          const payloadItem = payloadItems.find((pi: any) =>
             pi._label === item.label || pi._value === item.value
           );
-          console.log('Item:', item);
-          console.log('Payload Item:', payloadItem);
           if (payloadItem) {
             item.selected = payloadItem._selected;
           }
@@ -150,123 +182,120 @@ export class FilterAccordionComponent implements OnInit {
       ).length || 0;
       this.selectedCheckboxes[list.header] = checkedCount;
     }
-
   }
 
   isItemSelected(item: any): boolean {
     return item.selected === 'true' || item.selected === true;
   }
 
- onCheckBoxChange(event: Event, item: any, header: string): void {
+  onCheckBoxChange(event: Event, item: any, header: string): void {
     const isChecked = (event.target as HTMLInputElement).checked;
 
-  // If unchecking, ensure at least one checkbox remains selected for "Content Type"
-  if (!isChecked && header === 'Content Type') {
-    const list = this.collectionfilterData.find((list) => list.header === header);
-    const otherSelectedItems = list?.collectionTypes.filter(
-      (listItem: any) =>
-        listItem.selected === 'true' ||
-        listItem.selected === true
-    );
+    if (!isChecked && header === 'Content Type') {
+      const list = this.collectionfilterData.find((list) => list.header === header);
+      const otherSelectedItems = list?.collectionTypes.filter(
+        (listItem: any) => 
+          (listItem.selected === 'true' || listItem.selected === true) && 
+          listItem !== item
+      );
 
-    // If it's the only selected checkbox, prevent unchecking
-    if (otherSelectedItems?.length === 1) {
-      (event.target as HTMLInputElement).checked = true; // Revert the checkbox state
-      return; // Exit without further processing
+      if (otherSelectedItems?.length === 0) {
+        (event.target as HTMLInputElement).checked = true;
+        return;
+      }
     }
-  }
-  
-    // Update the item's selected state as a string to match payload format
+
     item.selected = isChecked ? 'true' : 'false';
-  
+
+    // Make sure the value is set correctly for Copyright Year
+    if (!item.value) {
+      item.value = item.label;  // Set value based on label if missing
+    }
+
     if (!this.selectedCheckboxes[header]) {
       this.selectedCheckboxes[header] = 0;
     }
     this.selectedCheckboxes[header] += isChecked ? 1 : -1;
-  
+
     let finalPayload = this.searchService.getPayload() || JSON.parse(JSON.stringify(USER_SEARCH_CONFIG));
-    console.log('Initial Payload filters:', finalPayload); 
-  
-    // Find the correct facet in the payload
     const facet = finalPayload.search.facets.facet.find((f: any) => f._label === header);
-    console.log('Facet:', facet);
-  
+
     if (facet) {
-      // Ensure item is an array
-      const items = Array.isArray(facet.item) ? facet.item : [facet.item];
-  
       if (header === 'Copyright Year') {
-        if (item.label === 'Prior to 2012') {
-          // Remove "Prior to 2012" entry
-          const index = items.findIndex((facetItem: any) => facetItem._label === 'Prior to 2012');
-          if (index > -1) {
-            items.splice(index, 1);
-          }
-  
-          // Add years from 1900 to 2011
-          if (isChecked) {
-            for (let year = 1901; year <= 2011; year++) {
-              if (!items.find((facetItem: any) => facetItem._value === year.toString())) {
-                items.push({
-                  _label: year.toString(),
-                  _selected: 'true',
-                  _value: year.toString(),
-                });
-              }
-            }
-          } else {
-            // If unchecked, remove years 1900 to 2011
-            for (let year = 1901; year <= 2011; year++) {
-              const yearIndex = items.findIndex((facetItem: any) => facetItem._value === year.toString());
-              if (yearIndex > -1) {
-                items.splice(yearIndex, 1);
-              }
-            }
-          }
-        } else {
-          // For individual years, update the value to the year and update selected state
-          const matchingItem = items.find((facetItem: any) =>
-            facetItem._label === item.label || facetItem._value === item.value
-          );
-  
-          if (matchingItem) {
-            matchingItem._value = item.label; // Update value to year only
-            matchingItem._selected = isChecked ? 'true' : 'false';
-          }
-        }
+        this.handleCopyrightYearChange(facet, item, isChecked);
       } else {
-        // For other headers, update the selected state
-        items.forEach((facetItem: any) => {
-          if (facetItem._label === item.label || facetItem._value === item.value) {
-            facetItem._selected = isChecked ? 'true' : 'false';
-          }
-        });
+        this.handleRegularFacetChange(facet, item, isChecked);
       }
     }
-  
-    // Pass the current search state
+
+    // Update query parameters
+    this.updateQueryParams();
+
     if (this.searchPayload) {
       finalPayload.search.query = this.searchPayload.query;
       finalPayload.search.textTypes.textType = this.searchPayload.textType;
       finalPayload.search.findable = this.searchPayload.findable;
     }
-  
-    console.log('final payload filters-', finalPayload);
+
     this.searchService.updateSearchQuery(finalPayload);
-  
-    //to start the loader
     this.searchService.startSearch();
-  
-    // Make the API call
+
     this.apiService.getSearchListing(finalPayload).subscribe({
       next: (response) => {
         if (response.ok) {
-          console.log('API Response:', JSON.parse(response.body));
           this.searchService.updateSearchResult(response.body);
-        } 
+        }
       },
       error: (err) => {
         console.error('API Error:', err);
+      }
+    });
+  }
+
+  private handleCopyrightYearChange(facet: any, item: any, isChecked: boolean): void {
+    const items = Array.isArray(facet.item) ? facet.item : [facet.item];
+
+    if (item.label === 'Prior to 2012') {
+      const index = items.findIndex((facetItem: any) => facetItem._label === 'Prior to 2012');
+      if (index > -1) {
+        items.splice(index, 1);
+      }
+
+      if (isChecked) {
+        for (let year = 1901; year <= 2011; year++) {
+          if (!items.find((facetItem: any) => facetItem._value === year.toString())) {
+            items.push({
+              _label: year.toString(),
+              _selected: 'true',
+              _value: year.toString(),
+            });
+          }
+        }
+      } else {
+        for (let i = items.length - 1; i >= 0; i--) {
+          const year = parseInt(items[i]._value);
+          if (year >= 1901 && year <= 2011) {
+            items.splice(i, 1);
+          }
+        }
+      }
+    } else {
+      const matchingItem = items.find((facetItem: any) =>
+        facetItem._label === item.label || facetItem._value === item.value
+      );
+
+      if (matchingItem) {
+        matchingItem._value = item.label;
+        matchingItem._selected = isChecked ? 'true' : 'false';
+      }
+    }
+  }
+
+  private handleRegularFacetChange(facet: any, item: any, isChecked: boolean): void {
+    const items = Array.isArray(facet.item) ? facet.item : [facet.item];
+    items.forEach((facetItem: any) => {
+      if (facetItem._label === item.label || facetItem._value === item.value) {
+        facetItem._selected = isChecked ? 'true' : 'false';
       }
     });
   }

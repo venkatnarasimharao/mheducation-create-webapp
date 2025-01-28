@@ -2,11 +2,12 @@
 import { Component, OnInit } from '@angular/core';
 import { SearchService } from '../../../core/services/search/search.service';
 import { ApiService } from '../../../core/services/api/api.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'hec-search-results',
   standalone: true,
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './search-results.component.html',
   styleUrl: './search-results.component.scss',
 })

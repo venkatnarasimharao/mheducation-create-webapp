@@ -71,4 +71,11 @@ export const routes: Routes = [
         (m) => m.SpecialCollectionComponent
       ),
   },
+  {
+    path: 'preview',
+    loadComponent: () => 
+      import('./features/landing/landing.component').then(
+        (m) => m.LandingComponent
+      ),
+  }
 ];

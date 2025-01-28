@@ -19,4 +19,8 @@ describe('SearchbarComponent', () => {
     translateService = TestBed.inject(TranslateService);
     fixture.detectChanges();
   });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 });
