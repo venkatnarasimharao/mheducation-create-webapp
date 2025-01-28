@@ -6,21 +6,14 @@ import { environment } from '../../../../environments/environment';
   providedIn: 'root'
 })
 export class CommonStateService {
+  private userId = 'paris_user_id';
 
   constructor(private cookieService: CookieService) { }
   public isAnonymous() {
-    const paris_user_id = this.cookieService.get('paris_user_id');
-    return paris_user_id ? false : true;
-  }
-  public getUserId() {
-    if (this.isAnonymous()) {
-      return "";
-    }
-    return this.cookieService.get('paris_user_id');
+    return this.cookieService.get(this.userId);
   }
 
   getImageUrl(endPointUrl: string, nonDev = true): string {
-    console.log(environment.apiUrl, 'check this')
     if (nonDev) {
       return environment.apiUrl + endPointUrl;
     }

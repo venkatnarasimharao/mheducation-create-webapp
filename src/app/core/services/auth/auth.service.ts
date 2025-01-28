@@ -47,10 +47,7 @@ export class AuthService {
       }
     });
   }
-  public isAnonymous(): boolean {
-    const paris_user_id = this.cookieService.get('paris_user_id');
-    return paris_user_id ? false : true;
-  }
+
   public getLoginErrorMessage(): string {
     return this.loginError;
   }
