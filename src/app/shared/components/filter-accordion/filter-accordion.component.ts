@@ -64,32 +64,52 @@ export class FilterAccordionComponent implements OnInit {
   }
 
   private updateQueryParams(): void {
+    // Start with empty query params
     const queryParams: { [key: string]: string } = {};
+    
+    // Get current query params
+    const currentParams = this.route.snapshot.queryParams;
+    console.log('Current Query Params:', currentParams);
 
+    // Copy over any query params that aren't related to our filters
+    Object.keys(currentParams).forEach(key => {
+      const matchingFilter = this.collectionfilterData.find(
+        list => this.normalizeHeader(list.header) === key
+      );
+      if (!matchingFilter) {
+        queryParams[key] = currentParams[key];
+      }
+    });
+
+    // Add selected filter values
     this.collectionfilterData.forEach((list) => {
       const selectedItems = list.collectionTypes?.filter(
         (item: any) => item.selected === 'true' || item.selected === true
       );
 
-      if (list.header === 'Copyright Year') {
-        console.log('Selected items for Copyright Year:', selectedItems); // Debug log
-      }
+      const normalizedHeader = this.normalizeHeader(list.header);
+      console.log(`Processing ${normalizedHeader}:`, selectedItems);
 
       if (selectedItems?.length) {
-        const normalizedHeader = this.normalizeHeader(list.header);
-        queryParams[normalizedHeader] = selectedItems.map((item: any) => item.value).join(',');
+        const values = selectedItems.map((item: any) => item.value).join(',');
+        queryParams[normalizedHeader] = values;
       }
+      // If no items selected, the parameter will not be included
     });
 
-    console.log('Query Params:', queryParams);
+    console.log('Final Query Params:', queryParams);
 
+    // Navigate with the new query params
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams,
-      queryParamsHandling: 'merge',
+      queryParams: queryParams,
+      // Remove queryParamsHandling to ensure complete replacement
+    }).then(() => {
+      console.log('Navigation completed');
+    }).catch(error => {
+      console.error('Navigation error:', error);
     });
   }
-
   private syncFacetsWithApiResponse(apiFacets: any[]): void {
     this.collectionfilterData.forEach((list) => {
       if (list.collectionTypes) {
@@ -208,9 +228,9 @@ export class FilterAccordionComponent implements OnInit {
     item.selected = isChecked ? 'true' : 'false';
 
     // Make sure the value is set correctly for Copyright Year
-    if (!item.value) {
-      item.value = item.label;  // Set value based on label if missing
-    }
+      if (!item.value) {
+        item.value = item.label;  // Set value based on label if missing
+      }
 
     if (!this.selectedCheckboxes[header]) {
       this.selectedCheckboxes[header] = 0;

@@ -73,9 +73,9 @@ export const routes: Routes = [
   },
   {
     path: 'preview',
-    loadComponent: () => 
-      import('./features/landing/landing.component').then(
-        (m) => m.LandingComponent
+    loadComponent: () =>
+      import('./features/book-info-panel/book-info-panel.component').then(
+        (m) => m.BookInfoPanelComponent
       ),
   }
 ];

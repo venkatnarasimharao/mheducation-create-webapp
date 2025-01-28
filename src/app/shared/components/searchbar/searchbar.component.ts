@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -108,71 +108,91 @@ export class SearchbarComponent {
   }
 
   onSearch() {
-    const payload = this.searchService.getPayload();
-    const searchQuery = payload?.query || this.searchTerm;
+    // Retrieve the existing payload from the SearchService
+    const existingPayload = this.searchService.getPayload();
   
-    let selectedCategories: string[];
-    const searchAll = this.searchCategories.find((cat) => cat.id === 'all');
-  
-    if (searchAll?.checked) {
-      selectedCategories = ['all'];
+    // Check if a payload exists
+    if (existingPayload) {
+      // If a payload already exists, use it for the API call
+      this.apiService.getSearchListing(existingPayload).subscribe({
+        next: (response) => {
+          if (response.ok) {
+            console.log('API Response:', JSON.parse(response.body));
+            this.searchService.updateSearchResult(response.body);
+          }
+        },
+        error: (err) => {
+          console.error('API Error:', err);
+        },
+      });
     } else {
-      selectedCategories = this.checkedOptions.map((opt) => opt.id);
-    }
+      // Proceed with the existing implementation to create a new payload
+      const searchQuery = this.searchTerm;
   
-    const finalPayload = JSON.parse(JSON.stringify(USER_SEARCH_CONFIG));
-    finalPayload.search.query = searchQuery;
+      let selectedCategories: string[] = [];
+      const searchAll = this.searchCategories.find((cat) => cat.id === 'all');
   
-    if (selectedCategories.includes('all')) {
-      finalPayload.search.textTypes = { textType: ['all'] };
-    } else {
-      finalPayload.search.textTypes = { textType: selectedCategories };
-      finalPayload.search.textNamespace = 'http://mhhe.com/primis/meta/resolved';
-    }
-  
-    finalPayload.search.findable = finalPayload.search.textTypes.textType.length === 3;
-  
-    // Get current query parameters
-    this.route.queryParams.subscribe(currentParams => {
-      // Create new query params object with existing params
-      const updatedParams = {
-        ...currentParams,  // Preserve existing parameters
-        query: searchQuery,
-        textType: selectedCategories.join(',')
-      };
-
-      // Check if current URL is search-content
-      if (this.router.url.includes('/search-content')) {
-        // Update only query parameters
-        this.router.navigate([], {
-          relativeTo: this.route,
-          queryParams: updatedParams,
-          queryParamsHandling: 'merge'
-        });
+      if (searchAll?.checked) {
+        selectedCategories = ['all'];
       } else {
-        // Navigate to search-content with combined parameters
-        this.router.navigate(['/search-content'], {
-          queryParams: updatedParams,
-          queryParamsHandling: 'merge'
-        });
+        selectedCategories = this.checkedOptions.map((opt) => opt.id);
       }
-    }).unsubscribe();  // Unsubscribe after first emission
   
-    // Update search service and make API call
-    this.searchService.updateSearchQuery(finalPayload);
-    this.searchService.startSearch();
+      const finalPayload = JSON.parse(JSON.stringify(USER_SEARCH_CONFIG));
+      finalPayload.search.query = searchQuery;
   
-    this.apiService.getSearchListing(finalPayload).subscribe({
-      next: (response) => {
-        if (response.ok) {
-          console.log('API Response:', JSON.parse(response.body));
-          this.searchService.updateSearchResult(response.body);
+      if (selectedCategories.includes('all')) {
+        finalPayload.search.textTypes = { textType: ['all'] };
+      } else {
+        finalPayload.search.textTypes = { textType: selectedCategories };
+        finalPayload.search.textNamespace = 'http://mhhe.com/primis/meta/resolved';
+      }
+  
+      finalPayload.search.findable = finalPayload.search.textTypes.textType.length === 3;
+  
+      // Get current query parameters
+      this.route.queryParams.subscribe((currentParams) => {
+        // Create new query params object with existing params
+        const updatedParams = {
+          ...currentParams, // Preserve existing parameters
+          query: searchQuery,
+          textType: selectedCategories.join(','),
+        };
+  
+        // Check if current URL is search-content
+        if (this.router.url.includes('/search-content')) {
+          // Update only query parameters
+          this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: updatedParams,
+            queryParamsHandling: 'merge',
+          });
+        } else {
+          // Navigate to search-content with combined parameters
+          this.router.navigate(['/search-content'], {
+            queryParams: updatedParams,
+            queryParamsHandling: 'merge',
+          });
         }
-      },
-      error: (err) => {
-        console.error('API Error:', err);
-      },
-    });
+      }).unsubscribe(); // Unsubscribe after first emission
+  
+      // Update search service and make API call
+      this.searchService.updateSearchQuery(finalPayload);
+      this.searchService.startSearch();
+  
+      this.apiService.getSearchListing(finalPayload).subscribe({
+        next: (response) => {
+          if (response.ok) {
+            console.log('API Response:', JSON.parse(response.body));
+            this.searchService.updateSearchResult(response.body);
+          }
+        },
+        error: (err) => {
+          console.error('API Error:', err);
+        },
+      });
+    }
   }
+  
 }
   

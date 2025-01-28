@@ -40,7 +40,10 @@ export class LoginComponent {
       if (status === 'success') {
         this.loaderActive = false;
         this.activeModal.close();
-        this.router.navigate([this.redirectUrl]);
+        if (this.redirectUrl) {
+          this.router.navigate([this.redirectUrl]);
+        }
+
       } else if (status === 'failed') {
         this.loaderActive = false;
         this.loginError = this.authService.getLoginErrorMessage();
