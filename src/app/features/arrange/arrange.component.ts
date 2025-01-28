@@ -308,7 +308,6 @@ export class ArrangeComponent implements OnInit {
 
     if (event.key === 'ArrowUp') {
       if (currentIndex > 0) {
-        // Move within same section
         const [movedItem] = currentSection.items.splice(currentIndex, 1);
         currentSection.items.splice(currentIndex - 1, 0, movedItem);
         this.cdr.detectChanges();
@@ -321,7 +320,6 @@ export class ArrangeComponent implements OnInit {
         const button = row?.querySelector('.bi-arrows-expand') as HTMLElement;
         if (button) button.focus();
       } else if (currentSectionIndex > 0) {
-        // Move to previous section
         const prevSection = this.sections[currentSectionIndex - 1];
         const [movedItem] = currentSection.items.splice(currentIndex, 1);
         prevSection.items.push(movedItem);
@@ -337,7 +335,6 @@ export class ArrangeComponent implements OnInit {
       }
     } else if (event.key === 'ArrowDown') {
       if (currentIndex < currentSection.items.length - 1) {
-        // Move within same section
         const [movedItem] = currentSection.items.splice(currentIndex, 1);
         currentSection.items.splice(currentIndex + 1, 0, movedItem);
         this.cdr.detectChanges();
@@ -350,7 +347,6 @@ export class ArrangeComponent implements OnInit {
         const button = row?.querySelector('.bi-arrows-expand') as HTMLElement;
         if (button) button.focus();
       } else if (currentSectionIndex < this.sections.length - 1) {
-        // Move to next section
         const nextSection = this.sections[currentSectionIndex + 1];
         const [movedItem] = currentSection.items.splice(currentIndex, 1);
         nextSection.items.unshift(movedItem);
