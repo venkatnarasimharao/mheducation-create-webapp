@@ -5,8 +5,16 @@ import {
   moveItemInArray,
   transferArrayItem,
   CdkDropList,
+  CdkDragStart,
 } from '@angular/cdk/drag-drop';
-import { Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnInit,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbCollapseModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../../core/services/api/api.service';
@@ -52,7 +60,8 @@ export class ArrangeComponent implements OnInit {
   constructor(
     private apiService: ApiService,
     private route: ActivatedRoute,
-    private readonly router: Router
+    private readonly router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -151,8 +160,7 @@ export class ArrangeComponent implements OnInit {
             this.sections[1].items = row.entry;
           } else if (row.subtype === 'backmatter') {
             this.sections[2].items = row.entry;
-          }
-          else {
+          } else {
             this.sections[3].items = row.entry;
           }
         }
@@ -165,7 +173,7 @@ export class ArrangeComponent implements OnInit {
         entry.entry.forEach((item: any) => {
           const processedItem = this.processItem(item);
           console.log('processedItem Loading:', entries);
-      
+
           if (item.entry && Array.isArray(item.entry)) {
             this.processStructureEntries([item]);
           }
@@ -211,7 +219,7 @@ export class ArrangeComponent implements OnInit {
     this.isCollapsed[sectionId] = !this.isCollapsed[sectionId];
   }
 
-  checkIfAnySelected() {
+  checkIfAnySelected(): void {
     this.isAnyCheckboxSelected = this.sections.some((section) =>
       section.items.some((item: { checked: boolean }) => item.checked)
     );
@@ -221,7 +229,21 @@ export class ArrangeComponent implements OnInit {
     );
   }
 
-  deleteSelectedItems() {
+  toggleSelectAll(section: Section): void {
+    section.items.forEach((item: ProjectItem) => {
+      item.checked = section.selectAllChecked;
+    });
+    this.checkIfAnySelected();
+  }
+
+  updateSelectAllState(section: Section): void {
+    const allChecked = section.items.every((item: ProjectItem) => item.checked);
+    const someChecked = section.items.some((item: ProjectItem) => item.checked);
+
+    section.selectAllChecked = allChecked;
+  }
+
+  deleteSelectedItems(): void {
     this.sections.forEach((section) => {
       section.items = section.items.filter(
         (item: { checked: boolean }) => !item.checked
@@ -231,85 +253,143 @@ export class ArrangeComponent implements OnInit {
   }
 
   drop(event: CdkDragDrop<ProjectItem[]>) {
-    const sourceSection = this.sections.find(s => s.id === event.previousContainer.id);
-    const targetSection = this.sections.find(s => s.id === event.container.id);
-  
+    const sourceSection = this.sections.find(
+      (s) => s.id === event.previousContainer.id
+    );
+    const targetSection = this.sections.find(
+      (s) => s.id === event.container.id
+    );
+
     if (!sourceSection || !targetSection) return;
 
-    const selectedItems = sourceSection.items.filter((item: ProjectItem) => item.checked);
-    const itemsToMove = selectedItems.length > 0 ? selectedItems : [sourceSection.items[event.previousIndex] as ProjectItem];
+    const itemsToMove =
+      this.draggedItems.length > 0
+        ? this.draggedItems
+        : [sourceSection.items[event.previousIndex] as ProjectItem];
 
     if (event.previousContainer === event.container) {
-  
-      const unselectedItems = sourceSection.items.filter((item: ProjectItem) => !item.checked);
+      const unselectedItems = sourceSection.items.filter(
+        (item: ProjectItem) => !itemsToMove.includes(item)
+      );
       sourceSection.items = [
         ...unselectedItems.slice(0, event.currentIndex),
         ...itemsToMove,
-        ...unselectedItems.slice(event.currentIndex)
+        ...unselectedItems.slice(event.currentIndex),
       ];
     } else {
-
-      sourceSection.items = sourceSection.items.filter((item: ProjectItem) => 
-        !itemsToMove.includes(item)
+      sourceSection.items = sourceSection.items.filter(
+        (item: ProjectItem) => !itemsToMove.includes(item)
       );
-      
+
       targetSection.items.splice(event.currentIndex, 0, ...itemsToMove);
     }
 
     this.sections.forEach((section: Section) => {
-      section.items.forEach((item: ProjectItem) => item.checked = false);
+      section.items.forEach((item: ProjectItem) => (item.checked = false));
       section.selectAllChecked = false;
     });
 
     this.draggedItems = [];
-}
-  
+  }
 
-  handleKeyboardDrag = (event: KeyboardEvent, currentSection: Section, item: ProjectItem) => {
+  handleIconKeydown(
+    event: KeyboardEvent,
+    currentSection: Section,
+    item: ProjectItem
+  ): void {
     if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown') return;
+
     event.preventDefault();
-  
+
     const currentSectionIndex = this.sections.indexOf(currentSection);
     const currentIndex = currentSection.items.indexOf(item);
-  
+
     if (currentIndex === -1) return;
-  
-    let newIndex = currentIndex;
-    let targetSectionIndex = currentSectionIndex;
-  
+
     if (event.key === 'ArrowUp') {
-      if (currentIndex === 0 && currentSectionIndex > 0) {
-        targetSectionIndex = currentSectionIndex - 1;
-        newIndex = this.sections[targetSectionIndex].items.length - 1;
-      } else {
-        newIndex = Math.max(0, currentIndex - 1);
+      if (currentIndex > 0) {
+        // Move within same section
+        const [movedItem] = currentSection.items.splice(currentIndex, 1);
+        currentSection.items.splice(currentIndex - 1, 0, movedItem);
+        this.cdr.detectChanges();
+
+        const row = document.querySelector(
+          `[data-section-id="${currentSection.id}"][data-item-index="${
+            currentIndex - 1
+          }"]`
+        );
+        const button = row?.querySelector('.bi-arrows-expand') as HTMLElement;
+        if (button) button.focus();
+      } else if (currentSectionIndex > 0) {
+        // Move to previous section
+        const prevSection = this.sections[currentSectionIndex - 1];
+        const [movedItem] = currentSection.items.splice(currentIndex, 1);
+        prevSection.items.push(movedItem);
+        this.cdr.detectChanges();
+
+        const row = document.querySelector(
+          `[data-section-id="${prevSection.id}"][data-item-index="${
+            prevSection.items.length - 1
+          }"]`
+        );
+        const button = row?.querySelector('.bi-arrows-expand') as HTMLElement;
+        if (button) button.focus();
       }
     } else if (event.key === 'ArrowDown') {
-      if (currentIndex === currentSection.items.length - 1 && currentSectionIndex < this.sections.length - 1) {
-        targetSectionIndex = currentSectionIndex + 1;
-        newIndex = 0;
-      } else {
-        newIndex = Math.min(currentSection.items.length - 1, currentIndex + 1);
-      }
-    }
-  
+      if (currentIndex < currentSection.items.length - 1) {
+        // Move within same section
+        const [movedItem] = currentSection.items.splice(currentIndex, 1);
+        currentSection.items.splice(currentIndex + 1, 0, movedItem);
+        this.cdr.detectChanges();
 
-    if (currentSectionIndex === targetSectionIndex) {
-      currentSection.items.splice(currentIndex, 1);
-      currentSection.items.splice(newIndex, 0, item);
-    } else {
-      currentSection.items.splice(currentIndex, 1);
-      this.sections[targetSectionIndex].items.splice(newIndex, 0, item);
-    }
-    setTimeout(() => {
-      const dragButtons = document.querySelectorAll('.bi-arrows-expand');
-      if (dragButtons && dragButtons[newIndex]) {
-        (dragButtons[newIndex] as HTMLElement).focus();
+        const row = document.querySelector(
+          `[data-section-id="${currentSection.id}"][data-item-index="${
+            currentIndex + 1
+          }"]`
+        );
+        const button = row?.querySelector('.bi-arrows-expand') as HTMLElement;
+        if (button) button.focus();
+      } else if (currentSectionIndex < this.sections.length - 1) {
+        // Move to next section
+        const nextSection = this.sections[currentSectionIndex + 1];
+        const [movedItem] = currentSection.items.splice(currentIndex, 1);
+        nextSection.items.unshift(movedItem);
+        this.cdr.detectChanges();
+
+        const row = document.querySelector(
+          `[data-section-id="${nextSection.id}"][data-item-index="0"]`
+        );
+        const button = row?.querySelector('.bi-arrows-expand') as HTMLElement;
+        if (button) button.focus();
       }
-    });
-  };
-  
- 
+    }
+  }
+
+  getExpandButton(section: Section, index: number): HTMLElement | null {
+    const tableRows = Array.from(
+      document.querySelectorAll(`[data-section-id="${section.id}"]`)
+    );
+    const targetRow = tableRows[index];
+
+    if (targetRow) {
+      const expandButton = targetRow.querySelector(
+        '.bi-arrows-expand'
+      ) as HTMLElement;
+      return expandButton;
+    }
+
+    return null;
+  }
+
+  onDragStarted(
+    event: CdkDragStart,
+    section: Section,
+    item: ProjectItem
+  ): void {
+    const selectedItems = section.items.filter((i: ProjectItem) => i.checked);
+    this.draggedItems = selectedItems.length > 0 ? selectedItems : [item];
+  }
+
   onSelect(item: { id: string; name: string }) {
     this.selectedProject = item;
     this.projectLoadError = null;

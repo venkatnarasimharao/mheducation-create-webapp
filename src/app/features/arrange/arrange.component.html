@@ -136,7 +136,7 @@
                     {{ projectLoadError }}
                 </div>
                 } @else {
-                @for (section of sections; track $index; let sectionIndex = $index) {
+                @for (section of sections; track $index;) {
                 @if (section.items.length) {
                 <div class="d-flex justify-content-between align-items-center px-2">
                     <h3 class="fw-bolder h4" id="{{ section.id }}-header">{{ section.title }}</h3>
@@ -151,15 +151,13 @@
                 <div [id]="section.id + 'Table'" [ngbCollapse]="isCollapsed[section.id]" role="region"
                     [attr.aria-labelledby]="section.id + '-header'">
                     <div cdkDropList [id]="section.id" [cdkDropListData]="section.items"
-                         (cdkDropListDropped)="drop($event)"
-                        class="table-responsive">
+                        (cdkDropListDropped)="drop($event)" class="table-responsive">
                         <table class="table table-borderless mt-2">
                             <thead class="table-bordered border-bottom">
                                 <tr>
                                     <th scope="col" class="col-12 col-sm-1">
                                         <input type="checkbox" class="form-check-input me-1"
-                                            [(ngModel)]="section.selectAllChecked"
-                                           
+                                            [(ngModel)]="section.selectAllChecked" (change)="toggleSelectAll(section)"
                                             [attr.aria-label]="'Select all items in ' + section.title" />
                                     </th>
                                     <th><span class="d-none d-sm-inline">Product</span></th>
@@ -168,19 +166,21 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @for (item of section.items; track $index; let itemIndex = $index) {
+                                @for (item of section.items; track $index;) {
                                 @if(item.type?.toLowerCase() !== 'placeholder') {
-                                <tr cdkDrag role="row">
+                                <tr cdkDrag role="row" tabindex="0" [attr.data-section-id]="section.id"
+                                    [attr.data-item-index]="$index"
+                                    (cdkDragStarted)="onDragStarted($event, section, item)">
                                     <td class="text-break">
                                         <input type="checkbox" class="form-check-input me-3" [(ngModel)]="item.checked"
-                                           
-                                            [attr.aria-label]="'Select ' + item.name" />
+                                            (change)="checkIfAnySelected()" [attr.aria-label]="'Select ' + item.name" />
                                         <span class="me-3"><i class="bi bi-plus-square"></i></span>
 
                                         <!-- <span class=""><i class="bi bi-arrows-expand"></i></span> -->
                                         <span #dragButton class="bi bi-arrows-expand" tabindex="0" role="button"
-                                            (keydown)="handleKeyboardDrag($event, section, item)"
-                                            aria-label="Drag item vertically"></span>
+                                            aria-label="Reorder item"
+                                            (keydown)="handleIconKeydown($event, section, item)">
+                                        </span>
                                     </td>
                                     <td>
                                         <a href="#" class="text-decoration-none text-primary">{{ item.computedtitle ||
@@ -194,9 +194,9 @@
 
                                     <ng-template cdkDragPreview>
                                         <div class="drag-preview">
-                                            <!-- Moving {{ draggedItems.length || 1 }} item{{ draggedItems.length > 1 ? 's' :
-                                            '' }} -->
-                                            Moving items
+                                            Moving {{ draggedItems.length || 1 }} item{{ draggedItems.length > 1 ? 's' :
+                                            '' }}
+                                            <!-- Moving items -->
                                         </div>
                                     </ng-template>
                                 </tr>

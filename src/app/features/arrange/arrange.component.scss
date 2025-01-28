@@ -1,53 +1,97 @@
-ul .divider {
+$border-color: #d3d3d3;
+$primary-color: #007bff;
+$disabled-bg: #e9ecef;
+$disabled-text: #6c757d;
+$shadow-color: rgba(0, 0, 0, 0.2);
+$white: #ffffff;
+$black: #333;
+
+// styles.scss
+ul {
+  &.list-unstyled {
+    li {
+      display: flex;
+      align-items: center;
+      position: relative;
+      
+      &:not(:last-child) {
+        padding-right: 1rem;
+        position: relative;
+      }
+
+      &::after {
+        content: '';
+        display: block;
+        width: 1px;
+        height: 20px;
+        background-color: $border-color;
+        margin-left: 1rem;
+      }
+
+      &:last-child {
+        &::after {
+          content: none;
+        }
+        
+        .divider {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .divider {
     position: absolute;
     right: 0;
     top: 50%;
     transform: translateY(-50%);
     height: 20px;
     width: 1px;
-    background-color: #d3d3d3;
+    background-color: $border-color;
   }
-  
-  ul li:not(:last-child) {
-    padding-right: 1rem;
-    position: relative;
-  }
-  
-  ul li:last-child .divider {
-    display: none;
-  }
-
-  .disabled {
-    pointer-events: none;
-    opacity: 0.5;
-    cursor: not-allowed;
-  }  
-
-.btn.disabled {
-    background-color: #e9ecef; 
-    border-color: #e9ecef;
-    color: #6c757d;
 }
-.example-container {
+
+// Button states
+.btn {
+  &.disabled {
+    background-color: $disabled-bg;
+    border-color: $disabled-bg;
+    color: $disabled-text;
+  }
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+// Drag and drop styles
+.example {
+  &-container {
     width: 400px;
     max-width: 100%;
     margin: 0 25px 25px 0;
     display: inline-block;
     vertical-align: top;
   }
-  
-  .example-list {
-    border: solid 1px #ccc;
+
+  &-list {
+    border: solid 1px $border-color;
     min-height: 60px;
-    background: white;
+    background: $white;
     border-radius: 4px;
     overflow: hidden;
     display: block;
+
+    &.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
+      transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+    }
   }
-  
-  .example-box {
+
+  &-box {
     padding: 20px 10px;
-    border-bottom: solid 1px #ccc;
+    border-bottom: solid 1px $border-color;
     color: rgba(0, 0, 0, 0.87);
     display: flex;
     flex-direction: row;
@@ -55,93 +99,78 @@ ul .divider {
     justify-content: space-between;
     box-sizing: border-box;
     cursor: move;
-    background: white;
+    background: $white;
     font-size: 14px;
+
+    &:last-child {
+      border: none;
+    }
   }
-  
-  .cdk-drag-preview {
-    box-sizing: border-box;
+}
+
+// Drag states and animations
+.cdk-drag {
+  &-preview {
+    background-color: $white;
+    box-shadow: 
+      0 5px 5px -3px $shadow-color,
+      0 8px 10px 1px rgba(0, 0, 0, 0.14),
+      0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  }
+
+  &-placeholder {
+    opacity: 0.3;
+  }
+
+  &-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+// Custom drag styles
+.drag {
+  &-selected {
+    background-color: rgba($primary-color, 0.1) !important;
+  }
+
+  &-preview {
+    padding: 8px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: $white;
     border-radius: 4px;
-    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
-                0 8px 10px 1px rgba(0, 0, 0, 0.14),
-                0 3px 14px 2px rgba(0, 0, 0, 0.12);
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    min-width: 150px;
   }
-  
-  .cdk-drag-placeholder {
-    opacity: 0;
+}
+
+// Multi-drag styles
+.multi-drag {
+  &-preview {
+    background: $white;
+    border-radius: 4px;
+    box-shadow: 
+      0 5px 5px -3px $shadow-color,
+      0 8px 10px 1px rgba(0, 0, 0, 0.14),
+      0 3px 14px 2px rgba(0, 0, 0, 0.12);
+    padding: 10px;
+    font-size: 14px;
+    color: $black;
   }
-  
-  .cdk-drag-animating {
-    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-  }
-  
-  .example-box:last-child {
-    border: none;
-  }
-  
-  .example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
-    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-  }
-  
-  ul .list-unstyled li {
+
+  &-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: $primary-color;
+    color: $white;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
     display: flex;
     align-items: center;
-    position: relative;
+    justify-content: center;
+    font-size: 12px;
   }
-  
-  ul .list-unstyled li::after {
-    content: '';
-    display: block;
-    width: 1px;
-    height: 20px;
-    background-color: #d3d3d3;
-    margin-left: 1rem; /* Space between the icon and the divider */
-  }
-  
-  ul .list-unstyled li:last-child::after {
-    content: none; /* Remove the divider for the last item */
-  }
-  
-  .cdk-drag-preview {
-      background-color: #ffffff;
-      box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
-                  0 8px 10px 1px rgba(0, 0, 0, 0.14),
-                  0 3px 14px 2px rgba(0, 0, 0, 0.12);
-    }
-
-    .cdk-drag-placeholder {
-      opacity: 0.3;
-    }
-
-    .drag-selected {
-      background-color: rgba(0, 123, 255, 0.1) !important;
-    }
-
-    .multi-drag-preview {
-      background: white;
-      border-radius: 4px;
-      box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
-                  0 8px 10px 1px rgba(0, 0, 0, 0.14),
-                  0 3px 14px 2px rgba(0, 0, 0, 0.12);
-      padding: 10px;
-      font-size: 14px;
-      color: #333;
-    }
-
-    .multi-drag-count {
-      position: absolute;
-      top: -10px;
-      right: -10px;
-      background: #007bff;
-      color: white;
-      border-radius: 50%;
-      width: 25px;
-      height: 25px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-    }
-
-  
-    
+}
