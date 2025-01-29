@@ -39,26 +39,30 @@ export class SearchbarComponent {
   dropdownLabelText: string = '';
 
   ngOnInit() {
-    this.toggleSearchAll(true);
-    this.getDropdownLabel();
-
-    // Subscribe to payload service
-    const payload = this.searchService.getPayload();
-
-    if (payload) {
-      this.searchTerm = payload.search.query || '';
-
-      // Update selected categories based on textType
-      const textTypes = payload.search?.textTypes?.textType || [];
-      this.searchCategories.forEach((category) => {
-        category.checked = textTypes.includes(category.id);
-      });
-
-      // Update checked options and dropdown label
-      this.checkedOptions = this.searchCategories.filter((cat) => cat.checked);
+    // Initialize state from query parameters
+    this.route.queryParams.subscribe((params) => {
+      const query = params['query'] || ''; // Get the query parameter
+      const textType = params['textType'] || ''; // Get the textType parameter
+  
+      // Set the search term
+      this.searchTerm = query;
+  
+      if (textType) {
+        // Split the textType string into an array and update the categories
+        const textTypesArray = textType.split(',');
+        this.searchCategories.forEach((category) => {
+          category.checked = textTypesArray.includes(category.id);
+        });
+        this.checkedOptions = this.searchCategories.filter((cat) => cat.checked);
+      } else {
+        // If no textType in query params, default to selecting all categories
+        this.toggleSearchAll(true);
+      }
+  
+      // Update the dropdown label
       this.getDropdownLabel();
-    }
-  }
+    });
+  }  
 
   areAllCategoriesChecked(): boolean {
     return this.searchCategories
@@ -110,11 +114,65 @@ export class SearchbarComponent {
   onSearch() {
     // Retrieve the existing payload from the SearchService
     const existingPayload = this.searchService.getPayload();
+    const searchQuery = this.searchTerm;
   
-    // Check if a payload exists
+    let selectedCategories: string[] = [];
+    const searchAll = this.searchCategories.find((cat) => cat.id === 'all');
+  
+    if (searchAll?.checked) {
+      selectedCategories = ['all'];
+    } else {
+      // Proceed with the existing implementation to create a new payload
+      const searchQuery = this.searchTerm;
+  
+    // Get current query parameters and update them
+    this.route.queryParams.subscribe((currentParams) => {
+      // Define the updated parameters
+      const updatedParams = {
+        ...currentParams, // Preserve existing parameters
+        query: searchQuery,
+        textType: selectedCategories.join(','), // Update textType with selected categories
+      };
+  
+      // Check if we are on the /search-content route
+      if (this.router.url.includes('/search-content')) {
+        // If we are on the /search-content route, only update query and textType
+        this.router.navigate([], {
+          relativeTo: this.route,
+          queryParams: updatedParams,
+          queryParamsHandling: 'merge',
+        });
+      } else {
+        // Otherwise, include ContentType and TrimSize when navigating to /search-content
+        const finalParams = {
+          ...updatedParams,
+          ContentType: 'Book',
+          TrimSize: '8by11',
+        };
+  
+        this.router.navigate(['/search-content'], {
+          queryParams: finalParams,
+          queryParamsHandling: 'merge',
+        });
+      }
+    }).unsubscribe(); // Unsubscribe after first emission
+  
+    // Start the search process in the service
+    this.searchService.startSearch();
+  
+    // If there is an existing payload, merge the query and categories
     if (existingPayload) {
-      // If a payload already exists, use it for the API call
-      this.apiService.getSearchListing(existingPayload).subscribe({
+      const finalPayload = {
+        ...existingPayload, // Retain other fields from the existing payload
+        search: {
+          ...existingPayload.search, // Retain other fields in the `search` object
+          query: searchQuery, // Overwrite query with input value
+          textTypes: { textType: selectedCategories }, // Overwrite textType with selected categories
+        },
+      };
+  
+      // API call with the merged payload
+      this.apiService.getSearchListing(finalPayload).subscribe({
         next: (response) => {
           if (response.ok) {
             console.log('API Response:', JSON.parse(response.body));
@@ -126,57 +184,15 @@ export class SearchbarComponent {
         },
       });
     } else {
-      // Proceed with the existing implementation to create a new payload
-      const searchQuery = this.searchTerm;
-  
-      let selectedCategories: string[] = [];
-      const searchAll = this.searchCategories.find((cat) => cat.id === 'all');
-  
-      if (searchAll?.checked) {
-        selectedCategories = ['all'];
-      } else {
-        selectedCategories = this.checkedOptions.map((opt) => opt.id);
-      }
-  
+      // If there is no existing payload, create a new one
       const finalPayload = JSON.parse(JSON.stringify(USER_SEARCH_CONFIG));
       finalPayload.search.query = searchQuery;
+      finalPayload.search.textTypes = { textType: selectedCategories };
   
-      if (selectedCategories.includes('all')) {
-        finalPayload.search.textTypes = { textType: ['all'] };
-      } else {
-        finalPayload.search.textTypes = { textType: selectedCategories };
-        finalPayload.search.textNamespace = 'http://mhhe.com/primis/meta/resolved';
-      }
+      // Set findable flag
+      finalPayload.search.findable = selectedCategories.length === 3;
   
-      finalPayload.search.findable = finalPayload.search.textTypes.textType.length === 3;
-  
-      // Get current query parameters
-      this.route.queryParams.subscribe((currentParams) => {
-        // Create new query params object with existing params
-        const updatedParams = {
-          ...currentParams, // Preserve existing parameters
-          query: searchQuery,
-          textType: selectedCategories.join(','),
-        };
-  
-        // Check if current URL is search-content
-        if (this.router.url.includes('/search-content')) {
-          // Update only query parameters
-          this.router.navigate([], {
-            relativeTo: this.route,
-            queryParams: updatedParams,
-            queryParamsHandling: 'merge',
-          });
-        } else {
-          // Navigate to search-content with combined parameters
-          this.router.navigate(['/search-content'], {
-            queryParams: updatedParams,
-            queryParamsHandling: 'merge',
-          });
-        }
-      }).unsubscribe(); // Unsubscribe after first emission
-  
-      // Update search service and make API call
+      // Update search service and make the API call
       this.searchService.updateSearchQuery(finalPayload);
       this.searchService.startSearch();
   
@@ -193,6 +209,7 @@ export class SearchbarComponent {
       });
     }
   }
-  
 }
   
+  
+}

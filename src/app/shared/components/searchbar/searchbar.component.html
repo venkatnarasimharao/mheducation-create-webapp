@@ -21,14 +21,15 @@
             @for (category of searchCategories; track category.id) {
               <div class="form-check d-flex gap-1">
                 <input
-                  type="checkbox"
-                  [(ngModel)]="category.checked"
-                  [checked]="category.checked"
-                  (change)="onCategoryToggle(category, $event)"
-                  class="form-check-input ms-1"
-                  [id]="category.id"
-                />
-                <label [for]="category.id">{{ category.label | translate }}</label>
+                type="checkbox"
+                [(ngModel)]="category.checked"
+                (change)="onCategoryToggle(category, $event)"
+                class="form-check-input ms-1"
+                [id]="category.id"
+              />
+              <label class="form-check-label" [attr.for]="category.id">
+                {{ category.label | translate }}
+              </label>
               </div>
             }
           </div>

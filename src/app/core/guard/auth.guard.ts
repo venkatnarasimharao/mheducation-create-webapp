@@ -7,14 +7,15 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { LoginComponent } from '../../shared/components/login/login.component';
 
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
   constructor(
-    private modalService: NgbModal,
     private commonStateService: CommonStateService,
-    private router: Router
+    private router: Router,
+    private modalService: NgbModal
   ) { }
 
   canActivate(

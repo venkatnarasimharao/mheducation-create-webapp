@@ -1,28 +1,26 @@
-import { CommonStateService } from './../common-state/common-state.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BOOK_COVER_IMAGES, USER_SEARCH_CONFIG } from '../../../shared/constants/search-payload.config';
 import { environment } from '../../../../environments/environment';
 import { CookieService } from 'ngx-cookie-service';
+import { CommonStateService } from '../common-state/common-state.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
+
   constructor(
     private http: HttpClient,
     private cookieService: CookieService,
     private commonStateService: CommonStateService
   ) { }
   
-  public isAnonymous(): string {
-    return this.cookieService.get('paris_user_id')
-  }
 
   getSearchListing(finalPayload: any) {
     const finalPay = JSON.parse(JSON.stringify(finalPayload));
-    const userId: string = this.isAnonymous();
+    const userId = this.commonStateService.isAnonymous();
     let user = userId || "anonymous";
     const headers = new HttpHeaders({
       'X-Response-Type': 'arraybuffer',
@@ -35,6 +33,7 @@ export class ApiService {
       options: { responseType: 'text', headers }
     })
   }
+
   userLogin(payload: { username: string, password: string }): Observable<any> {
     const { username, password } = payload;
     const base64String = btoa(`${username}:${password}`);
@@ -82,25 +81,8 @@ export class ApiService {
     return environment.apiUrl + endPointUrl;
   }
   
-  getBookDetails(assetId: string) {
-    const url = `/p/assets/${assetId}`;
-    const params = {
-      type: "metadata",
-      recursive: true,
-      getrootancestor: true,
-      relationships: true,
-      supplements: false,
-      nocacheTimestamp: Date.now(),
-    };
-    return this.apiMethodService({
-      url,
-      method: "GET_PARMS",
-      params,
-    });
-
-  }
   getBookPageView(payload: any) {
-    const userId = this.commonStateService.getUserId();
+    const userId = this.commonStateService.isAnonymous();
     const url = `/users/${userId}/preview/${payload.guid}/${payload.pageNumber}`;
     const headers = new HttpHeaders({
       'X-Response-Type': 'arraybuffer'
@@ -115,31 +97,13 @@ export class ApiService {
       options: { headers }
     });
   }
-  getBadPreviewPage() {
-    return "https://createqa.mheducation.com/createonline/images/bad_preview.jpg";
-  }
-  getBookCoverImage(isbn: string): string {
-    return `https://createqa.mheducation.com/covers/${isbn}.jpeg`;
-  }
-  getSearchInsideList(payload: any) {
-    let user = "anonymous";
-    if (!this.commonStateService.isAnonymous()) {
-      user = this.commonStateService.getUserId();
-    }
-    return this.apiMethodService({
-      url: `/p/users/${user}/searchinside`,
-      method: 'POST',
-      body: payload,
-      options: {
-        responseType: 'text'
-      }
-    })
-  }
+
+  
 
   apiMethodService<T>({ url, method, body, params = {}, options = {} }: any): Observable<any> {
     const pathName = window.location.pathname?.includes('createonline') ? window.location.pathname : '/createonline'
     url = environment.apiUrl + pathName + url;
-    if (!options['responseType'] && method !== 'GET_IMAGE') {
+    if (!options['responseType']) {
       options['responseType'] = 'text';
     }
     if (!options['observe']) {
@@ -152,7 +116,7 @@ export class ApiService {
       case 'GET_PARMS':
         return this.http.get(url, { params: params, ...options });
       case 'GET_IMAGE':
-        return this.http.get(url, { params: params, responseType: 'blob', ...options });
+        return this.http.get(url, { responseType: 'blob' as 'json', ...options });
       case 'PUT':
         return this.http.put(url, body, options);
       case 'PUT_PARAMS':

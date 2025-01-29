@@ -35,7 +35,7 @@ export class FilterAccordionComponent implements OnInit {
     });
 
     // Subscribe to search results and sync facets
-    this.searchService.searchResults.subscribe((state) => {
+    this.searchService.searchResult$.subscribe((state) => {
       this.searchPayload = {
         query: state.query,
         textType: state.textType,
