@@ -124,11 +124,44 @@ export class SearchbarComponent {
     } else {
       selectedCategories = this.checkedOptions.map((opt) => opt.id);
     }
-
+  
+    // Get current query parameters and update them
+    this.route.queryParams.subscribe((currentParams) => {
+      // Define the updated parameters
+      const updatedParams = {
+        ...currentParams, // Preserve existing parameters
+        query: searchQuery,
+        textType: selectedCategories.join(','), // Update textType with selected categories
+      };
+  
+      // Check if we are on the /search-content route
+      if (this.router.url.includes('/search-content')) {
+        // If we are on the /search-content route, only update query and textType
+        this.router.navigate([], {
+          relativeTo: this.route,
+          queryParams: updatedParams,
+          queryParamsHandling: 'merge',
+        });
+      } else {
+        // Otherwise, include ContentType and TrimSize when navigating to /search-content
+        const finalParams = {
+          ...updatedParams,
+          ContentType: 'Book',
+          TrimSize: '8by11',
+        };
+  
+        this.router.navigate(['/search-content'], {
+          queryParams: finalParams,
+          queryParamsHandling: 'merge',
+        });
+      }
+    }).unsubscribe(); // Unsubscribe after first emission
+  
+    // Start the search process in the service
     this.searchService.startSearch();
   
+    // If there is an existing payload, merge the query and categories
     if (existingPayload) {
-      // Merge query and textType with the existing payload
       const finalPayload = {
         ...existingPayload, // Retain other fields from the existing payload
         search: {
@@ -151,44 +184,15 @@ export class SearchbarComponent {
         },
       });
     } else {
-      // Proceed with the new payload creation
+      // If there is no existing payload, create a new one
       const finalPayload = JSON.parse(JSON.stringify(USER_SEARCH_CONFIG));
       finalPayload.search.query = searchQuery;
+      finalPayload.search.textTypes = { textType: selectedCategories };
   
-      if (selectedCategories.includes('all')) {
-        finalPayload.search.textTypes = { textType: ['all'] };
-      } else {
-        finalPayload.search.textTypes = { textType: selectedCategories };
-        finalPayload.search.textNamespace = 'http://mhhe.com/primis/meta/resolved';
-      }
+      // Set findable flag
+      finalPayload.search.findable = selectedCategories.length === 3;
   
-      finalPayload.search.findable = finalPayload.search.textTypes.textType.length === 3;
-  
-      // Get current query parameters
-      this.route.queryParams.subscribe((currentParams) => {
-        const updatedParams = {
-          ...currentParams, // Preserve existing parameters
-          query: searchQuery,
-          textType: selectedCategories.join(','),
-          ContentType: 'Book', 
-          TrimSize: '8by11', 
-        };
-  
-        if (this.router.url.includes('/search-content')) {
-          this.router.navigate([], {
-            relativeTo: this.route,
-            queryParams: updatedParams,
-            queryParamsHandling: 'merge',
-          });
-        } else {
-          this.router.navigate(['/search-content'], {
-            queryParams: updatedParams,
-            queryParamsHandling: 'merge',
-          });
-        }
-      }).unsubscribe(); // Unsubscribe after first emission
-  
-      // Update search service and make API call
+      // Update search service and make the API call
       this.searchService.updateSearchQuery(finalPayload);
       this.searchService.startSearch();
   
@@ -205,5 +209,7 @@ export class SearchbarComponent {
       });
     }
   }
+  
+  
   
 }
