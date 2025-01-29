@@ -5,6 +5,7 @@ import { NgbDropdownToggleNoCaretDirective } from '../../directives/dropdown-tog
 import { MenuSidebarService } from '../../../core/services/menu-sidebar/menuSidebarService.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { LoginComponent } from '../login/login.component';
+import { CommonStateService } from '../../../core/services/common-state/common-state.service';
 
 @Component({
   selector: 'header',
@@ -22,13 +23,14 @@ export class HeaderComponent implements OnInit {
 
   constructor(private menuService: MenuSidebarService,
     private AuthService: AuthService,
+    private commonStateService: CommonStateService,
     private modalService: NgbModal) {
   }
   ngOnInit(): void {
     this.AuthService.authStatus.subscribe((event: any) => {
       this.loggedInStatus = event;
     });
-    if (!this.AuthService.isAnonymous()) {
+    if (!this.commonStateService.isAnonymous()) {
       this.loggedInStatus = "LogOut"
     }
   }

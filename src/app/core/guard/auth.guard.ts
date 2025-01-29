@@ -3,14 +3,14 @@ import { CanActivate, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { LoginComponent } from '../../shared/components/login/login.component';
-import { AuthService } from '../services/auth/auth.service';
+import { CommonStateService } from '../services/common-state/common-state.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
   constructor(
-    private authService: AuthService,
+    private commonStateService: CommonStateService,
     private router: Router,
     private modalService: NgbModal
   ) { }
@@ -19,7 +19,7 @@ export class AuthGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): boolean {
-    if (!this.authService.isAnonymous()) {
+    if (!this.commonStateService.isAnonymous()) {
       return true;
     }
     else {

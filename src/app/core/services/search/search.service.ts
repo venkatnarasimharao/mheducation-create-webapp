@@ -15,7 +15,7 @@ export class SearchService {
 
   private payload: any = null;
 
-  searchResults = this.searchStateSource.asObservable();
+  searchResult$ = this.searchStateSource.asObservable();
 
   updateSearchResult(data: any) {
     this.searchStateSource.next({

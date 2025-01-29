@@ -90,28 +90,38 @@
         <!-- Search Results -->
         <div class="col-md-8">
           <hec-searchbar [searchbarTitle]="'Search'" [placeholder]="'Search...'"></hec-searchbar>
-          
-          <div class="d-flex justify-content-end">
-            <hec-sortby></hec-sortby>
-          </div>
-          
-          <hec-search-results></hec-search-results>
-          
-          @if(!loading) {
-            <div class="d-lg-flex justify-content-between align-items-center mt-2">
+        
+          <!-- Use a flex container to align sortby and pagination info in parallel -->
+          <div class="d-flex justify-content-between align-items-center">
+            <!-- Pagination Info -->
+            <ng-template #paginationInfo>
               <p class="mb-0">
                 Showing {{ ((currentPage - 1) * resultsPerPage + 1) }}-{{ Math.min(currentPage * resultsPerPage, totalResults) }} of {{ totalResults }}
               </p>
+            </ng-template>
+
+            <!-- Render the pagination info template -->
+            <ng-container *ngTemplateOutlet="paginationInfo"></ng-container>
+            <!-- Sortby Component -->
+            <hec-sortby></hec-sortby>
+          </div>
+        
+          <hec-search-results></hec-search-results>
+        
+          @if (!loading) {
+            <div class="d-lg-flex justify-content-between align-items-center mt-2">
+              <!-- Pagination Info (for larger screens) -->
+              <ng-container *ngTemplateOutlet="paginationInfo"></ng-container>
+        
+              <!-- Pagination Component -->
               <hec-pagination
                 [currentPage]="currentPage"
                 [totalPages]="totalPagesCount"
                 [maxSize]="pagePerItem"
                 (pageChange)="onPageChange($event)"
-              >
-              </hec-pagination>
+              ></hec-pagination>
             </div>
-            }
-          
+          }
         </div>
         
       </div>

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { BOOK_COVER_IMAGES, USER_SEARCH_CONFIG } from '../../../shared/constants/search-payload.config';
 import { environment } from '../../../../environments/environment';
 import { CookieService } from 'ngx-cookie-service';
+import { CommonStateService } from '../common-state/common-state.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,16 +13,14 @@ export class ApiService {
 
   constructor(
     private http: HttpClient,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private commonStateService: CommonStateService
   ) { }
   
-  public isAnonymous(): string {
-    return this.cookieService.get('paris_user_id')
-  }
 
   getSearchListing(finalPayload: any) {
     const finalPay = JSON.parse(JSON.stringify(finalPayload));
-    const userId: string = this.isAnonymous();
+    const userId: string = this.commonStateService.isAnonymous();
     let user = userId || "anonymous";
     const headers = new HttpHeaders({
       'X-Response-Type': 'arraybuffer',
@@ -84,7 +83,8 @@ export class ApiService {
   
 
   apiMethodService<T>({ url, method, body, params = {}, options = {} }: any): Observable<any> {
-    url = environment.apiUrl + url;
+    const pathName = window.location.pathname?.includes('createonline') ? window.location.pathname : '/createonline'
+    url = environment.apiUrl + pathName + url;
     if (!options['responseType']) {
       options['responseType'] = 'text';
     }

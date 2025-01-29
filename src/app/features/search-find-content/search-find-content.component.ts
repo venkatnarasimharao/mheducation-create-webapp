@@ -86,7 +86,7 @@ export class SearchFindContentComponent implements OnInit {
   ngOnInit(): void {
     const payload = this.searchService.getPayload();
 
-    this.searchService.searchResults.subscribe((state) => {
+    this.searchService.searchResult$.subscribe((state) => {
       this.loading = state.loading;
       if (state.result) {
         const estimate = state.result?.estimate;

@@ -28,14 +28,12 @@ export class FilterAccordionComponent implements OnInit {
   searchPayload: { query: string; textType: string[]; findable: boolean } | undefined;
 
   ngOnInit(): void {
-    // Subscribe to queryParams and update checkbox states
     this.route.queryParams.subscribe((params) => {
       this.initializeFromQueryParams(params);
-      this.updateSelectedCounts();
+      this.updateSelectedCounts(); // Ensure UI reflects selections
     });
-
-    // Subscribe to search results and sync facets
-    this.searchService.searchResults.subscribe((state) => {
+  
+    this.searchService.searchResult$.subscribe((state) => {
       this.searchPayload = {
         query: state.query,
         textType: state.textType,
@@ -43,50 +41,79 @@ export class FilterAccordionComponent implements OnInit {
       };
       this.syncFacetsWithApiResponse(state.result?.['s:facets']?.['s:facet'] || []);
     });
-
-    this.syncSelectionStatesFromPayload();
   }
+  
+  
 
   private initializeFromQueryParams(params: any): void {
-    // Apply selections from query params
+
+  this.collectionfilterData.forEach((list) => {
+    list.collectionTypes?.forEach((item: any) => {
+      item.selected = false; 
+    });
+  });
+
     Object.keys(params).forEach((paramKey) => {
-      const values = params[paramKey].split(',');
+      const values = params[paramKey]?.split(',') || [];
+  
       this.collectionfilterData.forEach((list) => {
         if (this.normalizeHeader(list.header) === paramKey) {
           list.collectionTypes?.forEach((item: any) => {
-            if (values.includes(item.value)) {
-              item.selected = 'true';
-            }
+            // Set selected to true if the value is in the queryParams
+            item.selected = values.includes(item.value);
           });
         }
       });
     });
+  
+    // Ensure the selected counts are updated
+    this.updateSelectedCounts();
   }
 
   private updateQueryParams(): void {
+    // Start with empty query params
     const queryParams: { [key: string]: string } = {};
+    
+    // Get current query params
+    const currentParams = this.route.snapshot.queryParams;
+    console.log('Current Query Params:', currentParams);
 
+    // Copy over any query params that aren't related to our filters
+    Object.keys(currentParams).forEach(key => {
+      const matchingFilter = this.collectionfilterData.find(
+        list => this.normalizeHeader(list.header) === key
+      );
+      if (!matchingFilter) {
+        queryParams[key] = currentParams[key];
+      }
+    });
+
+    // Add selected filter values
     this.collectionfilterData.forEach((list) => {
       const selectedItems = list.collectionTypes?.filter(
         (item: any) => item.selected === 'true' || item.selected === true
       );
 
-      if (list.header === 'Copyright Year') {
-        console.log('Selected items for Copyright Year:', selectedItems); // Debug log
-      }
+      const normalizedHeader = this.normalizeHeader(list.header);
+      console.log(`Processing ${normalizedHeader}:`, selectedItems);
 
       if (selectedItems?.length) {
-        const normalizedHeader = this.normalizeHeader(list.header);
-        queryParams[normalizedHeader] = selectedItems.map((item: any) => item.value).join(',');
+        const values = selectedItems.map((item: any) => item.value).join(',');
+        queryParams[normalizedHeader] = values;
       }
+      // If no items selected, the parameter will not be included
     });
 
-    console.log('Query Params:', queryParams);
+    console.log('Final Query Params:', queryParams);
 
+    // Navigate with the new query params
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams,
-      queryParamsHandling: 'merge',
+      queryParams: queryParams,
+    }).then(() => {
+      console.log('Navigation completed');
+    }).catch(error => {
+      console.error('Navigation error:', error);
     });
   }
 

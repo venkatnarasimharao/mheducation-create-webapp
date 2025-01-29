@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { SearchService } from '../../../core/services/search/search.service';
 import { ApiService } from '../../../core/services/api/api.service';
 import { RouterModule } from '@angular/router';
+import { CommonStateService } from '../../../core/services/common-state/common-state.service';
 
 @Component({
   selector: 'hec-search-results',
@@ -15,10 +16,10 @@ export class SearchResultsComponent implements OnInit {
   searchResults: any[] = [];
   loading: boolean = false;
 
-  constructor(private searchService: SearchService, private apiService: ApiService) {}
+  constructor(private searchService: SearchService, private apiService: ApiService, private commonStateService: CommonStateService) {}
 
   ngOnInit() {
-    this.searchService.searchResults.subscribe({
+    this.searchService.searchResult$.subscribe({
       next: (state) => {
         this.loading = state.loading;
 
@@ -36,7 +37,7 @@ export class SearchResultsComponent implements OnInit {
             guid: item.guid,
             description: item.description,
             enableAddButton: item.enableAddButton,
-            imageUrl: this.apiService.getImageUrl(`covers/${item.isbn}.jpeg`)
+            imageUrl: this.commonStateService.getImageUrl(`/covers/${item.isbn}.jpeg`, false)
           }));
         } else {
           this.searchResults = [];

@@ -30,6 +30,10 @@ export class PaginationComponent {
       this.currentPage = page;
       this.pageChange.emit(page);
 
+
+      // Scroll to top on page change
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
       // Calculate the <start> value based on the current page
       const startValue = (page - 1) * 20 + 1; // Example: Page 2 => 21, Page 3 => 41
       this.updatePayloadStart(startValue);

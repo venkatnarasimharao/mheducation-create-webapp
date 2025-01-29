@@ -10,6 +10,7 @@ import { ApiService } from './core/services/api/api.service';
 import { SharedstateService } from './core/services/shared-state/sharedstate.service';
 import { AuthService } from './core/services/auth/auth.service';
 import { SearchService } from './core/services/search/search.service';
+import { CommonStateService } from './core/services/common-state/common-state.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -36,7 +37,8 @@ export const appConfig: ApplicationConfig = {
     ApiService,
     SearchService,
     SharedstateService,
-    AuthService
+    AuthService,
+    CommonStateService
   ]
 };
 
