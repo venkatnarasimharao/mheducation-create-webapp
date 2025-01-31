@@ -1,1 +1,88 @@
-<p>projects works!</p>
+<div class="p-2">
+    <div class="d-flex justify-content-between p-3">
+        <h1>My Projects</h1>
+        <button>Create New Projects</button>
+    </div>
+    @for(projectType of projectTypes; track $index){
+    <div ngbAccordion>
+        <div ngbAccordionItem [collapsed]="false" class="border-0  ">
+            <h2 ngbAccordionHeader class="custom-accordion-header pl-2">
+                <button ngbAccordionButton class="fw-bold">
+                    {{ projectType | uppercase }} Projects
+                </button>
+            </h2>
+            <div ngbAccordionCollapse>
+                <div ngbAccordionBody>
+                    <table class="table">
+                        <tbody>
+                            @for (project of allProjects[projectType]; track i; let i = $index) {
+                            @if(project){
+                            <tr>
+                                <td style="width: 40%;">
+                                    <div class="d-flex align-items-center"><img
+                                            src="https://createqa.mheducation.com/createonline/images/unknown-cover.png"
+                                            alt="project cover" />
+                                        <div class="p-2">
+                                            <h5 class="mb-2 fw-bold fs-4"> {{project?.title}}</h5>
+                                            <div> {{"Pages:-"+ project?.pageCount}}</div>
+                                            <div> {{"Created By:-" + project?.createdBy }}</div>
+                                            <div> {{ project?.createdDate | date: 'MM/dd/yy - hh:mm a'}}</div>
+                                            <div style="opacity: 0.6;"> {{"Last Activity:-" + (project?.lastModified |
+                                                date: 'MM/dd/yy - hh:mm
+                                                a')}}</div>
+                                            @if(projectType!=="trashed"){
+                                            <button class="bg-transparent border-0"><i
+                                                    class="bi bi-cloud-arrow-down fs-3"></i> Table of
+                                                content</button>
+                                            }
+
+
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="fw-bold">Print:</span> {{project.bookType? "Black And White":"--"}}
+                                </td>
+                                <td>{{"$ "+ project?.price}}</td>
+                                <td>{{project.status | titlecase}}</td>
+                                <td>
+                                    @if(projectType==="active" || projectType==="current"){
+                                    <button class="d-block fs-5 p-0">Request Review Copy</button>
+                                    }
+                                    <div class="d-flex">
+                                        <div ngbDropdown class="">
+                                            <button type="button" class="btn btn-outline-primary border-0"
+                                                id="myAccountDropdown" ngbDropdownToggle noCaret>more options<i
+                                                    class="bi bi-caret-down-fill"></i>
+
+                                            </button>
+                                            <div ngbDropdownMenu aria-labelledby="myAccountDropdown">
+                                                <button ngbDropdownItem>Duplicate Projects</button>
+
+                                                @if(projectType==="trashed" || projectType=="archived"){
+
+                                                <button ngbDropdownItem>Make Active Project</button>
+                                                }
+                                                @else{
+                                                <button ngbDropdownItem>Share a copy</button>
+                                                <button ngbDropdownItem>Archive Project</button>
+                                                }
+
+                                            </div>
+                                        </div>
+                                        @if(projectType==="trashed"){
+                                        <button class="border-0 bg-transparent" aria-label="delete project"><i
+                                                class="bi bi-trash"></i></button>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                            }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+</div>

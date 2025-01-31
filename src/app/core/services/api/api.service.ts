@@ -69,6 +69,30 @@ export class ApiService {
   getTaxonomyfacetsList() {
     return this.apiMethodService({ url: '/p/taxonomyfacets/create.mheducation.com/80/createonline', method: 'GET' })
   }
+  addFavourite(guid: string) {
+    const payload = {
+      "favorite": {
+        "_guid": guid
+      }
+    }
+    return this.apiMethodService({ url: `/p/users/${this.commonStateService.getUserId()}/favorites`, method: 'POST', body: payload })
+  }
+  deleteFavorite(guid: string) {
+    return this.apiMethodService({ url: `/p/users/${this.commonStateService.getUserId()}/favorites/${guid}?method=DELETE`, method: 'POST', });
+  }
+  getProjectList(projectType: string) {
+    const userId = this.commonStateService.getUserId();
+    const params = {
+      nocacheTimestamp: Date.now(),
+      state: projectType
+    }
+    return this.apiMethodService({
+      url: `/p/users/${userId}/projects`,
+      method: 'GET_PARMS',
+      params
+    })
+  }
+
 
   getCoverPhotosList() {
     return this.apiMethodService({ url: '/p/searchcovers', method: 'POST', body: BOOK_COVER_IMAGES })
@@ -117,6 +141,19 @@ export class ApiService {
   }
   getBookCoverImage(isbn: string): string {
     return `https://createqa.mheducation.com/covers/${isbn}.jpeg`;
+  }
+  getFavouriteList() {
+    const params = {
+      nocacheTimestamp: Date.now(),
+    }
+    return this.apiMethodService({
+      url: `/p/users/${this.commonStateService.getUserId()}/specialsearch/favorites/`,
+      method: 'GET_PARMS',
+      params,
+      options: {
+        responseType: 'text'
+      }
+    })
   }
   getSearchInsideList(payload: any) {
     let user = "anonymous";

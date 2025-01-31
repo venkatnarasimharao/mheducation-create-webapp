@@ -163,6 +163,7 @@ export class BookInfoPanelComponent implements OnInit {
     const modalRef = this.modalService.open(LoginComponent, { centered: false });
     modalRef.result.then(() => {
       this.isAnonymous = false;
+      // TODO: set the book as favorite or not
     }, () => {
       this.isAnonymous = true;
     });
@@ -219,8 +220,17 @@ export class BookInfoPanelComponent implements OnInit {
 
   }
   addToFav() {
-    // Logic to add book to favourites
-    this.isFav = !this.isFav;
+    if (!this.isFav) {
+      this.apiService.addFavourite(this.bookData.guid).subscribe(() => {
+        this.isFav = true;
+      });
+    }
+    else {
+      this.apiService.deleteFavorite(this.bookData.guid).subscribe(() => {
+        this.isFav = false;
+      });
+    }
+
   }
   toggleExpand(index: number) {
     this.expanded[index] = !this.expanded[index];
