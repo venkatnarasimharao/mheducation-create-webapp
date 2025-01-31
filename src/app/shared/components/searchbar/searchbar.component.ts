@@ -122,8 +122,8 @@ export class SearchbarComponent {
     if (searchAll?.checked) {
       selectedCategories = ['all'];
     } else {
-      // Proceed with the existing implementation to create a new payload
-      const searchQuery = this.searchTerm;
+      selectedCategories = this.checkedOptions.map((opt) => opt.id);
+    }
   
     // Get current query parameters and update them
     this.route.queryParams.subscribe((currentParams) => {
@@ -209,7 +209,6 @@ export class SearchbarComponent {
       });
     }
   }
-}
   
   
 }
