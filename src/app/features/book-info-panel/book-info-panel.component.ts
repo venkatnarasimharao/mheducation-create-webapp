@@ -191,7 +191,7 @@ export class BookInfoPanelComponent implements OnInit {
     console.log(this.bookData);
     payload.search.guid = this.bookData.guid;
     this.isSearchInsideLoader = true;
-    this.apiService.getSearchInsideList(payload).subscribe((res) => {
+    this.apiService.getSearchInsideList(payload).subscribe((res: any) => {
       this.isSearchInsideLoader = false;
       if (res.ok) {
         const parsedResponse = JSON.parse(res.body).result

@@ -5,10 +5,11 @@ import { ApiService } from './../../core/services/api/api.service';
 import { AuthService } from './../../core/services/auth/auth.service';
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'hec-book-page-viewer',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './book-page-viewer.component.html',
   styleUrl: './book-page-viewer.component.scss'
 })

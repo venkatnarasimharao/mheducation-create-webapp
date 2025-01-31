@@ -98,6 +98,39 @@ export class ApiService {
     });
   }
 
+  getBookDetails(assetId: string) {
+    const url = `/p/assets/${assetId}`;
+    const params = {
+      type: "metadata",
+      recursive: true,
+      getrootancestor: true,
+      relationships: true,
+      supplements: false,
+      nocacheTimestamp: Date.now(),
+    };
+    return this.apiMethodService({
+      url,
+      method: "GET_PARMS",
+      params,
+    });
+ 
+  }
+
+  getSearchInsideList(payload: any) {
+    let user = "anonymous";
+    if (!this.commonStateService.isAnonymous()) {
+      user = this.commonStateService.getUserId();
+    }
+    return this.apiMethodService({
+      url: `/p/users/${user}/searchinside`,
+      method: 'POST',
+      body: payload,
+      options: {
+        responseType: 'text'
+      }
+    })
+  }
+
   
 
   apiMethodService<T>({ url, method, body, params = {}, options = {} }: any): Observable<any> {

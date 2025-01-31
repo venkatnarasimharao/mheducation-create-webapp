@@ -13,6 +13,13 @@ export class CommonStateService {
     return this.cookieService.get(this.userId);
   }
 
+  public getUserId() {
+    if (this.isAnonymous()) {
+      return "";
+    }
+    return this.cookieService.get('paris_user_id');
+  }
+
   getImageUrl(endPointUrl: string, nonDev = true): string {
     if (nonDev) {
       return environment.apiUrl + endPointUrl;
@@ -20,4 +27,5 @@ export class CommonStateService {
     // TODO currently pointing to qa
     return 'https://createqa.mheducation.com' + endPointUrl;
   }
+  
 }
