@@ -27,6 +27,8 @@ export class HeaderComponent implements OnInit {
     private modalService: NgbModal) {
   }
   ngOnInit(): void {
+    const userId = this.commonStateService.isAnonymous();
+    let user = userId || "anonymous";
     this.authService.authStatus.subscribe((event: any) => {
       this.loggedInStatus = event;
     });
@@ -35,7 +37,7 @@ export class HeaderComponent implements OnInit {
         this.loggedInStatus = "LogOut"
       }
     });
-    if (!this.commonStateService.isAnonymous()) {
+    if (user !=="anonymous") {
       this.loggedInStatus = "LogOut"
     }
   }

@@ -10,17 +10,17 @@ export class CommonStateService {
 
   constructor(private cookieService: CookieService) { }
   public isAnonymous() {
-    const paris_user_id = this.cookieService.get('paris_user_id');
-    return paris_user_id ? false : true;
-  }
-  public getUserId() {
-    if (this.isAnonymous()) {
-      return "";
-    }
     return this.cookieService.get('paris_user_id');
   }
-  getDynamicUrl(endPointUrl: string): string {
-
-    return clientUrl.apiUrl + endPointUrl;
+ 
+  getImageUrl(endPointUrl: string, nonDev = true): string {
+    if (nonDev) {
+      return environment.apiUrl + endPointUrl;
+    }
+    // TODO currently pointing to qa
+    return 'https://createqa.mheducation.com' + endPointUrl;
   }
+
 }
+
+// https://createqa.mheducation.com/createonline/images/bad_preview.jpg

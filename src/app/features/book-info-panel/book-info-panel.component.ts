@@ -49,7 +49,9 @@ export class BookInfoPanelComponent implements OnInit {
 
   }
   ngOnInit(): void {
-    this.isAnonymous = this.commonStateService.isAnonymous();
+    const userId = this.commonStateService.isAnonymous();
+    let user = userId || "anonymous";
+    this.isAnonymous = user ==="anonymous"?true:false;
     let previousGuid: string | null = null;
     this.route.queryParams.subscribe(params => {
       const currentGuid = params['guid'];
@@ -104,7 +106,7 @@ export class BookInfoPanelComponent implements OnInit {
   setBookCardData() {
     this.bookTitle = this.bookData?.title;
     this.bookSummary = (this.bookData?.year ? (" © " + this.bookData?.year) : "") + (this.bookData?.authors ? " | " + this.bookData.authors : "") + (this.bookData?.source ? " | " + this.bookData?.source : "");
-    this.bookImage = this.commonStateService.getDynamicUrl(`/covers/${this.bookData.isbn}.jpeg`);
+    this.bookImage = this.commonStateService.getImageUrl(`/covers/${this.bookData.isbn}.jpeg`,false);
   }
   setCurrentChapter(part: any, chapter: any) {
     this.currentChapter = this.tocList[part][chapter];

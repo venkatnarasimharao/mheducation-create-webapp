@@ -29,7 +29,9 @@ export class BookPageViewerComponent implements OnInit, OnChanges {
     private modalService: NgbModal
   ) { }
   ngOnInit(): void {
-    this.isAnonymous = this.commonStateService.isAnonymous();
+    const userId = this.commonStateService.isAnonymous();
+    let user = userId || "anonymous";
+    this.isAnonymous = user ==="anonymous"? true:false;
     this.pageCount = this.currentChapter.pageCount;
     this.fetchBookPageView();
     this.authService.loginStatus$.subscribe((status) => {
@@ -53,7 +55,9 @@ export class BookPageViewerComponent implements OnInit, OnChanges {
   handleSign() {
     const modalRef = this.modalService.open(LoginComponent, { centered: false });
     modalRef.result.then(() => {
-      this.isAnonymous = this.commonStateService.isAnonymous();
+      const userId = this.commonStateService.isAnonymous();
+      let user = userId || "anonymous";
+      this.isAnonymous = user ==="anonymous"? true:false;
       if (!this.isAnonymous) {
         this.fetchBookPageView();
       }
@@ -100,14 +104,14 @@ export class BookPageViewerComponent implements OnInit, OnChanges {
             this.imageUrl = blobUrl;
           } else {
             console.error('Invalid image type:', response.body?.type);
-            this.imageUrl = this.commonStateService.getDynamicUrl('/images/bad_preview.jpg');
+            this.imageUrl = this.apiService.getBadPreviewPage();
           }
         }
       },
       error: (error: any) => {
         this.pageViewLoading = false;
         this.isPreviousPage = true;
-        this.imageUrl = this.commonStateService.getDynamicUrl("/images/bad_preview.jpg");
+        this.imageUrl = this.apiService.getBadPreviewPage()
         console.error('Error fetching book data:', error);
       },
     });

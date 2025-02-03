@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ApiService } from './../../core/services/api/api.service';
 import { Component, OnInit } from '@angular/core';
+import { CommonStateService } from '../../core/services/common-state/common-state.service';
 
 @Component({
   selector: 'hec-favourites',
@@ -10,11 +11,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrl: './favourites.component.scss'
 })
 export class FavouritesComponent implements OnInit {
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService
+  ) { }
   favouriteList: { type: any; title: any; guid: any; ingested: any, imageUrl: any, isFav: boolean, year: any, authors: any, description: any, isMoreButton: boolean, isFavLoader: boolean }[] = [];
   isFavLoading: boolean = false;
 
   ngOnInit(): void {
+    
     this.apiService.addFavourite("CF42AF7D-55C3-5F16-FDDD-556ABA71E91B").subscribe(() => {
 
     });

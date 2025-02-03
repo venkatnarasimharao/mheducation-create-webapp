@@ -75,13 +75,14 @@ export class ApiService {
         "_guid": guid
       }
     }
-    return this.apiMethodService({ url: `/p/users/${this.commonStateService.getUserId()}/favorites`, method: 'POST', body: payload })
+    return this.apiMethodService({ url: `/p/users/${this.commonStateService.isAnonymous()}/favorites`, method: 'POST', body: payload })
   }
   deleteFavorite(guid: string) {
-    return this.apiMethodService({ url: `/p/users/${this.commonStateService.getUserId()}/favorites/${guid}?method=DELETE`, method: 'POST', });
+    return this.apiMethodService({ url: `/p/users/${this.commonStateService.isAnonymous()}/favorites/${guid}?method=DELETE`, method: 'POST', });
   }
   getProjectList(projectType: string) {
-    const userId = this.commonStateService.getUserId();
+    const userId = this.commonStateService.isAnonymous();
+    let user = userId || "anonymous";
     const params = {
       nocacheTimestamp: Date.now(),
       state: projectType
@@ -121,7 +122,8 @@ export class ApiService {
 
   }
   getBookPageView(payload: any) {
-    const userId = this.commonStateService.getUserId();
+    const userId = this.commonStateService.isAnonymous();
+    let user = userId || "anonymous";
     const url = `/users/${userId}/preview/${payload.guid}/${payload.pageNumber}`;
     const headers = new HttpHeaders({
       'X-Response-Type': 'arraybuffer'
@@ -139,15 +141,12 @@ export class ApiService {
   getBadPreviewPage() {
     return "https://createqa.mheducation.com/createonline/images/bad_preview.jpg";
   }
-  getBookCoverImage(isbn: string): string {
-    return `https://createqa.mheducation.com/covers/${isbn}.jpeg`;
-  }
   getFavouriteList() {
     const params = {
       nocacheTimestamp: Date.now(),
     }
     return this.apiMethodService({
-      url: `/p/users/${this.commonStateService.getUserId()}/specialsearch/favorites/`,
+      url: `/p/users/${this.commonStateService.isAnonymous()}/specialsearch/favorites/`,
       method: 'GET_PARMS',
       params,
       options: {
@@ -156,10 +155,8 @@ export class ApiService {
     })
   }
   getSearchInsideList(payload: any) {
-    let user = "anonymous";
-    if (!this.commonStateService.isAnonymous()) {
-      user = this.commonStateService.getUserId();
-    }
+    const userId = this.commonStateService.isAnonymous();
+    let user = userId || "anonymous";
     return this.apiMethodService({
       url: `/p/users/${user}/searchinside`,
       method: 'POST',
