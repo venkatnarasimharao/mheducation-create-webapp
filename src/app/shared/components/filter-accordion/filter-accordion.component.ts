@@ -28,13 +28,11 @@ export class FilterAccordionComponent implements OnInit {
   searchPayload: { query: string; textType: string[]; findable: boolean } | undefined;
 
   ngOnInit(): void {
-    // Subscribe to queryParams and update checkbox states
     this.route.queryParams.subscribe((params) => {
       this.initializeFromQueryParams(params);
-      this.updateSelectedCounts();
+      this.updatePayloadFromQueryParams(params);
     });
-
-    // Subscribe to search results and sync facets
+    
     this.searchService.searchResult$.subscribe((state) => {
       this.searchPayload = {
         query: state.query,
@@ -43,24 +41,32 @@ export class FilterAccordionComponent implements OnInit {
       };
       this.syncFacetsWithApiResponse(state.result?.['s:facets']?.['s:facet'] || []);
     });
-
-    this.syncSelectionStatesFromPayload();
   }
 
   private initializeFromQueryParams(params: any): void {
-    // Apply selections from query params
+    if (!params) return;
+  
+    // Reset all selections
+    this.collectionfilterData.forEach((list) => {
+      list.collectionTypes?.forEach((item: any) => {
+        item.selected = false;
+      });
+    });
+  
+    // Iterate over query parameters and apply selections
     Object.keys(params).forEach((paramKey) => {
-      const values = params[paramKey].split(',');
+      const values = params[paramKey]?.split(',') || [];
+  
       this.collectionfilterData.forEach((list) => {
         if (this.normalizeHeader(list.header) === paramKey) {
           list.collectionTypes?.forEach((item: any) => {
-            if (values.includes(item.value)) {
-              item.selected = 'true';
-            }
+            item.selected = values.includes(item.value);
           });
         }
       });
     });
+  
+    this.updateSelectedCounts();
   }
 
   private updatePayloadFromQueryParams(params: any): void {
@@ -204,13 +210,9 @@ export class FilterAccordionComponent implements OnInit {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: queryParams,
-      // Remove queryParamsHandling to ensure complete replacement
-    }).then(() => {
-      console.log('Navigation completed');
-    }).catch(error => {
-      console.error('Navigation error:', error);
     });
   }
+
   private syncFacetsWithApiResponse(apiFacets: any[]): void {
     this.collectionfilterData.forEach((list) => {
       if (list.collectionTypes) {
@@ -332,10 +334,9 @@ export class FilterAccordionComponent implements OnInit {
 
     item.selected = isChecked ? 'true' : 'false';
 
-    // Make sure the value is set correctly for Copyright Year
-      if (!item.value) {
-        item.value = item.label;  // Set value based on label if missing
-      }
+    if (!item.value) {
+      item.value = item.label;
+    }
 
     if (!this.selectedCheckboxes[header]) {
       this.selectedCheckboxes[header] = 0;
