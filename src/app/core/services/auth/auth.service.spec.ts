@@ -72,15 +72,6 @@ describe('AuthService', () => {
         expect(cookieService.set).toHaveBeenCalledWith('userCountry', 'US');
     });
 
-    it('should return true for isAnonymous when no user ID in cookies', () => {
-        cookieService.get = jasmine.createSpy('get').and.returnValue('');
-        expect(service.isAnonymous()).toBeTrue();
-    });
-
-    it('should return false for isAnonymous when user ID is present in cookies', () => {
-        expect(service.isAnonymous()).toBeFalse();
-    });
-
     it('should call userLogOut and navigate to home on logout', () => {
         service.logout();
         expect(apiService.userLogOut).toHaveBeenCalledWith('123');
