@@ -3,10 +3,8 @@ import { ApiService } from '../../core/services/api/api.service';
 import { CommonModule } from '@angular/common';
 import { NgbAccordionModule, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDropdownToggleNoCaretDirective } from '../../shared/directives/dropdown-toggle-css.directive';
-import { jsPDF } from 'jspdf';
 import { CommonStateService } from '../../core/services/common-state/common-state.service';
 import { Router } from '@angular/router';
-import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'hec-projects',
@@ -21,19 +19,26 @@ export class ProjectsComponent implements OnInit {
   projectTypes = ["current", "active", "archived", "trashed"];
   allProjects: { [key: string]: any[] } = {};
   projectLoader: boolean = false;
+  projectList:any=[];
   constructor(private apiService: ApiService,
     private commonStateService: CommonStateService,
-    private router: Router,
-    private cookiesService: CookieService
+    private router: Router
   ) { }
   ngOnInit(): void {
-      this.projectUpdateLoader=true;
-      this.apiService.getProjectList("active").subscribe((projects) => {
-        this.projectUpdateLoader=false;
-        const parsedProjects = JSON.parse(projects.body);
-        const grouped = this.groupedProjects(parsedProjects.project || []);
-        this.allProjects["active"] = grouped;
-      });
+      this.fetchProjects();
+  }
+  fetchProjects(){
+    this.projectUpdateLoader=true;
+    this.apiService.getProjectList().subscribe((projects) => {
+      this.projectUpdateLoader=false;
+      const parsedProjects = JSON.parse(projects.body);
+      this.projectList = parsedProjects.project || [];
+      this.groupedProjects(parsedProjects.project || []);
+    }
+  ,(error)=>{
+    console.error('Error fetching projects:', error);
+    this.projectUpdateLoader=false;
+  });
   }
   downloadToc(project:any){
     project.downloadLoader =true;
@@ -58,38 +63,6 @@ export class ProjectsComponent implements OnInit {
   createNewProject(){
     alert("create new project popup is not ready")
   }
-  getProject(projectType:any){
-    if(this.allProjects[projectType]){
-      return;
-    }
-    this.projectUpdateLoader=true;
-    this.apiService.getProjectList(projectType).subscribe((projects) => {
-      this.projectUpdateLoader=false;
-      const parsedProjects = JSON.parse(projects.body);
-      const grouped = this.groupedProjects(parsedProjects.project || []);
-      this.allProjects[projectType] = grouped;
-    });
-  }
-  refreshProjects(projectTypes: any[]) {
-    this.projectUpdateLoader = true;
-    const projectTypesString = projectTypes.join(',');
-    this.apiService.getProjectList(projectTypesString).subscribe({
-      next: (projects) => {
-        this.projectUpdateLoader = false;
-        const parsedProjects = JSON.parse(projects.body);
-        console.log(parsedProjects);
-        
-        // Optional: You can perform further actions like grouping or storing projects
-        // const grouped = this.groupedProjects(parsedProjects.project || []);
-        // this.allProjects[projectType] = grouped;
-      },
-      error: (error) => {
-        this.projectUpdateLoader = false;
-        console.error('Error fetching project list:', error);
-      }
-    });
-  }
-  
   requestReview(project:any){
     const guid = project.guid;
     this.router.navigate(['/personalize'], { queryParams: { guid } });
@@ -104,18 +77,31 @@ export class ProjectsComponent implements OnInit {
     // open a modal to share
     alert("share copy popup is not ready")
   }
+  updateDuplicateProject(guid:any){
+    this.projectUpdateLoader=true;
+    this.apiService.duplicateProject(guid).subscribe((res)=>{
+      this.projectUpdateLoader=false;
+      console.log(res);
+      this.fetchProjects();
+    },
+  (error)=>{
+    console.error('Error updating duplicates:', error);
+    this.projectUpdateLoader=false;
+  });
+  }
   duplicateProject(project:any){
     this.projectUpdateLoader=true;
     this.apiService.checkActiveProject(project.guid).subscribe((res)=>{
       this.projectUpdateLoader=false;
       console.log(res);
-      this.apiService.duplicateProject(project.guid).subscribe((res)=>{
-        console.log(res);
-        if(res.status ==='success'){
-          alert("Project duplicated successfully");
-        }
-      })
-    })
+      this.updateDuplicateProject(project.guid);
+      
+    },
+  (error)=>{
+    this.projectUpdateLoader=false;
+    alert(`Error while updating duplicates:${error}` );
+    
+  });
 
   }
   updatePayload(payload:any,projectType:string){
@@ -123,12 +109,25 @@ export class ProjectsComponent implements OnInit {
     newPayload.project['archivedState'] =projectType;
     return newPayload;
   }
+  updateProject(guid:string,payload:any){
+    this.apiService.updateProjectType(guid, payload).subscribe(
+      (data) => {
+        this.projectUpdateLoader = false;
+          const response = JSON.parse(data.body);
+          console.log(response);
+          this.fetchProjects();
+        
+      },
+      (error) => {
+        this.projectUpdateLoader = false;
+        console.error('Error updating project type:', error);
+      }
+    );
+  }
   
   changeProjectType(project: any, projectType: string) {
     this.projectUpdateLoader = true;
     let payload;
-    
-    // Get project details
     this.apiService.getProjectDetails(project.guid).subscribe(
       (data) => {
         console.log(data.body);
@@ -136,21 +135,7 @@ export class ProjectsComponent implements OnInit {
           console.log(payload);
           const updatePayload = this.updatePayload(payload, projectType);
           console.log(updatePayload);
-          
-          // Update project type
-          this.apiService.updateProjectType(project.guid, updatePayload).subscribe(
-            (data) => {
-              this.projectUpdateLoader = false;
-                const response = JSON.parse(data.body);
-                console.log(response);
-              
-            },
-            (error) => {
-              this.projectUpdateLoader = false;
-              console.error('Error updating project type:', error);
-            }
-          );
-       
+          this.updateProject(project.guid, updatePayload);
       },
       (error) => {
         this.projectUpdateLoader = false;
@@ -158,25 +143,19 @@ export class ProjectsComponent implements OnInit {
       }
     );
   }
-  
-  groupedProjects(projects: any) {
+  groupedProjects(projects:any){
     if (!Array.isArray(projects)) {
-      projects = [projects];
-    }
-    console.log(projects);
-    return projects.map((project: any) => ({
-      title: project.title,
-      pageCount: project.pageCount,
-      createdBy: this.cookiesService.get('user_email'),
-      createdDate: new Date(project.createdDate),
-      lastModified: new Date(project['last-modified']),
-      bookType: project.bookType,
-      status: project.status,
-      price: project.pricebw,
-      guid:project.guid,
-      bookCover:project.bookCover,
-    }));
+        projects = [projects];
+      }
+    this.projectList =[];
+    projects.forEach((project:any) => {
+      const type=project.archivedState || "active";
+      if (!this.projectList[type]) {
+        this.projectList[type] = [];
+      }
+      this.projectList[type].push(project)});
+      console.log(this.projectList);
   }
 
-
 }
+

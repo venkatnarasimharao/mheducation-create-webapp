@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { BOOK_COVER_IMAGES, USER_SEARCH_CONFIG } from '../../../shared/constants/search-payload.config';
 import { environment } from '../../../../environments/environment';
 import { CookieService } from 'ngx-cookie-service';
-import { N } from '@angular/cdk/keycodes';
 
 @Injectable({
   providedIn: 'root'
@@ -94,12 +93,11 @@ export class ApiService {
       options:{headers}
     })
   }
-  getProjectList(projectType: string) {
+  getProjectList() {
     const userId = this.commonStateService.isAnonymous();
     let user = userId || "anonymous";
     const params = {
-      nocacheTimestamp: Date.now(),
-      state: projectType
+      nocacheTimestamp: Date.now()
     }
     return this.apiMethodService({
       url: `/p/users/${userId}/projects`,

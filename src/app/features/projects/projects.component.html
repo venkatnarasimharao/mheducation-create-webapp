@@ -13,17 +13,9 @@
   </div>
   @for(projectType of projectTypes; track $index){
   <div ngbAccordion>
-    <div
-      ngbAccordionItem
-      [collapsed]="projectType === 'active' ? false : true"
-      class="border-0"
-    >
+    <div ngbAccordionItem [collapsed]="(projectType === 'active'|| projectType==='current') ? false : true" class="border-0">
       <h2 ngbAccordionHeader class="custom-accordion-header pl-2">
-        <button
-          ngbAccordionButton
-          class="fw-bold"
-          (click)="getProject(projectType)"
-        >
+        <button ngbAccordionButton class="fw-bold">
           {{ projectType | uppercase }} Projects
         </button>
       </h2>
@@ -31,16 +23,13 @@
         <div ngbAccordionBody>
           <table class="table">
             <tbody>
-              @for (project of allProjects[projectType]; track i; let i =
-              $index) { @if(project){
+              @for (project of projectList[projectType]; track $index) {
+              @if(project){
               <tr>
                 <td style="width: 40%">
                   <div class="d-flex align-items-center">
-                    <img
-                      [src]="getCoverUrl(project)"
-                      alt="project cover"
-                      style="height: 100px; width: 100px"
-                    />
+                    <img [src]="getCoverUrl(project)" alt="project cover" style="height: 100px; width: 100px" />
+
                     <div class="p-2">
                       <h5 class="mb-2 fw-bold fs-4">{{ project?.title }}</h5>
                       <div>{{ "Pages:-" + project?.pageCount }}</div>
@@ -50,19 +39,16 @@
                       </div>
                       <div style="opacity: 0.6">
                         {{
-                          "Last Activity:-" +
-                            (project?.lastModified
-                              | date
-                                : "MM/dd/yy - hh:mm
-                                                a")
+                        "Last Activity:-" +
+                        (project?.['last-modified']
+                        | date
+                        : "MM/dd/yy - hh:mm
+                        a")
                         }}
                       </div>
                       @if(projectType!=="trashed"){
-                      <button
-                        class="bg-transparent border-0"
-                        (click)="downloadToc(project)"
-                        [disabled]="project.downloadLoader"
-                      >
+                      <button class="bg-transparent border-0" (click)="downloadToc(project)"
+                        [disabled]="project.downloadLoader">
                         <i class="bi bi-cloud-arrow-down fs-3"></i>
                         @if(project.downloadLoader){
                         <span> Downloading</span>
@@ -77,63 +63,43 @@
                   <span class="fw-bold">Print:</span>
                   {{ project.bookType ? "Black And White" : "--" }}
                 </td>
-                <td>{{ "$ " + project?.price }}</td>
+                <td>{{ "$ " + project?.pricebw }}</td>
                 <td>{{ project.status | titlecase }}</td>
                 <td>
                   @if(projectType==="active" || projectType==="current"){
-                  <button
-                    class="btn btn-secondary mb-1"
-                    (click)="requestReview(project)"
-                  >
+                  <button class="btn btn-secondary mb-1" (click)="requestReview(project)">
                     Request Review Copy
                   </button>
                   }
                   <div class="d-flex">
                     <div ngbDropdown class="">
-                      <button
-                        type="button"
-                        class="btn btn-outline-primary border-0"
-                        id="myAccountDropdown"
-                        ngbDropdownToggle
-                        noCaret
-                      >
+                      <button type="button" class="btn btn-outline-primary border-0" id="myAccountDropdown"
+                        ngbDropdownToggle noCaret>
                         more options<i class="bi bi-caret-down-fill"></i>
                       </button>
                       <div ngbDropdownMenu aria-labelledby="myAccountDropdown">
-                        <button
-                          ngbDropdownItem
-                          (click)="duplicateProject(project)"
-                        >
+                        <button ngbDropdownItem (click)="duplicateProject(project)">
                           Duplicate Projects
                         </button>
 
                         @if(projectType==="trashed" || projectType=="archived"){
 
-                        <button
-                          ngbDropdownItem
-                          (click)="changeProjectType(project, 'active')"
-                        >
+                        <button ngbDropdownItem (click)="changeProjectType(project, 'active')">
                           Make Active Project
                         </button>
                         } @else{
                         <button ngbDropdownItem (click)="shareCopy(project)">
                           Share a copy
                         </button>
-                        <button
-                          ngbDropdownItem
-                          (click)="changeProjectType(project, 'archived')"
-                        >
+                        <button ngbDropdownItem (click)="changeProjectType(project, 'archived')">
                           Archive Project
                         </button>
                         }
                       </div>
                     </div>
                     @if(projectType=="archived"){
-                    <button
-                      class="border-0 bg-transparent"
-                      (click)="changeProjectType(project, 'trashed')"
-                      aria-label="delete project"
-                    >
+                    <button class="border-0 bg-transparent" (click)="changeProjectType(project, 'trashed')"
+                      aria-label="delete project">
                       <i class="bi bi-trash"></i>
                     </button>
                     }
