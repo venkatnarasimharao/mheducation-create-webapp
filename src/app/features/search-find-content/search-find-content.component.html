@@ -76,12 +76,8 @@
       <div class="row">
         <!-- Filter Accordion -->
         <div class="col-md-3 position-relative">
-         @if(sfcloading){
-          <div class="hec-loader-content"></div>
-         } @else{
             <hec-filter-accordion [collectionfilterData]="collections">
             </hec-filter-accordion>  
-         }
         </div>
      
          
@@ -105,10 +101,11 @@
             <!-- Sortby Component -->
             <hec-sortby></hec-sortby>
           </div>
+          
+            <hec-search-results></hec-search-results>
+          
         
-          <hec-search-results></hec-search-results>
-        
-          @if (!loading && totalResults > 0) {
+          @if (!loading  && totalResults> 0) {
             <div class="d-lg-flex justify-content-between align-items-center mt-2">
               <!-- Pagination Info (for larger screens) -->
               <ng-container *ngTemplateOutlet="paginationInfo"></ng-container>

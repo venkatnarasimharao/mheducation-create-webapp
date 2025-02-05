@@ -5,7 +5,7 @@ export const USER_SEARCH_CONFIG = {
         "textTypes": {
             "textType": ""
         },
-        "findable": "",
+        "findable": "false",
         "textNamespace": "http://mhhe.com/primis/meta/resolved",
         "textConstraints": {
             "textConstraint": [

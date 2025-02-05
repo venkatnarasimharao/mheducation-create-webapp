@@ -30,9 +30,9 @@ export class FilterAccordionComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       this.initializeFromQueryParams(params);
-      this.updateSelectedCounts(); // Ensure UI reflects selections
+      this.updatePayloadFromQueryParams(params);
     });
-  
+    
     this.searchService.searchResult$.subscribe((state) => {
       this.searchPayload = {
         query: state.query,
@@ -42,43 +42,148 @@ export class FilterAccordionComponent implements OnInit {
       this.syncFacetsWithApiResponse(state.result?.['s:facets']?.['s:facet'] || []);
     });
   }
-  
-  
 
   private initializeFromQueryParams(params: any): void {
-
-  this.collectionfilterData.forEach((list) => {
-    list.collectionTypes?.forEach((item: any) => {
-      item.selected = false; 
+    if (!params) return;
+  
+    // Reset all selections
+    this.collectionfilterData.forEach((list) => {
+      list.collectionTypes?.forEach((item: any) => {
+        item.selected = false;
+      });
     });
-  });
-
+  
+    // Iterate over query parameters and apply selections
     Object.keys(params).forEach((paramKey) => {
       const values = params[paramKey]?.split(',') || [];
   
       this.collectionfilterData.forEach((list) => {
         if (this.normalizeHeader(list.header) === paramKey) {
           list.collectionTypes?.forEach((item: any) => {
-            // Set selected to true if the value is in the queryParams
             item.selected = values.includes(item.value);
           });
         }
       });
     });
   
-    // Ensure the selected counts are updated
     this.updateSelectedCounts();
   }
 
-  private updateQueryParams(): void {
-    // Start with empty query params
-    const queryParams: { [key: string]: string } = {};
+  private updatePayloadFromQueryParams(params: any): void {
+    let currentPayload = this.searchService.getPayload() || JSON.parse(JSON.stringify(USER_SEARCH_CONFIG));
     
-    // Get current query params
-    const currentParams = this.route.snapshot.queryParams;
-    console.log('Current Query Params:', currentParams);
+    // Reset all selected states in payload first
+    currentPayload.search.facets.facet.forEach((facet: any) => {
+      if (Array.isArray(facet.item)) {
+        facet.item.forEach((item: any) => {
+          item._selected = 'false';
+        });
+      } else if (facet.item) {
+        facet.item._selected = 'false';
+      }
+    });
 
-    // Copy over any query params that aren't related to our filters
+    // Update payload based on query params
+    Object.keys(params).forEach(paramKey => {
+      const values = params[paramKey]?.split(',') || [];
+      
+      // Handle query parameter
+      if (paramKey === 'query') {
+        currentPayload.search.query = params.query;
+      }
+      // Handle textType parameter
+      else if (paramKey === 'textType') {
+        currentPayload.search.textTypes.textType = values;
+      }
+      // Handle facet parameters
+      else {
+        const facet = currentPayload.search.facets.facet.find(
+          (f: any) => this.normalizeHeader(f._label) === paramKey
+        );
+
+        if (facet) {
+          if (paramKey === 'CopyrightYear') {
+            this.handleCopyrightYearPayloadUpdate(facet, values);
+          } else {
+            this.handleRegularPayloadUpdate(facet, values);
+          }
+        }
+      }
+    });
+
+    // Update the search service and trigger search
+    this.searchService.updateSearchQuery(currentPayload);
+    this.searchService.startSearch();
+
+    // Make single API call
+    this.apiService.getSearchListing(currentPayload).subscribe({
+      next: (response) => {
+        if (response.ok) {
+          this.searchService.updateSearchResult(response.body);
+        }
+      },
+      error: (err) => {
+        console.error('API Error:', err);
+      }
+    });
+  }
+
+
+  private handleCopyrightYearPayloadUpdate(facet: any, values: string[]): void {
+    let items = Array.isArray(facet.item) ? facet.item : [facet.item];
+    
+    // Handle "Prior to 2012" special case
+    if (values.includes('Prior to 2012')) {
+      for (let year = 1901; year <= 2011; year++) {
+        const yearStr = year.toString();
+        if (!items.find((item: any) => item._value === yearStr)) {
+          items.push({
+            _label: yearStr,
+            _selected: 'true',
+            _value: yearStr
+          });
+        }
+      }
+    }
+
+    // Update regular years
+    values.forEach(value => {
+      const existingItem = items.find((item: any) => 
+        item._value === value || item._label === value
+      );
+
+      if (existingItem) {
+        existingItem._selected = 'true';
+        existingItem._value = existingItem._label;
+      } else if (!isNaN(Number(value))) {
+        items.push({
+          _label: value,
+          _selected: 'true',
+          _value: value
+        });
+      }
+    });
+
+    facet.item = items;
+  }
+
+  private handleRegularPayloadUpdate(facet: any, values: string[]): void {
+    const items = Array.isArray(facet.item) ? facet.item : [facet.item];
+    
+    items.forEach((item: any) => {
+      item._selected = values.includes(item._value) || values.includes(item._label) 
+        ? 'true' 
+        : 'false';
+    });
+
+    facet.item = items;
+  }
+
+  private updateQueryParams(): void {
+    const queryParams: { [key: string]: string } = {};
+    const currentParams = this.route.snapshot.queryParams;
+
+    // Copy over non-filter query params
     Object.keys(currentParams).forEach(key => {
       const matchingFilter = this.collectionfilterData.find(
         list => this.normalizeHeader(list.header) === key
@@ -95,25 +200,16 @@ export class FilterAccordionComponent implements OnInit {
       );
 
       const normalizedHeader = this.normalizeHeader(list.header);
-      console.log(`Processing ${normalizedHeader}:`, selectedItems);
 
       if (selectedItems?.length) {
         const values = selectedItems.map((item: any) => item.value).join(',');
         queryParams[normalizedHeader] = values;
       }
-      // If no items selected, the parameter will not be included
     });
 
-    console.log('Final Query Params:', queryParams);
-
-    // Navigate with the new query params
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: queryParams,
-    }).then(() => {
-      console.log('Navigation completed');
-    }).catch(error => {
-      console.error('Navigation error:', error);
     });
   }
 
@@ -185,7 +281,11 @@ export class FilterAccordionComponent implements OnInit {
     const currentPayload = this.searchService.getPayload() || USER_SEARCH_CONFIG;
 
     this.collectionfilterData.forEach(list => {
-      const payloadFacet = currentPayload.search.facets.facet.find((f: any) => f._label === list.header);
+      const normalizedHeader = this.normalizeHeader(list.header);
+      const payloadFacet = currentPayload.search.facets.facet.find(
+        (f: any) => this.normalizeHeader(f._label) === normalizedHeader
+      );
+
       if (payloadFacet && list.collectionTypes) {
         const payloadItems = Array.isArray(payloadFacet.item) ? payloadFacet.item : [payloadFacet.item];
 
@@ -234,9 +334,8 @@ export class FilterAccordionComponent implements OnInit {
 
     item.selected = isChecked ? 'true' : 'false';
 
-    // Make sure the value is set correctly for Copyright Year
     if (!item.value) {
-      item.value = item.label;  // Set value based on label if missing
+      item.value = item.label;
     }
 
     if (!this.selectedCheckboxes[header]) {
@@ -255,7 +354,6 @@ export class FilterAccordionComponent implements OnInit {
       }
     }
 
-    // Update query parameters
     this.updateQueryParams();
 
     if (this.searchPayload) {
@@ -267,16 +365,16 @@ export class FilterAccordionComponent implements OnInit {
     this.searchService.updateSearchQuery(finalPayload);
     this.searchService.startSearch();
 
-    this.apiService.getSearchListing(finalPayload).subscribe({
-      next: (response) => {
-        if (response.ok) {
-          this.searchService.updateSearchResult(response.body);
-        }
-      },
-      error: (err) => {
-        console.error('API Error:', err);
-      }
-    });
+    // this.apiService.getSearchListing(finalPayload).subscribe({
+    //   next: (response) => {
+    //     if (response.ok) {
+    //       this.searchService.updateSearchResult(response.body);
+    //     }
+    //   },
+    //   error: (err) => {
+    //     console.error('API Error:', err);
+    //   }
+    // });
   }
 
   private handleCopyrightYearChange(facet: any, item: any, isChecked: boolean): void {

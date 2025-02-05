@@ -3,7 +3,6 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../../../core/services/api/api.service';
 import { SearchService } from '../../../core/services/search/search.service';
 
-
 @Component({
   selector: 'hec-sortby',
   standalone: true,
@@ -14,6 +13,7 @@ import { SearchService } from '../../../core/services/search/search.service';
 export class SortbyComponent implements OnInit {
   sortOptions: { label: string; value: string; direction: string }[] = []; 
   selectedSortOption: string | null = null; 
+  payload: any = '';
 
   constructor(
     private apiService: ApiService,
@@ -21,34 +21,32 @@ export class SortbyComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.fetchSortOptions(); // Fetch options on component initialization
+    const textType = this.searchService.getTextType();
+    console.log('textType-', textType);
+    this.fetchSortOptions(textType);
   }
+  
 
-  // Fetch sort options from the API
-  private fetchSortOptions(): void {
+  // ✅ Fetch sort options from the API based on selected `textType`
+  private fetchSortOptions(textType: string[]): void {
     this.apiService.getCollectionsList().subscribe({
       next: (response: any) => {
-        if(response.ok){
-  const parsedBody = JSON.parse(response.body);
-        const sortFields = parsedBody?.search?.sort?.sortfield || []; 
-        this.sortOptions = sortFields.map((field: any) => ({
-          label: field.name,
-          value: field.id || '',
-          direction: field.direction,
-        }));
+        if (response.ok) {
+          const parsedBody = JSON.parse(response.body);
+          const sortFields = parsedBody?.search?.sort?.sortfield || []; 
 
-        // Set default sort option
-        if (this.sortOptions.length > 0) {
-          const defaultOption = this.sortOptions[0];
-          this.selectedSortOption = defaultOption.label;
-          // this.updatePayloadWithSort(defaultOption);
+          this.sortOptions = sortFields.map((field: any) => ({
+            label: field.name,
+            value: field.id || '',
+            direction: field.direction,
+          }));
+
+          // ✅ Dynamically determine default sort option based on `textType`
+          this.setDefaultSortOption(textType);
         }
-        }
-      
       },
       error: (err) => {
         console.error('Error fetching sort options:', err);
-        // Fallback to a default option if API fails
         this.sortOptions = [{ label: 'Relevance', value: '', direction: 'descending' }];
         this.selectedSortOption = 'Relevance';
         this.updatePayloadWithSort(this.sortOptions[0]);
@@ -56,17 +54,38 @@ export class SortbyComponent implements OnInit {
     });
   }
 
-  // Handle sort option selection from the dropdown
+  // ✅ Dynamically set the default sorting option based on `textType`
+  private setDefaultSortOption(textType: string[]): void {
+    if (!this.sortOptions.length) return;
+  
+    let defaultOption;
+  
+    if (textType.includes('all') || textType.includes('description')) {
+      defaultOption = this.sortOptions[0]; // Select first option
+    } else {
+      defaultOption = this.sortOptions[3] || this.sortOptions[0]; // Fallback to valid option
+    }
+  
+    // ✅ Prevent unnecessary updates to avoid infinite loop
+    if (this.selectedSortOption !== defaultOption.label) {
+      this.selectedSortOption = defaultOption.label;
+      this.updatePayloadWithSort(defaultOption);
+    }
+  }
+  
+
+  // ✅ Handle sort option selection from the dropdown
   onSortChange(sortOption: { label: string; value: string; direction: string }): void {
     this.selectedSortOption = sortOption.label;
     this.updatePayloadWithSort(sortOption); 
+    this.fetchSortResults();
   }
 
-  // Update search payload with the selected sort option and start search
+  // ✅ Update search payload with the selected sort option
   private updatePayloadWithSort(sortOption: { label: string; value: string; direction: string }): void {
     const currentPayload = this.searchService.getPayload() || {};
 
-    const updatedPayload = {
+    this.payload = {
       ...currentPayload,
       search: {
         ...currentPayload.search,
@@ -78,10 +97,13 @@ export class SortbyComponent implements OnInit {
       },
     };
 
-    this.searchService.updateSearchQuery(updatedPayload);
-    this.searchService.startSearch();
+    this.searchService.updateSearchQuery(this.payload);
+    
+  }
 
-    this.apiService.getSearchListing(updatedPayload).subscribe({
+  // ✅ Fetch sorted results based on the updated payload
+  private fetchSortResults() {
+    this.apiService.getSearchListing(this.payload).subscribe({
       next: (response) => {
         if (response.ok) {
           this.searchService.updateSearchResult(response.body);

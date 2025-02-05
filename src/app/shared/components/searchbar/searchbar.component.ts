@@ -18,6 +18,7 @@ import { SearchService } from '../../../core/services/search/search.service';
 export class SearchbarComponent {
   @Input() searchbarTitle: string = '';
   @Input() placeholder: string = '';
+  @Output() textTypeChange = new EventEmitter<string[]>();
 
 
   translate: TranslateService = inject(TranslateService);
@@ -46,8 +47,13 @@ export class SearchbarComponent {
   
       // Set the search term
       this.searchTerm = query;
-  
-      if (textType) {
+      if (textType === 'all') {
+        // If 'cat' is 'all', check all checkboxes
+        this.searchCategories.forEach((category) => {
+          category.checked = true;
+        });
+        this.checkedOptions = this.searchCategories.slice(1); // Exclude 'SearchAll' from checked options
+      }else if (textType) {
         // Split the textType string into an array and update the categories
         const textTypesArray = textType.split(',');
         this.searchCategories.forEach((category) => {
@@ -97,6 +103,9 @@ export class SearchbarComponent {
     }
 
     this.getDropdownLabel();
+    const selectedCategories = this.checkedOptions.map((opt) => opt.id);
+    this.searchService.setTextType(selectedCategories);
+    console.log('Selected Categories', selectedCategories);
   }
 
   getDropdownLabel(): void {
@@ -124,6 +133,8 @@ export class SearchbarComponent {
     } else {
       selectedCategories = this.checkedOptions.map((opt) => opt.id);
     }
+
+    this.searchService.setTextType(selectedCategories);
   
     // Get current query parameters and update them
     this.route.queryParams.subscribe((currentParams) => {
@@ -170,6 +181,8 @@ export class SearchbarComponent {
           textTypes: { textType: selectedCategories }, // Overwrite textType with selected categories
         },
       };
+
+      this.searchService.updateSearchQuery(finalPayload);
   
       // API call with the merged payload
       this.apiService.getSearchListing(finalPayload).subscribe({
@@ -194,7 +207,7 @@ export class SearchbarComponent {
   
       // Update search service and make the API call
       this.searchService.updateSearchQuery(finalPayload);
-      this.searchService.startSearch();
+      
   
       this.apiService.getSearchListing(finalPayload).subscribe({
         next: (response) => {

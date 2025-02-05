@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { SearchState } from '../../../shared/models/search.model';
-import { ApiService } from '../../services/api/api.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,12 +13,11 @@ export class SearchService {
     findable: false,
   });
 
+  private textTypeSource = new BehaviorSubject<string[]>([]);  // New source to track textType
+
   private payload: any = null;
-  private collectionsListSource = new BehaviorSubject<any[]>([]);
-  collectionsList$ = this.collectionsListSource.asObservable();
 
-
-  constructor(private apiService: ApiService) {}
+  constructor() {}
 
   searchResult$ = this.searchStateSource.asObservable();
 
@@ -43,6 +41,7 @@ export class SearchService {
     });
 
     this.payload = payload;
+    
   }
 
   startSearch() {
@@ -62,32 +61,11 @@ export class SearchService {
     this.payload = newPayload;
   }
 
-  fetchCollectionsList(): void {
-    this.apiService.getCollectionsList().subscribe({
-      next: (response) => {
-        if (response.ok) {
-          const parsedBody = JSON.parse(response.body);
-          if (parsedBody?.search?.valuefacets?.facet) {
-            const collections = parsedBody.search.valuefacets.facet.map((facet: any) => {
-              const items = Array.isArray(facet.item) ? facet.item : [facet.item].filter(Boolean);
-              return {
-                header: facet?.label,
-                displayType: facet?.displayType,
-                collectionTypes: items.map((item: any) => ({
-                  label: item?.label,
-                  selected: item?.selected,
-                  value: item?.value,
-                })),
-              };
-            });
+  setTextType(selectedCategories: any):any {
+    this.textTypeSource.next(selectedCategories);
+  }
 
-            this.collectionsListSource.next(collections);
-          }
-        }
-      },
-      error: (err) => {
-        console.error('Error fetching collections:', err);
-      },
-    });
+  getTextType(){
+    return this.textTypeSource.value;
   }
 }

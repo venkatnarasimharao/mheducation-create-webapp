@@ -105,12 +105,38 @@ export class SearchFindContentComponent implements OnInit {
         }
       });
 
-    // Fetch collections from SearchService
-    this.searchService.fetchCollectionsList();
+    // Fetch collections list here instead of SearchService
+    this.fetchCollectionsList();
+  }
+
+  fetchCollectionsList(): void {
+   
+
+    this.apiService.getCollectionsList().subscribe({
+      next: (response) => {
+        if (response.ok) {
+          const parsedBody = JSON.parse(response.body);
+          if (parsedBody?.search?.valuefacets?.facet) {
+            this.collections = parsedBody.search.valuefacets.facet.map((facet: any) => {
+              const items = Array.isArray(facet.item) ? facet.item : [facet.item].filter(Boolean);
+              return {
+                header: facet?.label,
+                displayType: facet?.displayType,
+                collectionTypes: items.map((item: any) => ({
+                  label: item?.label,
+                  selected: item?.selected,
+                  value: item?.value,
+                })),
+              };
+            });
+          }
+        }
     
-    this.searchService.collectionsList$.subscribe((collections) => {
-      this.collections = collections;
-      this.sfcloading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching collections:', err);
+        
+      },
     });
   }
 
@@ -133,12 +159,12 @@ export class SearchFindContentComponent implements OnInit {
 
       this.searchService.startSearch();
 
-      this.searchService.fetchCollectionsList(); // Refresh collections on page change
+      this.fetchCollectionsList(); // Refresh collections on page change
 
       this.searchService.getPayload().search.start = this.startValue;
 
-       // Call the API to fetch updated results based on the new page
-       this.apiService.getSearchListing(finalPayload).subscribe({
+      // Call the API to fetch updated results based on the new page
+      this.apiService.getSearchListing(finalPayload).subscribe({
         next: (response) => {
           if (response.ok) {
             this.searchService.updateSearchResult(response.body);

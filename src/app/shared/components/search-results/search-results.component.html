@@ -1,8 +1,7 @@
 <div class="loadingcontainer position-relative">
   <!-- Display loading message while data is being fetched -->
   @if (loading) {
-    <div class="hec-loader-content">
-    </div>
+    <div class="hec-loader-content"></div>
   }
 
   <!-- Display message if no results are found -->
@@ -14,26 +13,35 @@
 
   <!-- Display search results if available -->
   @if (!loading && searchResults.length > 0) {
-    @for (result of searchResults; track result.title) {
+    @for (result of searchResults; track result.guid) {
       <div class="card mb-3 shadow-sm">
-        <div class="card-body gap-3 d-flex">
-          <img src="{{result.imageUrl}}" alt="">
-          <div>
-              <div class="d-flex align-items-center">
-                  <p class="badge bg-primary me-2 mb-0">{{ result.type }}</p>
-                  <a [routerLink]="'/preview'" [queryParams]="{ guid: result.guid }" routerLinkActive="router-link-active" class="text-decoration-none">{{ result.title }}</a>
-              </div>
-      
-                <p class="card-text">
-                  <strong>By:</strong> {{ result.authors }}<br />
-                  <strong>&copy;{{ result.year }}</strong><br />
-                  <strong>Available Formats:</strong>
-                </p>
-      
-                <!-- Change button text based on data availability -->
-                <button class="btn btn-outline-primary btn-sm">
-                  {{ result.enableAddButton ? 'Add Entire Book +' : 'Remove Book -' }}
-                </button>
+        <div class="card-body d-flex gap-3">
+          <img src="{{result.imageUrl}}" alt="Cover Image">
+
+          <div class="flex-grow-1">
+            <div class="d-flex align-items-center">
+              <p class="badge bg-primary me-2 mb-0">{{ result.type }}</p>
+              <a [routerLink]="'/preview'" [queryParams]="{ guid: result.guid }"
+                 routerLinkActive="router-link-active" class="text-decoration-none">
+                {{ result.title }}
+              </a>
+              
+              <!-- Favorite Icon -->
+               <button class="bg-transparent border-0  ms-auto"><i class="bi fs-3" [ngClass]="result.isFavorite ? 'bi-star-fill text-warning' : 'bi-star text-warning'"
+                (click)="toggleFavorite(result)"></i></button>
+              
+            </div>
+
+            <p class="card-text">
+              <strong>By:</strong> {{ result.authors }}<br />
+              <strong>&copy;{{ result.year }}</strong><br />
+              <strong>Available Formats:</strong>
+            </p>
+
+            <!-- Change button text based on data availability -->
+            <button class="btn btn-outline-primary btn-sm">
+              {{ result.enableAddButton ? 'Add Entire Book +' : 'Remove Book -' }}
+            </button>
           </div>
         </div>
       </div>

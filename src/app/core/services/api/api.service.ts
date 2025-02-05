@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { BOOK_COVER_IMAGES, USER_SEARCH_CONFIG } from '../../../shared/constants/search-payload.config';
+import { BOOK_COVER_IMAGES } from '../../../shared/constants/search-payload.config';
 import { environment } from '../../../../environments/environment';
 import { CookieService } from 'ngx-cookie-service';
 import { CommonStateService } from '../common-state/common-state.service';
@@ -79,6 +79,19 @@ export class ApiService {
 
   getImageUrl(endPointUrl: string): string{
     return environment.apiUrl + endPointUrl;
+  }
+
+  addFavorite(guid: string) {
+    const payload = {
+      "favorite": {
+        "_guid": guid
+      }
+    }
+    return this.apiMethodService({ url: `/p/users/${this.commonStateService.isAnonymous()}/favorites/`, method: 'POST', body: payload })
+  }
+
+  deleteFavorite(guid: string) {
+    return this.apiMethodService({ url: `/p/users/${this.commonStateService.isAnonymous()}/favorites/${guid}?method=DELETE`, method: 'POST', });
   }
   
 
