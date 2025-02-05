@@ -41,6 +41,17 @@ export class FilterAccordionComponent implements OnInit {
       };
       this.syncFacetsWithApiResponse(state.result?.['s:facets']?.['s:facet'] || []);
     });
+     // Make single API call
+    this.apiService.getSearchListing(this.searchService.getPayload()).subscribe({
+      next: (response) => {
+        if (response.ok) {
+          this.searchService.updateSearchResult(response.body);
+        }
+      },
+      error: (err) => {
+        console.error('API Error:', err);
+      }
+    });
   }
 
   private initializeFromQueryParams(params: any): void {
@@ -115,17 +126,7 @@ export class FilterAccordionComponent implements OnInit {
     this.searchService.updateSearchQuery(currentPayload);
     this.searchService.startSearch();
 
-    // Make single API call
-    this.apiService.getSearchListing(currentPayload).subscribe({
-      next: (response) => {
-        if (response.ok) {
-          this.searchService.updateSearchResult(response.body);
-        }
-      },
-      error: (err) => {
-        console.error('API Error:', err);
-      }
-    });
+   
   }
 
 
@@ -365,16 +366,16 @@ export class FilterAccordionComponent implements OnInit {
     this.searchService.updateSearchQuery(finalPayload);
     this.searchService.startSearch();
 
-    // this.apiService.getSearchListing(finalPayload).subscribe({
-    //   next: (response) => {
-    //     if (response.ok) {
-    //       this.searchService.updateSearchResult(response.body);
-    //     }
-    //   },
-    //   error: (err) => {
-    //     console.error('API Error:', err);
-    //   }
-    // });
+    this.apiService.getSearchListing(finalPayload).subscribe({
+      next: (response) => {
+        if (response.ok) {
+          this.searchService.updateSearchResult(response.body);
+        }
+      },
+      error: (err) => {
+        console.error('API Error:', err);
+      }
+    });
   }
 
   private handleCopyrightYearChange(facet: any, item: any, isChecked: boolean): void {
