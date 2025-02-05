@@ -101,17 +101,18 @@ export class BookPageViewerComponent implements OnInit, OnChanges {
           this.isPreviousPage = true;
           if (response.body?.type === 'image/jpeg' || response.body?.type === 'image/png') {
             const blobUrl = URL.createObjectURL(response.body);
+            console.log(blobUrl);
             this.imageUrl = blobUrl;
           } else {
             console.error('Invalid image type:', response.body?.type);
-            this.imageUrl = this.apiService.getBadPreviewPage();
+            this.imageUrl = this.commonStateService.getImageUrl("/createonline/images/bad_preview.jpg",false);
           }
         }
       },
       error: (error: any) => {
         this.pageViewLoading = false;
         this.isPreviousPage = true;
-        this.imageUrl = this.apiService.getBadPreviewPage()
+        this.imageUrl = this.commonStateService.getImageUrl("/createonline/images/bad_preview.jpg",false);
         console.error('Error fetching book data:', error);
       },
     });

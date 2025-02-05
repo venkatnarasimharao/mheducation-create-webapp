@@ -26,6 +26,7 @@ app.get('/', (req, res) => {
 
 app.all('/proxy/createonline/*', async (req, res) => {
     try {
+        console.log(req.body);
         let response = ``
         const dynamicEndpoint = req.originalUrl.replace('/proxy', '');
         const externalApiBaseUrl = 'https://createqa.mheducation.com';

@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { BOOK_COVER_IMAGES, USER_SEARCH_CONFIG } from '../../../shared/constants/search-payload.config';
 import { environment } from '../../../../environments/environment';
 import { CookieService } from 'ngx-cookie-service';
+import { N } from '@angular/cdk/keycodes';
 
 @Injectable({
   providedIn: 'root'
@@ -75,10 +76,23 @@ export class ApiService {
         "_guid": guid
       }
     }
-    return this.apiMethodService({ url: `/p/users/${this.commonStateService.isAnonymous()}/favorites`, method: 'POST', body: payload })
+    return this.apiMethodService({ url: `/p/users/${this.commonStateService.isAnonymous()}/favorites/`, method: 'POST', body: payload })
   }
   deleteFavorite(guid: string) {
     return this.apiMethodService({ url: `/p/users/${this.commonStateService.isAnonymous()}/favorites/${guid}?method=DELETE`, method: 'POST', });
+  }
+  getProjectToc(guid: string){
+    console.log(guid);
+    const headers = new HttpHeaders({
+      'X-Response-Type': 'arraybuffer'
+    });
+    const url = `/public/projects/${guid}`;
+    return this.apiMethodService({
+      url,
+      method: 'GET_IMAGE',
+      params: { displayExtra: "all"},
+      options:{headers}
+    })
   }
   getProjectList(projectType: string) {
     const userId = this.commonStateService.isAnonymous();
@@ -93,7 +107,29 @@ export class ApiService {
       params
     })
   }
-
+  getProjectDetails(guid:any){
+    const params ={
+      nocacheTimestamp : Date.now(),
+    }
+    return this.apiMethodService({ url: `/p/users/${this.commonStateService.isAnonymous()}/projects/${guid}`, method: 'GET_PARAMS',params })
+  }
+  updateProjectType(guid:any,payload:any){
+    const url =`/p/users/${this.commonStateService.isAnonymous()}/projects/${guid}`
+    const params ={
+      returnpricing: false,
+      method :"PUT",
+    } 
+    console.log(payload,"payload")
+    return this.apiMethodService({ url, method: 'PUT', options:{params},body: payload})
+  }
+  checkActiveProject(guid:string) {
+    const url = `/users/${this.commonStateService.isAnonymous()}/checkActive/${guid}`;
+    return this.apiMethodService({ url, method: 'GET' });
+  }
+  duplicateProject(guid: string){
+    const url = `/p/users/${this.commonStateService.isAnonymous()}/projects/?guid=${guid}&titleDuplicate=duplicated`;
+    return this.apiMethodService({ url, method: 'POST' });
+  }
 
   getCoverPhotosList() {
     return this.apiMethodService({ url: '/p/searchcovers', method: 'POST', body: BOOK_COVER_IMAGES })
@@ -137,9 +173,6 @@ export class ApiService {
       params,
       options: { headers }
     });
-  }
-  getBadPreviewPage() {
-    return "https://createqa.mheducation.com/createonline/images/bad_preview.jpg";
   }
   getFavouriteList() {
     const params = {
