@@ -21,9 +21,11 @@ export class SortbyComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const textType = this.searchService.getTextType();
-    console.log('textType-', textType);
-    this.fetchSortOptions(textType);
+    const textType = this.searchService.textType$.subscribe((textType)=> {
+      console.log('textType-', textType);
+      this.fetchSortOptions(textType);
+    });
+    
   }
   
 

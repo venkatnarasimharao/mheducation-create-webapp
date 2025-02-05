@@ -20,6 +20,7 @@ export class SearchService {
   constructor() {}
 
   searchResult$ = this.searchStateSource.asObservable();
+  textType$ = this.textTypeSource.asObservable()
 
 
   updateSearchResult(data: any) {
@@ -63,9 +64,5 @@ export class SearchService {
 
   setTextType(selectedCategories: any):any {
     this.textTypeSource.next(selectedCategories);
-  }
-
-  getTextType(){
-    return this.textTypeSource.value;
   }
 }
