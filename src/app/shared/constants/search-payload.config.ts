@@ -330,343 +330,183 @@ export const USER_SEARCH_CONFIG = {
   },
 };
 export const PROJECT_ARRANGE_CONFIG = {
-	"project": {
-		"meta": {
-			"courseNames": {
-				"course1": {
-					"_name": ""
-				},
-				"course2": {
-					"_name": ""
-				},
-				"course3": {
-					"_name": ""
-				}
-			},
-			"courseNumbers": {
-				"course1": {
-					"_number": ""
-				},
-				"course2": {
-					"_number": ""
-				}
-			},
-			"schools": {
-				"school1": {
-					"_name": "HE non listed"
-				},
-				"school2": {
-					"_name": ""
-				},
-				"school3": {
-					"_name": ""
-				}
-			},
-			"instructors": {
-				"instructor1": {
-					"_firstName": "karthik's",
-					"_lastName": "Test / Ins 1"
-				},
-				"instructor2": {
-					"_firstName": "",
-					"_lastName": ""
-				},
-				"instructor3": {
-					"_firstName": "",
-					"_lastName": ""
-				},
-				"_title": ""
-			},
-			"toc": {
-				"level1": {
-					"_style": ""
-				},
-				"level2": {
-					"_style": ""
-				},
-				"level3": {
-					"_style": ""
-				},
-				"level4": {
-					"_style": ""
-				},
-				"level5": {
-					"_style": ""
-				},
-				"_suppressNumbers": "false"
-			},
-			"account": {
-				"address": {
-					"_school": "HE non listed",
-					"_department": "null",
-					"_line1": "",
-					"_line2": "",
-					"_city": "",
-					"_state": "",
-					"_zip": "",
-					"_country": "US"
-				},
-				"shippingAddress": {
-					"_school": "HE non listed",
-					"_department": "null",
-					"_line1": "",
-					"_line2": "",
-					"_city": "",
-					"_state": "",
-					"_zip": "",
-					"_country": ""
-				},
-				"_compType": "eComp",
-				"_instructorFirstName": "karthik's",
-				"_instructorLastName": "Test / Ins 1",
-				"_phone": "",
-				"_email": "karthikins1@mheqa.com",
-				"_enrollment": "",
-				"_enrollmentType": "",
-				"_decisionDate": "",
-				"_repNumber": "",
-				"_repFirstName": "",
-				"_repLastName": "",
-				"_addressType": "account",
-				"_previousText": ""
-			},
-			"notes": "",
-			"_bookType": "bw",
-			"_bookFormat": "8by11",
-			"_bookCover": "",
-			"_discipline": "",
-			"_department": "null"
-		},
-		"structure": {
-			"entry": [
-				{
-					"entry": [
-						{
-							"_type": "Chapter",
-							"_subType": "",
-							"_structuraltype": "Chapter",
-							"_title": "About the Authors",
-							"_attributionTitle": "",
-							"_author": "Sylvia S. Mader and Michael Windelspecht",
-							"_pagecount": "1",
-							"_indextermcount": "",
-							"_isbn": "1260710874",
-							"_mhid": "",
-							"_guid": "81C6006A-CA4B-4C83-5724-DC498D6B0A1E",
-							"_node": "/assets/2023/1260710874/81C6006A-CA4B-4C83-5724-DC498D6B0A1E.xml",
-							"_source": "",
-							"_providerName": "Biology, 14th Edition",
-							"_originalnumber": "",
-							"_providerItemId": "",
-							"_authors": "Mader, Windelspecht",
-							"_electronicReview": "Y",
-							"_erights": "Y",
-							"_hasTeachingNotes": "false",
-							"_isTeachingNote": "false",
-							"_trimSize": "8by11",
-							"_trimSize6x9Guid": "",
-							"_hasApparatus": "false",
-							"_year": "2022",
-							"_numberInteriorColors": "4",
-							"_flowtype": "CameraReady",
-							"_targetContainer": "frontmatter",
-							"_isContentBearing": "true",
-							"_numbered": "",
-							"_includeInTOC": "true",
-							"_includeInContent": "true",
-							"_blockChildren": "",
-							"_description": "",
-							"_coverId": "",
-							"_eBookOnly": "",
-							"_eBookOnlyPrintException": "",
-							"_addToCredits": "",
-							"_booktitle": "Biology, 14th Edition",
-							"_bookauthor": "Mader",
-							"_computedtitle": "About the Authors",
-							"_computedtextcreditsattribution": "Chapter from Biology, 14th Edition by Mader, Windelspecht, 2022",
-							"_ancestorcount": "2",
-							"_ancestor1": "28E293EA-42AC-F6DB-284D-DC498D6BAF2B",
-							"_ancestor2": "CD696B93-438A-A88A-0399-DC498D6BDBCE",
-							"_build": "(689c251526)",
-							"_dateAdded": "Mon, 20 Jan 2025 10:11:41 GMT",
-							"_siteId": "1",
-							"_computedtocnumber": "i",
-							"_frontMatterDisable": "false"
-						},
-						{
-							"_type": "Chapter",
-							"_subType": "",
-							"_structuraltype": "Chapter",
-							"_title": "Cellular Respiration",
-							"_attributionTitle": "",
-							"_author": "Sylvia S. Mader and Michael Windelspecht",
-							"_pagecount": "16",
-							"_indextermcount": "",
-							"_isbn": "1260710874",
-							"_mhid": "",
-							"_guid": "9A9921D8-C14E-B0AA-06F9-DC498D6B4A50",
-							"_node": "/assets/2023/1260710874/9A9921D8-C14E-B0AA-06F9-DC498D6B4A50.xml",
-							"_source": "",
-							"_providerName": "Biology, 14th Edition",
-							"_originalnumber": "8",
-							"_providerItemId": "",
-							"_authors": "Mader, Windelspecht",
-							"_electronicReview": "Y",
-							"_erights": "Y",
-							"_hasTeachingNotes": "false",
-							"_isTeachingNote": "false",
-							"_trimSize": "8by11",
-							"_trimSize6x9Guid": "",
-							"_hasApparatus": "false",
-							"_year": "2022",
-							"_numberInteriorColors": "4",
-							"_flowtype": "CameraReady",
-							"_targetContainer": "contents",
-							"_isContentBearing": "true",
-							"_numbered": "",
-							"_includeInTOC": "true",
-							"_includeInContent": "true",
-							"_blockChildren": "",
-							"_description": "",
-							"_coverId": "",
-							"_eBookOnly": "",
-							"_eBookOnlyPrintException": "",
-							"_addToCredits": "",
-							"_booktitle": "Biology, 14th Edition",
-							"_bookauthor": "Mader",
-							"_computedtitle": "Cellular Respiration",
-							"_computedtextcreditsattribution": "Chapter 8 from Biology, 14th Edition by Mader, Windelspecht, 2022",
-							"_ancestorcount": "2",
-							"_ancestor1": "86C2CFAC-D8ED-695F-ABC9-DC498D6BE244",
-							"_ancestor2": "CD696B93-438A-A88A-0399-DC498D6BDBCE",
-							"_build": "(689c251526)",
-							"_dateAdded": "Mon, 20 Jan 2025 10:12:12 GMT",
-							"_siteId": "1",
-							"_computedtocnumber": "ii",
-							"_frontMatterDisable": "false"
-						},
-						{
-							"_type": "Placeholder",
-							"_subtype": "dragitems",
-							"_computedtitle": "",
-							"_computedtextcreditsattribution": "",
-							"_computedtocnumber": " ",
-							"_frontMatterDisable": "false"
-						}
-					],
-					"_type": "Container",
-					"_subtype": "frontmatter",
-					"_computedtitle": "",
-					"_computedtextcreditsattribution": "",
-					"_computedtocnumber": ""
-				},
-				{
-					"entry": {
-						"_type": "Placeholder",
-						"_subtype": "dragitems",
-						"_computedtitle": "Drag items here to move content to this section ",
-						"_computedtextcreditsattribution": "",
-						"_computedtocnumber": " ",
-						"_frontMatterDisable": "false"
-					},
-					"_type": "Container",
-					"_subtype": "contents",
-					"_computedtitle": "",
-					"_computedtextcreditsattribution": "",
-					"_computedtocnumber": ""
-				},
-				{
-					"entry": [
-						{
-							"_type": "Placeholder",
-							"_subtype": "dragitems",
-							"_computedtitle": "",
-							"_computedtextcreditsattribution": "",
-							"_computedtocnumber": " ",
-							"_frontMatterDisable": "false"
-						},
-						{
-							"_type": "Fixed",
-							"_subtype": "indices",
-							"_title": "Indices",
-							"_guid": "65919408-f129-4af7-9efb-24039d4b00b0",
-							"_computedtitle": "",
-							"_computedtextcreditsattribution": "",
-							"_pagecount": "0",
-							"_computedtocnumber": " ",
-							"_frontMatterDisable": "false"
-						}
-					],
-					"_type": "Container",
-					"_subtype": "backmatter",
-					"_computedtitle": "",
-					"_computedtextcreditsattribution": "",
-					"_computedtocnumber": ""
-				}
-			]
-		},
-		"constraints": "",
-		"projectCourseDetails": {
-			"projectCourseName": "tst",
-			"projectCourseNumber": "tst",
-			"projectInstructorName": "",
-			"projectSchoolInfo": {
-				"country": "",
-				"state": "",
-				"district": "",
-				"zipcode": "",
-				"schoolPartyId": "",
-				"schoolNumber": "",
-				"schoolName": "",
-				"departmentName": "",
-				"department": ""
-			}
-		},
-		"specialInstructions": "",
-		"TOCInfo": {
-			"_enabled": "true"
-		},
-		"assetsReplacedFrom": "",
-		"_status": "DRAFT",
-		"_projectrevision": "12",
-		"_guid": "a68d2caf-0f71-2b60-d94d-bf65f2f4795d",
-		"_archivedState": "",
-		"_title": "tst",
-		"_installationId": "",
-		"_dateCreated": "Mon, 20 Jan 2025 03:06:48 GMT-05:00",
-		"_ldapRmsId": "",
-		"_ldapId": "",
-		"_ldapName": "",
-		"_sponsorCode": "000478",
-		"_version": "10",
-		"_type": "Project",
-		"_sponsorCodeDeptId": "",
-		"_sponsorCodeId": "e2fcbf24-40c2-427c-80a1-097e5290fa6f",
-		"_userGroup": "ALL",
-		"_country": "US",
-		"_currency": "USD",
-		"_pagecount": "20",
-		"_printprice": "$0.00",
-		"_printpriceColor": "$0.00",
-		"_eprice": "$0.00",
-		"_uid": "1000507376",
-		"_printindices": "false",
-		"_teachersEditionFormat": "",
-		"_volumeSplitWarningHasBeenDisplayed": "false",
-		"_bindingSpec": "",
-		"_paperSpec": "",
-		"_build": "((689c251526))",
-		"_siteId": "1",
-		"_addToCredits": "false",
-		"_createIndex": "true",
-		"_createToc": "true",
-		"_createTitlePage": "true",
-		"_createCopyrightPage": "true",
-		"_createCreditPage": "true",
-		"_createDynamicIndex": "true",
-		"_addRunningHead": "false",
-		"_isProjectFromOneCompleteBook": "false"
-	}
+  "project": {
+    "addRunningHead": "false",
+    "addToCredits": "false",
+    "archivedState": "",
+    "bindingSpec": "Perfect",
+    "build": "37c722a44d",
+    "copiedFromGuid": "e6826657-e2a0-019d-8c4d-eddadbd96ac3",
+    "country": "US",
+    "createCopyrightPage": "true",
+    "createCreditPage": "true",
+    "createDynamicIndex": "true",
+    "createIndex": "true",
+    "createTitlePage": "true",
+    "createToc": "true",
+    "currency": "USD",
+    "dateCreated": "Mon, 09 Dec 2024 03:08:56 GMT-05:00",
+    "eprice": "$0.00",
+    "guid": "90369f30-55e9-49e1-8306-dc0a56b32556",
+    "installationId": "",
+    "isProjectFromOneCompleteBook": "false",
+    "ldapId": "",
+    "ldapName": "",
+    "ldapRmsId": "",
+    "meta": {
+      "account": {
+        "address": {
+          "city": "",
+          "country": "US",
+          "department": "null",
+          "line1": "",
+          "line2": "",
+          "school": "HE non listed",
+          "state": "",
+          "zip": ""
+        },
+        "addressType": "other",
+        "compType": "print",
+        "decisionDate": "30 days or less ",
+        "email": "karthikins1@mheqa.com",
+        "enrollment": "20 students or less ",
+        "enrollmentType": "yearly",
+        "instructorFirstName": "karthik's",
+        "instructorLastName": "Test / Ins 1",
+        "phone": "",
+        "previousText": "",
+        "repFirstName": "",
+        "repLastName": "",
+        "repNumber": "",
+        "shippingAddress": {
+          "city": "arizona",
+          "country": "US",
+          "department": "",
+          "line1": "",
+          "line2": "",
+          "school": "q",
+          "state": "AZ",
+          "zip": "03708"
+        }
+      },
+      "bookCover": "BLUE_ABSTRACT",
+      "bookFormat": "8by11",
+      "bookType": "bw",
+      "courseNames": {
+        "course1": "edited",
+        "course2": {
+          "name": ""
+        },
+        "course3": {
+          "name": ""
+        }
+      },
+      "courseNumbers": {
+        "course1": {
+          "number": "1"
+        },
+        "course2": {
+          "number": "2"
+        }
+      },
+      "coverCreditLine": "muha04/Getty Images",
+      "department": "null",
+      "discipline": "",
+      "instructors": {
+        "instructor1": {
+          "firstName": "karthik's",
+          "lastName": "Test / Ins 1"
+        },
+        "instructor2": {
+          "firstName": "a",
+          "lastName": "q"
+        },
+        "instructor3": {
+          "firstName": "1",
+          "lastName": "2"
+        },
+        "title": "Professor"
+      },
+      "notes": {
+      },
+      "schools": {
+        "school1": {
+          "name": "HE non listed"
+        },
+        "school2": {
+          "name": ""
+        },
+        "school3": {
+          "name": ""
+        }
+      },
+      "toc": {
+        "level1": {
+          "style": ""
+        },
+        "level2": {
+          "style": ""
+        },
+        "level3": {
+          "style": ""
+        },
+        "level4": {
+          "style": ""
+        },
+        "level5": {
+          "style": ""
+        },
+        "suppressNumbers": "false"
+      }
+    },
+    "pagecount": "20",
+    "paperSpec": "Regular",
+    "printindices": "false",
+    "printprice": "$0.00",
+    "printpriceColor": "$0.00",
+    "projectCourseDetails": {
+      "projectCourseName": "history2",
+      "projectCourseNumber": {
+      },
+      "projectInstructorName": "karthik's Test / Ins 1",
+      "projectSchoolInfo": {
+        "country": "US",
+        "department": "453",
+        "departmentName": "HISTORY",
+        "district": {
+        },
+        "schoolName": "HE non listed",
+        "schoolNumber": "HE non listed",
+        "schoolPartyId": {
+        },
+        "state": "NY",
+        "zipcode": {
+        }
+      }
+    },
+    "projectrevision": "3",
+    "shrinkWrapped": "false",
+    "siteId": "1",
+    "specialInstructions": {
+    },
+    "sponsorCode": "000164",
+    "sponsorCodeDeptId": "",
+    "sponsorCodeId": "1bcc06d5-17fc-43db-90b0-71e2071f54f3",
+    "status": "DRAFT",
+    "structure": {
+      "entry": []
+    },
+    "teachersEditionFormat": "",
+    "title": "createhistory duplicated",
+    "TOCInfo": {
+      "enabled": "true"
+    },
+    "type": "Project",
+    "uid": "1000507376",
+    "userGroup": "ALL",
+    "version": "10",
+    "volumeSplitWarningHasBeenDisplayed": "false"
+  }
 }
 
 export const BOOK_COVER_IMAGES = {

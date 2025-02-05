@@ -19,7 +19,7 @@ import { FormsModule } from '@angular/forms';
 import { NgbCollapseModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../../core/services/api/api.service';
 import { catchError, finalize, map } from 'rxjs/operators';
-import { ProjectItem, Section } from '../../shared/models/search.model';
+import { ApiEntry, ProjectItem, Section } from '../../shared/models/search.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { PROJECT_ARRANGE_CONFIG } from '../../shared/constants/search-payload.config';
@@ -42,6 +42,8 @@ export class ArrangeComponent implements OnInit {
   selectAllChecked: boolean = false;
   isAnyCheckboxSelected: boolean = false;
 
+  reArrangeProjectOrder: any = PROJECT_ARRANGE_CONFIG
+
   selectedProject: any = '';
   projectList: any[] = [];
   projectStructureEntries: any[] = [];
@@ -56,13 +58,13 @@ export class ArrangeComponent implements OnInit {
   draggedItems: ProjectItem[] = [];
   sections: any[] = [];
   pricingData: any;
-
+  private initialProjectStructure: any;
   constructor(
     private apiService: ApiService,
     private route: ActivatedRoute,
     private readonly router: Router,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
@@ -121,10 +123,13 @@ export class ArrangeComponent implements OnInit {
 
     this.apiService.getProjectData(this.projectId).subscribe((data: any) => {
       this.arrangeSpinner = false;
+      console.log('Project data data is here', data);
       if (data.ok) {
         const result = JSON.parse(data.body);
         console.log('Project data response', result);
 
+        this.initialProjectStructure = JSON.parse(JSON.stringify(result));
+        console.log('initial project structure', this.initialProjectStructure)
         this.sections = [
           {
             id: 'introMaterial',
@@ -215,6 +220,71 @@ export class ArrangeComponent implements OnInit {
     };
   }
 
+  saveProjectData(): void {
+    this.reArrangeProjectOrder = {
+      ...PROJECT_ARRANGE_CONFIG,
+      project: {
+        ...PROJECT_ARRANGE_CONFIG.project,
+        uid: this.initialProjectStructure.uid,
+        structure: {
+          entry: this.sections.map((section) => {
+            section.items = Array.isArray(section.items) ? section.items : [section.items];
+            return {
+              type: "Container",
+              subtype: this.getSectionSubtype(section.id),
+              entry: section.items.map((item: ProjectItem) => ({
+                guid: item.guid,
+                computedtitle: item.name,
+                pagecount: item.pages,
+                price: item.price,
+                type: item.type,
+                subType: item.subType || this.getSectionSubtype(section.id),
+              })),
+            };
+          })
+        }
+      }
+    };
+    
+     console.log('rearrange order',this.reArrangeProjectOrder);
+    // this.apiService.saveProjectData(this.projectId, this.reArrangeProjectOrder).subscribe({
+    //   next: response => {
+    //     console.log('Project updated successfully', response);
+    //     this.initialProjectStructure = JSON.parse(JSON.stringify(this.reArrangeProjectOrder.project));
+    //   },
+    //   error: error => {
+    //     console.error('Error saving project:', error);
+    //   }
+    // });
+  }
+
+  private getSectionSubtype(sectionId: string): string {
+    const subtypeMap: { [key: string]: string } = {
+      'introMaterial': 'frontmatter',
+      'bookContent': 'contents',
+      'backMaterials': 'backmatter',
+      'supplements': 'supplements'
+    };
+    return subtypeMap[sectionId] || '';
+  }
+
+  // private hasProjectStructureChanged(): boolean {
+  //   const currentStructure = {
+  //     project: {
+  //       structure: {
+  //         entry: this.sections.map(section => ({
+  //           entry: section.items,
+  //           _type: "Container",
+  //           _subtype: this.getSectionSubtype(section.id)
+  //         }))
+  //       }
+  //     }
+  //   };
+
+  //   return JSON.stringify(this.initialProjectStructure) !==
+  //     JSON.stringify(currentStructure.project.structure);
+  // }
+
   toggleCollapse(sectionId: string) {
     this.isCollapsed[sectionId] = !this.isCollapsed[sectionId];
   }
@@ -253,6 +323,7 @@ export class ArrangeComponent implements OnInit {
   }
 
   drop(event: CdkDragDrop<ProjectItem[]>) {
+    // Find source and target sections
     const sourceSection = this.sections.find(
       (s) => s.id === event.previousContainer.id
     );
@@ -260,14 +331,34 @@ export class ArrangeComponent implements OnInit {
       (s) => s.id === event.container.id
     );
 
-    if (!sourceSection || !targetSection) return;
+    // Ensure both sections exist and have valid items arrays
+    if (!sourceSection?.items || !targetSection?.items) {
+      console.error('Invalid source or target section');
+      return;
+    }
 
-    const itemsToMove =
-      this.draggedItems.length > 0
-        ? this.draggedItems
-        : [sourceSection.items[event.previousIndex] as ProjectItem];
+    // Ensure items arrays are actually arrays
+    if (!Array.isArray(sourceSection.items)) {
+      sourceSection.items = [];
+    }
+    if (!Array.isArray(targetSection.items)) {
+      targetSection.items = [];
+    }
+
+    // Determine items to move
+    const itemsToMove = this.draggedItems.length > 0
+      ? this.draggedItems
+      : [sourceSection.items[event.previousIndex] as ProjectItem];
+
+    // Update subtype for moved items based on target section
+    const targetSubtype = this.getSectionSubtype(targetSection.id);
+    itemsToMove.forEach(item => {
+      item.subType = targetSubtype;
+    });
+    console.log('After dropped targeted subtype',targetSubtype);
 
     if (event.previousContainer === event.container) {
+      // Moving within the same section
       const unselectedItems = sourceSection.items.filter(
         (item: ProjectItem) => !itemsToMove.includes(item)
       );
@@ -277,20 +368,31 @@ export class ArrangeComponent implements OnInit {
         ...unselectedItems.slice(event.currentIndex),
       ];
     } else {
+      // Moving between different sections
       sourceSection.items = sourceSection.items.filter(
         (item: ProjectItem) => !itemsToMove.includes(item)
       );
-
       targetSection.items.splice(event.currentIndex, 0, ...itemsToMove);
     }
 
+    // Reset checked states
     this.sections.forEach((section: Section) => {
-      section.items.forEach((item: ProjectItem) => (item.checked = false));
-      section.selectAllChecked = false;
+      if (Array.isArray(section.items)) {
+        section.items.forEach((item: ProjectItem) => {
+          item.checked = false;
+        });
+        section.selectAllChecked = false;
+      }
     });
 
     this.draggedItems = [];
+
+    // Save changes if the structure has been modified
+    // if (this.hasProjectStructureChanged()) { // TODO - identify the difference of rearrangement
+      this.saveProjectData();
+    // }
   }
+
 
   handleIconKeydown(
     event: KeyboardEvent,
@@ -313,8 +415,7 @@ export class ArrangeComponent implements OnInit {
         this.cdr.detectChanges();
 
         const row = document.querySelector(
-          `[data-section-id="${currentSection.id}"][data-item-index="${
-            currentIndex - 1
+          `[data-section-id="${currentSection.id}"][data-item-index="${currentIndex - 1
           }"]`
         );
         const button = row?.querySelector('.bi-arrows-expand') as HTMLElement;
@@ -326,8 +427,7 @@ export class ArrangeComponent implements OnInit {
         this.cdr.detectChanges();
 
         const row = document.querySelector(
-          `[data-section-id="${prevSection.id}"][data-item-index="${
-            prevSection.items.length - 1
+          `[data-section-id="${prevSection.id}"][data-item-index="${prevSection.items.length - 1
           }"]`
         );
         const button = row?.querySelector('.bi-arrows-expand') as HTMLElement;
@@ -340,8 +440,7 @@ export class ArrangeComponent implements OnInit {
         this.cdr.detectChanges();
 
         const row = document.querySelector(
-          `[data-section-id="${currentSection.id}"][data-item-index="${
-            currentIndex + 1
+          `[data-section-id="${currentSection.id}"][data-item-index="${currentIndex + 1
           }"]`
         );
         const button = row?.querySelector('.bi-arrows-expand') as HTMLElement;
