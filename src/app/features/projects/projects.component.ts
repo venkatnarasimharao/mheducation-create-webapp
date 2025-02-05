@@ -110,25 +110,28 @@ export class ProjectsComponent implements OnInit {
     return newPayload;
   }
   updateProject(guid:string,payload:any){
-    this.apiService.updateProjectType(guid, payload).subscribe(
-      (data) => {
-        this.projectUpdateLoader = false;
-          const response = JSON.parse(data.body);
-          console.log(response);
-          this.fetchProjects();
+    console.log(payload);
+    this.projectUpdateLoader = false;
+    // this.apiService.updateProjectType(guid, payload).subscribe(
+    //   (data) => {
+    //     this.projectUpdateLoader = false;
+    //       const response = JSON.parse(data.body);
+    //       console.log(response);
+    //       this.fetchProjects();
         
-      },
-      (error) => {
-        this.projectUpdateLoader = false;
-        console.error('Error updating project type:', error);
-      }
-    );
+    //   },
+    //   (error) => {
+    //     this.projectUpdateLoader = false;
+    //     console.error('Error updating project type:', error);
+    //   }
+    // );
   }
   
   changeProjectType(project: any, projectType: string) {
+    console.log(project);
     this.projectUpdateLoader = true;
     let payload;
-    this.apiService.getProjectDetails(project.guid).subscribe(
+    this.apiService.getProjectDetails(project._guid).subscribe(
       (data) => {
         console.log(data.body);
           payload = JSON.parse(data.body); 
@@ -149,7 +152,7 @@ export class ProjectsComponent implements OnInit {
       }
     this.projectList =[];
     projects.forEach((project:any) => {
-      const type=project.archivedState || "active";
+      const type=project._archivedState || "active";
       if (!this.projectList[type]) {
         this.projectList[type] = [];
       }

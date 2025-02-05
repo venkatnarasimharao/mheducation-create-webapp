@@ -41,7 +41,7 @@ export class XmlTransformerUtil {
                 for (let index = 0; index < node.attributes.length; index++) {
                     const attributeName = node.attributes[index].nodeName;
                     const attributeValue = node.attributes[index].nodeValue;
-                    nodeObject[attributeName] = attributeValue;
+                    nodeObject[`_${attributeName}`] = attributeValue;
                 }
             }
 

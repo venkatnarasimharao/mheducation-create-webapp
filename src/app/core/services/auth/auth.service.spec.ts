@@ -94,6 +94,7 @@ describe('AuthService', () => {
     });
 
 
+<<<<<<< HEAD
     it('should return true for isAnonymous when no user ID in cookies', () => {
         cookieService.get = jasmine.createSpy('get').and.returnValue('');
         expect(commonStateService.isAnonymous()).toBeTrue();
@@ -103,6 +104,8 @@ describe('AuthService', () => {
         expect(commonStateService.isAnonymous()).toBeFalse();
     });
 
+=======
+>>>>>>> 94565f5b3628a0e3d881c0f5bcab81bace091af8
     it('should call userLogOut and navigate to home on logout', () => {
         service.logout();
         expect(apiService.userLogOut).toHaveBeenCalledWith('123');

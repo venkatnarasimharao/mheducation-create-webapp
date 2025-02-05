@@ -47,7 +47,10 @@ describe('AuthGuard', () => {
   });
 
   it('should allow navigation if user is not anonymous', () => {
+<<<<<<< HEAD
     spyOn(commonStateService, 'isAnonymous').and.returnValue(false); // Mocking isAnonymous to return false
+=======
+>>>>>>> 94565f5b3628a0e3d881c0f5bcab81bace091af8
     const route = {} as ActivatedRouteSnapshot;
     const state = { url: '/some-path' } as RouterStateSnapshot;
 
@@ -56,7 +59,10 @@ describe('AuthGuard', () => {
   });
 
   it('should block navigation and open the login modal if user is anonymous', () => {
+<<<<<<< HEAD
     spyOn(commonStateService, 'isAnonymous').and.returnValue(true); // Mocking isAnonymous to return true
+=======
+>>>>>>> 94565f5b3628a0e3d881c0f5bcab81bace091af8
     spyOn(modalService, 'open').and.callThrough();
 
     const route = {} as ActivatedRouteSnapshot;
