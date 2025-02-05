@@ -13,7 +13,7 @@
                 </div>
                 <div class="ms-md-4 text-center text-md-start">
 
-                    <h5 class="card-title mb-2">@if(!isAnonymous){
+                    <h5 class="card-title mb-2" >@if(!isAnonymous){
                         <button (click)="addToFav()" class="bg-transparent border-0"> <i class="bi bi-star fs-3"
                                 [ngClass]="{ 'text-warning': isFav }"></i></button>
                         } {{ bookTitle }}
@@ -48,7 +48,7 @@
                                 <h2 ngbAccordionHeader>
                                     <button ngbAccordionButton>
                                         @if(!isAnonymous){
-                                        <button class="bg-transparent border-0">
+                                        <button class="bg-transparent border-0" aria-label="add part to project button">
                                             <i class="bi bi-plus-square fs-1"></i>
                                         </button>
                                         }
@@ -65,7 +65,7 @@
                                                 @if(item?.originalNumber) {
                                                 <span>
                                                     @if(!isAnonymous && item?.title) {
-                                                    <button class="bg-transparent border-0">
+                                                    <button class="bg-transparent border-0" aria-label="add chapter to project button">
                                                         <i class="bi bi-plus-square fs-3"></i>
                                                     </button>
                                                     }

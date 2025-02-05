@@ -45,3 +45,18 @@
     background-color: #e9ecef;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
+// .custom-accordion-header button:focus {
+//     outline: none; 
+//     border: 2px solid #161a1d; /* Add a custom border on focus */
+//     background-color: #f0f8ff; /* Optional: Change background color */
+//     color: #050f1a; /* Optional: Change text color */
+//   }
+  
+.loader-parent {
+    z-index: 1;
+    min-height: 500px;
+    position:fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

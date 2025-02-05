@@ -1,51 +1,64 @@
 <div class="p-2 fs-5">
-    <h1 class="m-2">My Favourites</h1>
-    <table class="table bg-transparent">
-        <thead class="bg-primary">
-            <tr class="border-0">
-                <th scope="col">Type</th>
-                <th scope="col" style="width: 80%;">Title/Details</th>
-                <th scope="col">Options</th>
-            </tr>
-        </thead>
-        @if(isFavLoading){
-        <div class="d-flex align-items-center justify-content-center loader-parent">
-            <div class="hec-loader-content"></div>
-        </div>
-        }
-        <tbody class="p-2">
+  <h1 class="m-2">My Favourites</h1>
+  <table class="table bg-transparent">
+    <thead class="bg-primary">
+      <tr class="border-0">
+        <th scope="col">Type</th>
+        <th scope="col" style="width: 80%">Title/Details</th>
+        <th scope="col">Options</th>
+      </tr>
+    </thead>
+    @if(isFavLoading){
+    <div class="d-flex align-items-center justify-content-center loader-parent">
+      <div class="hec-loader-content"></div>
+    </div>
+    }
+    <tbody class="p-2">
+      @for (item of favouriteList; track i; let i = $index) {
+      <tr tabindex="0" class="border-bottom">
+        <td scope=" row">
+          <img
+            [src]="item.imageUrl"
+            alt="item-img"
+            style="width: 100px; height: 130px"
+          />
+        </td>
+        <td>
+          <div [innerHtml]="item.title"></div>
+          <div>{{ item.year + " | " + item.authors }}</div>
+          <div>Available Formats:- --------</div>
+          @if(!item.isMoreButton){
+          <div [innerHtml]="item.description"></div>
+          }
 
-            @for (item of favouriteList; track i; let i = $index) {
-            <tr tabindex="0" class="border-bottom">
-                <td scope=" row"><img [src]="item.imageUrl" alt="item-img" style="width: 100px; height: 130px;" /></td>
-                <td>
-                    <div [innerHtml]="item.title"></div>
-                    <div>{{item.year +" | "+item.authors}}</div>
-                    <div>Available Formats:- --------</div>
-                    @if(item.isMoreButton){
-                    <button class="bg-transparent text-primary border-0" (click)="toggleShowDescription(item)">See
-                        More<i class="bi bi-plus fs-3"></i> </button>
-                    }
-                    @else{
-                    @if(item.description){
-                    <div [innerHtml]="item.description"></div>
-                    <button class="bg-transparent text-primary border-0" (click)="toggleShowDescription(item)">See
-                        Less<i class="bi bi-dash-lg fs-3"></i> </button>
-                    }
-
-                    }
-
-                </td>
-                <td><button (click)="toggleFavChange(item)" class="bg-transparent border-0"
-                        [disabled]="item.isFavLoader" aria-label="toggle favourites button"><i class="bi fs-3"
-                            [ngClass]="item.isFav ? 'bi-star-fill text-warning' : 'bi-star'"></i>
-                        @if(item.isFavLoader){
-                        <div class="hec-loader-btn"></div>
-                        }
-                    </button></td>
-            </tr>
+          <button
+            class="bg-transparent text-primary border-0"
+            (click)="toggleShowDescription(item)"
+          >
+            @if(item.isMoreButton){
+            <span> See More</span> <i class="bi bi-plus fs-3"></i>
+            } @else{
+            <span>See Less </span><i class="bi bi-dash-lg fs-3"></i>
             }
-        </tbody>
-    </table>
-
+          </button>
+        </td>
+        <td>
+          <button
+            (click)="toggleFavChange(item)"
+            class="bg-transparent border-0"
+            aria-label="toggle favourites button"
+          >
+            @if(item.isFavLoader){
+            <i class="hec-loader-btn"></i>
+            }
+            <i
+              class="bi fs-3"
+              [ngClass]="item.isFav ? 'bi-star-fill text-warning' : 'bi-star'"
+            ></i>
+          </button>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
 </div>
