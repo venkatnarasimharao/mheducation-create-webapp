@@ -93,7 +93,6 @@ describe('AuthService', () => {
         });
     });
 
-
     it('should call userLogOut and navigate to home on logout', () => {
         service.logout();
         expect(apiService.userLogOut).toHaveBeenCalledWith('123');

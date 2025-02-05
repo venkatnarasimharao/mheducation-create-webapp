@@ -93,12 +93,11 @@ export class ApiService {
       options:{headers}
     })
   }
-  getProjectList(projectType: string) {
+  getProjectList() {
     const userId = this.commonStateService.isAnonymous();
     let user = userId || "anonymous";
     const params = {
-      nocacheTimestamp: Date.now(),
-      state: projectType
+      nocacheTimestamp: Date.now()
     }
     return this.apiMethodService({
       url: `/p/users/${userId}/projects`,
