@@ -10,7 +10,7 @@ export class CommonStateService {
 
   constructor(private cookieService: CookieService) { }
   public isAnonymous() {
-    return this.cookieService.get(this.userId);
+    return this.cookieService.get(this.userId)
   }
 
   getImageUrl(endPointUrl: string, nonDev = true): string {

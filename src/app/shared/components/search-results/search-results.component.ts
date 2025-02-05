@@ -4,6 +4,8 @@ import { ApiService } from '../../../core/services/api/api.service';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonStateService } from '../../../core/services/common-state/common-state.service';
 import { CommonModule } from '@angular/common';
+import { LoginComponent } from '../login/login.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'hec-search-results',
@@ -20,6 +22,7 @@ export class SearchResultsComponent implements OnInit {
     private searchService: SearchService,
     private apiService: ApiService,
     private commonStateService: CommonStateService,
+    private modalService: NgbModal,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -61,17 +64,22 @@ export class SearchResultsComponent implements OnInit {
   }
 
   toggleFavorite(result: any) {
-    if (result.isFavorite) {
-      this.apiService.deleteFavorite(result.guid).subscribe(() => {
-        result.isFavorite = false;
-        this.updateQueryParams();
-      });
-    } else {
-      this.apiService.addFavorite(result.guid).subscribe(() => {
-        result.isFavorite = true;
-        this.updateQueryParams();
-      });
+    if(this.commonStateService.isAnonymous()){
+      const modalRef = this.modalService.open(LoginComponent, { centered: false });
+    } else{
+      if (result.isFavorite) {
+        this.apiService.deleteFavorite(result.guid).subscribe(() => {
+          result.isFavorite = false;
+          this.updateQueryParams();
+        });
+      } else {
+        this.apiService.addFavorite(result.guid).subscribe(() => {
+          result.isFavorite = true;
+          this.updateQueryParams();
+        });
+      }
     }
+   
   }
 
   private updateQueryParams() {

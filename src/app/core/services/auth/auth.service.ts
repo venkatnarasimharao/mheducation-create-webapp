@@ -1,8 +1,8 @@
 import { CookieService } from 'ngx-cookie-service';
-import { EventEmitter, Injectable, signal } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from '../api/api.service'
-import { BehaviorSubject, catchError, Observable, of } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -47,16 +47,17 @@ export class AuthService {
       }
     });
   }
-
   public getLoginErrorMessage(): string {
     return this.loginError;
   }
 
   logout(): void {
     this.apiService.userLogOut(this.cookieService.get('paris_user_id')).subscribe((data) => {
-      this.cookieService.deleteAll();
-      this.router.navigate(['/']);
-      this.authStatus.emit("LogIn");
+      if (data.ok) {
+        this.cookieService.deleteAll();
+        this.router.navigate(['/']);
+        this.authStatus.emit("LogIn");
+      }
 
     });
   }

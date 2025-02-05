@@ -1,16 +1,15 @@
+import { CommonStateService } from './../common-state/common-state.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BOOK_COVER_IMAGES } from '../../../shared/constants/search-payload.config';
 import { environment } from '../../../../environments/environment';
 import { CookieService } from 'ngx-cookie-service';
-import { CommonStateService } from '../common-state/common-state.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-
   constructor(
     private http: HttpClient,
     private cookieService: CookieService,
@@ -33,7 +32,6 @@ export class ApiService {
       options: { responseType: 'text', headers }
     })
   }
-
   userLogin(payload: { username: string, password: string }): Observable<any> {
     const { username, password } = payload;
     const base64String = btoa(`${username}:${password}`);
@@ -95,10 +93,61 @@ export class ApiService {
   }
   
 
+  getBookDetails(assetId: string) {
+    const url = `/p/assets/${assetId}`;
+    const params = {
+      type: "metadata",
+      recursive: true,
+      getrootancestor: true,
+      relationships: true,
+      supplements: false,
+      nocacheTimestamp: Date.now(),
+    };
+    return this.apiMethodService({
+      url,
+      method: "GET_PARMS",
+      params,
+    });
+
+  }
+  getBookPageView(payload: any) {
+    const userId = this.commonStateService.isAnonymous();
+    const url = `/users/${userId}/preview/${payload.guid}/${payload.pageNumber}`;
+    const headers = new HttpHeaders({
+      'X-Response-Type': 'arraybuffer'
+    });
+    const params = {
+      nocacheTimestamp: Date.now(),
+    };
+    return this.apiMethodService({
+      url,
+      method: "GET_IMAGE",
+      params,
+      options: { headers }
+    });
+  }
+  getBadPreviewPage() {
+    return "https://createqa.mheducation.com/createonline/images/bad_preview.jpg";
+  }
+  getBookCoverImage(isbn: string): string {
+    return `https://createqa.mheducation.com/covers/${isbn}.jpeg`;
+  }
+  getSearchInsideList(payload: any) {
+    const userId = this.commonStateService.isAnonymous();
+    return this.apiMethodService({
+      url: `/p/users/${(userId || "anonymous")}/searchinside`,
+      method: 'POST',
+      body: payload,
+      options: {
+        responseType: 'text'
+      }
+    })
+  }
+
   apiMethodService<T>({ url, method, body, params = {}, options = {} }: any): Observable<any> {
     const pathName = window.location.pathname?.includes('createonline') ? window.location.pathname : '/createonline'
     url = environment.apiUrl + pathName + url;
-    if (!options['responseType']) {
+    if (!options['responseType'] && method !== 'GET_IMAGE') {
       options['responseType'] = 'text';
     }
     if (!options['observe']) {
@@ -111,7 +160,7 @@ export class ApiService {
       case 'GET_PARMS':
         return this.http.get(url, { params: params, ...options });
       case 'GET_IMAGE':
-        return this.http.get(url, { responseType: 'blob' as 'json', ...options });
+        return this.http.get(url, { params: params, responseType: 'blob', ...options });
       case 'PUT':
         return this.http.put(url, body, options);
       case 'PUT_PARAMS':

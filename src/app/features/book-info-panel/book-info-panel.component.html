@@ -1,0 +1,176 @@
+@if(bookDataLoader){
+<div class="d-flex align-items-center justify-content-center vh-100">
+    <div class="hec-loader-content"></div>
+</div>
+}
+@if(isDataFetched){
+<div class="d-md-flex p-3">
+    <div class="book-info-panel col-10 col-md-auto">
+        <div class="card mx-auto mt-4 border-0 p-3 shadow-sm mw-60">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="flex-shrink-0 mb-3 mb-md-0">
+                    <img [src]="bookImage" alt="Book Image" class="img-fluid rounded w-150" />
+                </div>
+                <div class="ms-md-4 text-center text-md-start">
+
+                    <h5 class="card-title mb-2">@if(!isAnonymous){
+                        <button (click)="addToFav()" class="bg-transparent border-0"> <i class="bi bi-star fs-3"
+                                [ngClass]="{ 'text-warning': isFav }"></i></button>
+                        } {{ bookTitle }}
+                    </h5>
+                    <p class="card-text mb-0">{{ bookSummary }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-3">
+            @if(isAnonymous){
+            <button (click)="handleSign()" class="btn btn-primary">
+                Sign In to Add
+            </button>
+            }
+            @if(!isAnonymous){
+            <button class="btn btn-primary" (click)="addBook()">
+                + Add Whole Book
+            </button>
+            }
+        </div>
+        <div class="mt-4 shadow-sm">
+            <ul ngbNav #nav="ngbNav" [(activeId)]="currentTab" class="nav-tabs bg-primary p-0 d-flex">
+                <li [ngbNavItem]="'contents'" class=" flex-grow-1 text-center">
+                    <button ngbNavLink class="nav-link w-100" [class.active]="currentTab === 'contents'"
+                        [class.bg-white]="currentTab === 'contents'" [class.text-primary]="currentTab === 'contents'"
+                        [class.text-white]="currentTab !== 'contents'">Contents</button>
+                    <ng-template ngbNavContent>
+                        <div class="scrollable-container" ngbAccordion #accordion="ngbAccordion">
+                            @for(entry of getObjectKey(tocList); track i; let i = $index) {
+                            <div [ngbAccordionItem]="'panel-' + i" [collapsed]='false'>
+                                @if(entry !== "individual"){
+                                <h2 ngbAccordionHeader>
+                                    <button ngbAccordionButton>
+                                        @if(!isAnonymous){
+                                        <button class="bg-transparent border-0">
+                                            <i class="bi bi-plus-square fs-1"></i>
+                                        </button>
+                                        }
+                                        {{ entry }}
+                                    </button>
+                                </h2>
+                                }
+                                <div ngbAccordionCollapse>
+                                    <div ngbAccordionBody>
+                                        <ul class="list-group">
+                                            @for(item of getObjectValue(tocList, i); track $index) {
+                                            <li class="list-group-item d-flex justify-content-between align-items-center"
+                                                (click)="setCurrentChapter(entry, $index)">
+                                                @if(item?.originalNumber) {
+                                                <span>
+                                                    @if(!isAnonymous && item?.title) {
+                                                    <button class="bg-transparent border-0">
+                                                        <i class="bi bi-plus-square fs-3"></i>
+                                                    </button>
+                                                    }
+                                                    {{item?.originalNumber }}. {{ item?.title }}
+                                                </span>
+                                                } @else {
+                                                <span>
+                                                    @if(!isAnonymous && item?.title) {
+                                                    <button class="bg-transparent border-0">
+                                                        <i class="bi bi-plus-square fs-3"></i>
+                                                    </button>
+                                                    }
+                                                    {{ item?.title }}
+                                                </span>
+                                                }
+                                                @if(item?.pageCount) {
+                                                <span class="badge bg-primary rounded-pill">
+                                                    {{ item?.pageCount+'pp'}}
+                                                </span>
+                                                }
+                                            </li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            }
+                        </div>
+                    </ng-template>
+                </li>
+
+                <li [ngbNavItem]="'details'" class=" flex-grow-1 text-center">
+                    <button ngbNavLink class="nav-link w-100" [class.active]="currentTab === 'details'"
+                        [class.bg-white]="currentTab === 'details'" [class.text-primary]="currentTab === 'details'"
+                        [class.text-white]="currentTab !== 'details'">Details</button>
+                    <ng-template ngbNavContent>
+                        <div class="scrollable-container" id="details">
+                            <h5>Abstract</h5>
+                            <div class="p-1" [innerHtml]="bookDescription"></div>
+                            <hr />
+                            <h5>Previous and Alternate Editions:</h5>
+                            @for(relatedBook of relatedBookList; track $index){
+                <li class="text-primary" (click)="openRelatedBook($index)">
+                    <a href="javascript:void(0)">{{relatedBook?.title}}</a>
+                </li>
+                }
+                <hr />
+        </div>
+        </ng-template>
+        </li>
+
+        <li [ngbNavItem]="'search'" class=" flex-grow-1 text-center">
+            <button ngbNavLink class="nav-link w-100" [class.active]="currentTab === 'search'"
+                [class.bg-white]="currentTab === 'search'" [class.text-primary]="currentTab === 'search'"
+                [class.text-white]="currentTab !== 'search'">Search</button>
+            <ng-template ngbNavContent>
+                <div class="scrollable-container" (scroll)="onScroll($event)" id="search">
+                    <form #searchForm="ngForm" (ngSubmit)="handleSearchInside(1)">
+                        <div class="form-control d-flex p-1">
+                            <input type="text" class="no-focus-outline border-0 w-100 fs-3" placeholder="Search here..."
+                                [(ngModel)]="searchInsideQuery" name="searchQuery" required />
+                            <button type="submit" class="btn btn-primary" [disabled]="!searchForm.valid">Go</button>
+                        </div>
+                    </form>
+
+                    @if(bookInsideData.length > 0){
+                    <p>Result for {{searchInsideQuery}}</p>
+                    }
+
+                    @if(isSearchInsideLoader){
+                    <div class="d-flex align-items-center justify-content-center">
+                        <div class="hec-loader-content"></div>
+                    </div>
+                    }
+
+                    @for(item of bookInsideData; track $index){
+                    <div>
+                        <h5>{{ item.title }}</h5>
+                        <div class="">
+                            @if(!expanded[$index]){
+                            <div [innerHtml]="item.desc | slice: 0:300"></div>
+                            @if(item.desc.length > 300){
+                            <span>...</span>
+                            }
+                            }
+                            @else{
+                            <div [innerHtml]="item.desc"></div>
+                            }
+
+                            @if(item.desc.length > 100){
+                            <button class="bg-transparent text-primary border-0" (click)="toggleExpand($index)">
+                                {{ expanded[$index] ? 'Show Less' : 'Show More' }}
+                            </button>
+                            }
+                        </div>
+                        <hr />
+                    </div>
+                    }
+                </div>
+            </ng-template>
+        </li>
+        </ul>
+        <div [ngbNavOutlet]="nav"></div>
+    </div>
+</div>
+<hec-book-page-viewer class="book-page-viewer" [currentChapter]="currentChapter"></hec-book-page-viewer>
+</div>
+}
