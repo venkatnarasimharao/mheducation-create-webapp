@@ -1,0 +1,16 @@
+.book-info-panel {
+    flex: 0 0 400px;
+    min-width: 400px;
+}
+
+.book-page-viewer {
+    flex: 1;
+}
+
+.scrollable-container {
+    height: 500px;
+    /* Adjust as needed */
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+}

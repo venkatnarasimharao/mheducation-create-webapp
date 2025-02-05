@@ -1,3 +1,4 @@
+import { CommonStateService } from './../../../core/services/common-state/common-state.service';
 import { AuthService } from './../../../core/services/auth/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { NgbDropdownModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -5,7 +6,6 @@ import { NgbDropdownToggleNoCaretDirective } from '../../directives/dropdown-tog
 import { MenuSidebarService } from '../../../core/services/menu-sidebar/menuSidebarService.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { LoginComponent } from '../login/login.component';
-import { CommonStateService } from '../../../core/services/common-state/common-state.service';
 
 @Component({
   selector: 'header',
@@ -22,15 +22,22 @@ export class HeaderComponent implements OnInit {
   loggedInStatus: string = "LogIn"
 
   constructor(private menuService: MenuSidebarService,
-    private AuthService: AuthService,
     private commonStateService: CommonStateService,
+    private authService: AuthService,
     private modalService: NgbModal) {
   }
   ngOnInit(): void {
-    this.AuthService.authStatus.subscribe((event: any) => {
+    const userId = this.commonStateService.isAnonymous();
+    let user = userId || "anonymous";
+    this.authService.authStatus.subscribe((event: any) => {
       this.loggedInStatus = event;
     });
-    if (!this.commonStateService.isAnonymous()) {
+    this.authService.loginStatus$.subscribe((status) => {
+      if (status === 'success') {
+        this.loggedInStatus = "LogOut"
+      }
+    });
+    if (user !=="anonymous") {
       this.loggedInStatus = "LogOut"
     }
   }
@@ -39,7 +46,7 @@ export class HeaderComponent implements OnInit {
   }
   changeLoginStatus() {
     if (this.loggedInStatus === "LogOut") {
-      this.AuthService.logout();
+      this.authService.logout();
     }
     else {
       this.modalService.open(LoginComponent, { centered: false });

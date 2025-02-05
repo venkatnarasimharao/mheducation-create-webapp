@@ -1,0 +1,47 @@
+.table {
+    table-layout: fixed;
+    /* Ensures equal column widths */
+    width: 100%;
+    /* Ensures table stretches to the container width */
+}
+
+.table th,
+.table td {
+    text-align: left;
+    /* Centers the text for header and cells */
+    vertical-align: middle;
+    /* Ensures vertical alignment */
+    word-wrap: break-word;
+    /* Wraps text if it exceeds the column width */
+}
+
+/* Set height and background color for accordion header */
+.custom-accordion-header {
+    height: 60px;
+    /* Adjust height as needed */
+    background-color: #f8f9fa;
+    /* Light gray background */
+    color: #333;
+    /* Text color */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 15px;
+    border-radius: 5px;
+    /* Optional: Rounded corners */
+}
+
+/* Ensure the button inside doesn't have extra padding */
+.custom-accordion-header button {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+/* Optional: Add border and shadow */
+.custom-accordion-header:hover {
+    background-color: #e9ecef;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}

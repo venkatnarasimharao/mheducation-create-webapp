@@ -1,17 +1,21 @@
+import { CommonStateService } from './../common-state/common-state.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BOOK_COVER_IMAGES, USER_SEARCH_CONFIG } from '../../../shared/constants/search-payload.config';
 import { environment } from '../../../../environments/environment';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-
   constructor(
     private http: HttpClient,
+    private cookieService: CookieService,
+    private commonStateService: CommonStateService
   ) { }
+
 
   getSearchListing() {
     const finalPay = USER_SEARCH_CONFIG
@@ -32,7 +36,6 @@ export class ApiService {
       options: { responseType: 'text' }
     })
   }
-
   userLogin(payload: { username: string, password: string }): Observable<any> {
     const { username, password } = payload;
     const base64String = btoa(`${username}:${password}`);
@@ -66,6 +69,31 @@ export class ApiService {
   getTaxonomyfacetsList() {
     return this.apiMethodService({ url: '/p/taxonomyfacets/create.mheducation.com/80/createonline', method: 'GET' })
   }
+  addFavourite(guid: string) {
+    const payload = {
+      "favorite": {
+        "_guid": guid
+      }
+    }
+    return this.apiMethodService({ url: `/p/users/${this.commonStateService.isAnonymous()}/favorites`, method: 'POST', body: payload })
+  }
+  deleteFavorite(guid: string) {
+    return this.apiMethodService({ url: `/p/users/${this.commonStateService.isAnonymous()}/favorites/${guid}?method=DELETE`, method: 'POST', });
+  }
+  getProjectList(projectType: string) {
+    const userId = this.commonStateService.isAnonymous();
+    let user = userId || "anonymous";
+    const params = {
+      nocacheTimestamp: Date.now(),
+      state: projectType
+    }
+    return this.apiMethodService({
+      url: `/p/users/${userId}/projects`,
+      method: 'GET_PARMS',
+      params
+    })
+  }
+
 
   getCoverPhotosList() {
     return this.apiMethodService({ url: '/p/searchcovers', method: 'POST', body: BOOK_COVER_IMAGES })
@@ -76,10 +104,72 @@ export class ApiService {
     return this.apiMethodService({ url: `/locale/${languageCode}/props.json`, method: 'GET' });
   }
 
+  getBookDetails(assetId: string) {
+    const url = `/p/assets/${assetId}`;
+    const params = {
+      type: "metadata",
+      recursive: true,
+      getrootancestor: true,
+      relationships: true,
+      supplements: false,
+      nocacheTimestamp: Date.now(),
+    };
+    return this.apiMethodService({
+      url,
+      method: "GET_PARMS",
+      params,
+    });
+
+  }
+  getBookPageView(payload: any) {
+    const userId = this.commonStateService.isAnonymous();
+    let user = userId || "anonymous";
+    const url = `/users/${userId}/preview/${payload.guid}/${payload.pageNumber}`;
+    const headers = new HttpHeaders({
+      'X-Response-Type': 'arraybuffer'
+    });
+    const params = {
+      nocacheTimestamp: Date.now(),
+    };
+    return this.apiMethodService({
+      url,
+      method: "GET_IMAGE",
+      params,
+      options: { headers }
+    });
+  }
+  getBadPreviewPage() {
+    return "https://createqa.mheducation.com/createonline/images/bad_preview.jpg";
+  }
+  getFavouriteList() {
+    const params = {
+      nocacheTimestamp: Date.now(),
+    }
+    return this.apiMethodService({
+      url: `/p/users/${this.commonStateService.isAnonymous()}/specialsearch/favorites/`,
+      method: 'GET_PARMS',
+      params,
+      options: {
+        responseType: 'text'
+      }
+    })
+  }
+  getSearchInsideList(payload: any) {
+    const userId = this.commonStateService.isAnonymous();
+    let user = userId || "anonymous";
+    return this.apiMethodService({
+      url: `/p/users/${user}/searchinside`,
+      method: 'POST',
+      body: payload,
+      options: {
+        responseType: 'text'
+      }
+    })
+  }
+
   apiMethodService<T>({ url, method, body, params = {}, options = {} }: any): Observable<any> {
-    const pathName = window.location.pathname?.includes('createonline') ? window.location.pathname : '/createonline'
-    url = environment.apiUrl + pathName + url;
-    if (!options['responseType']) {
+    url = environment.apiUrl + url;
+    if (!options['responseType'] && method !== 'GET_IMAGE') {
       options['responseType'] = 'text';
     }
     if (!options['observe']) {
@@ -92,7 +182,7 @@ export class ApiService {
       case 'GET_PARMS':
         return this.http.get(url, { params: params, ...options });
       case 'GET_IMAGE':
-        return this.http.get(url, { responseType: 'blob' as 'json', ...options });
+        return this.http.get(url, { params: params, responseType: 'blob', ...options });
       case 'PUT':
         return this.http.put(url, body, options);
       case 'PUT_PARAMS':

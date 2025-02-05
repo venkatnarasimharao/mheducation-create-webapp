@@ -30,7 +30,7 @@ export class SearchFindContentComponent implements OnInit {
   selectProjectTitle: string = 'Test123';
   selectFormatTitle: string = 'Please Select';
   selectArrangeTitle: string = 'Arrange';
-  collectionDetails: SearchCollectionInterface| null = null;
+  collectionDetails: SearchCollectionInterface | null = null;
   //dropdown items
   selectProjectItems: any[] = [
     { id: 1, name: 'Project 1' },
@@ -49,7 +49,8 @@ export class SearchFindContentComponent implements OnInit {
   selectFormatHeading: string = 'Select Format';
   arrangeHeading: string = '86 pgs / $12.46 est';
 
-  constructor(private route: ActivatedRoute, private readonly imageService: ImageGalleryService) {}
+  constructor(private route: ActivatedRoute, private readonly imageService: ImageGalleryService,
+  ) { }
 
   ngOnInit(): void {
     combineLatest([this.route.params, this.route.queryParams])
@@ -58,15 +59,15 @@ export class SearchFindContentComponent implements OnInit {
       )
       .subscribe((results: any) => {
         const queryparam = results.query;
-        
-   
+
+
         if (queryparam.collectionCode) {
-           this.collectionDetails =  this.imageService.getImageByCode(queryparam.collectionCode);
+          this.collectionDetails = this.imageService.getImageByCode(queryparam.collectionCode);
         }
       });
   }
-  
-  
+
+
   onSelect(item: { id: number; name: string }) {
     this.selectProjectTitle = item.name;
   }

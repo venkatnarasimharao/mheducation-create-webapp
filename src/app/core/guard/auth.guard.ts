@@ -1,25 +1,29 @@
+import { CommonModule } from '@angular/common';
+import { CommonStateService } from './../services/common-state/common-state.service';
+import { SharedstateService } from './../services/shared-state/sharedstate.service';
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { LoginComponent } from '../../shared/components/login/login.component';
-import { CommonStateService } from '../services/common-state/common-state.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
   constructor(
+    private modalService: NgbModal,
     private commonStateService: CommonStateService,
-    private router: Router,
-    private modalService: NgbModal
+    private router: Router
   ) { }
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): boolean {
-    if (!this.commonStateService.isAnonymous()) {
+    const userId = this.commonStateService.isAnonymous();
+    let user = userId || "anonymous";
+    if (user !="anonymous") {
       return true;
     }
     else {

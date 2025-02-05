@@ -8,7 +8,7 @@ export class FocusTrapDirective {
   @Input('hecFocusTrap') dropdownMenu!: HTMLElement;
   @Input() focusableElementSelector: string = 'button';
 
-  constructor(private el: ElementRef) {}
+  constructor(private el: ElementRef) { }
 
   @HostListener('keydown', ['$event'])
   focusTrap(event: KeyboardEvent): void {
