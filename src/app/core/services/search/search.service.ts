@@ -13,9 +13,14 @@ export class SearchService {
     findable: false,
   });
 
+  private textTypeSource = new BehaviorSubject<string[]>([]);  // New source to track textType
+
   private payload: any = null;
 
+  constructor() {}
+
   searchResult$ = this.searchStateSource.asObservable();
+
 
   updateSearchResult(data: any) {
     this.searchStateSource.next({
@@ -28,16 +33,15 @@ export class SearchService {
   }
 
   updateSearchQuery(payload: any) {
-    // Update search state with query, textType, and findable
     this.searchStateSource.next({
       ...this.searchStateSource.value,
       query: payload.search.query,
       textType: payload.search.textTypes.textType,
       findable: payload.search.findable,
     });
-  
-    // Update payload
+
     this.payload = payload;
+    
   }
 
   startSearch() {
@@ -49,12 +53,19 @@ export class SearchService {
     });
   }
 
-  // Simplified payload methods
   getPayload(): any {
     return this.payload;
   }
 
   setPayload(newPayload: any): void {
     this.payload = newPayload;
+  }
+
+  setTextType(selectedCategories: any):any {
+    this.textTypeSource.next(selectedCategories);
+  }
+
+  getTextType(){
+    return this.textTypeSource.value;
   }
 }

@@ -11,11 +11,11 @@ import { SearchResultsComponent } from '../../shared/components/search-results/s
 import { combineLatest, map } from 'rxjs';
 import { ImageGalleryService } from '../../core/services/image-gallery/image-gallery.service';
 import { SearchCollectionInterface } from '../../shared/models/search.model';
-import { ApiService } from '../../core/services/api/api.service';
 import { ImageCardComponent } from '../../shared/components/image-card/image-card.component';
 import { SearchbarComponent } from '../../shared/components/searchbar/searchbar.component';
 import { SearchService } from '../../core/services/search/search.service';
 import { SortbyComponent } from '../../shared/components/sortby/sortby.component';
+import { ApiService } from '../../core/services/api/api.service';
 
 @Component({
   selector: 'hec-search-find-content',
@@ -45,11 +45,8 @@ export class SearchFindContentComponent implements OnInit {
   collectionDetails: SearchCollectionInterface | null = null;
   totalResults: number = 0;
   Math = Math;
-
-  private apiService: ApiService = inject(ApiService);
-
-
   collections: any[] = [];
+
   selectProjectItems: any[] = [
     { id: 1, name: 'Project1' },
     { id: 2, name: 'Project2' },
@@ -80,7 +77,8 @@ export class SearchFindContentComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private readonly imageService: ImageGalleryService,
-    private searchService: SearchService,
+    private searchService: SearchService, 
+    private apiService: ApiService
   ) {}
 
   ngOnInit(): void {
@@ -95,7 +93,7 @@ export class SearchFindContentComponent implements OnInit {
           this.totalResults = state.result?.estimate || 0;
         }
       }
-    });  
+    });
 
     combineLatest([this.route.params, this.route.queryParams])
       .pipe(map((results) => ({ params: results[0], query: results[1] })))
@@ -107,37 +105,40 @@ export class SearchFindContentComponent implements OnInit {
         }
       });
 
+    // Fetch collections list here instead of SearchService
+    this.fetchCollectionsList();
+  }
+
+  fetchCollectionsList(): void {
+   
+
     this.apiService.getCollectionsList().subscribe({
       next: (response) => {
-        this.sfcloading = false
-        if(response.ok){
-            const parsedBody = JSON.parse(response.body);
-            console.log('parsedBody', parsedBody)
-
-            if (parsedBody?.search?.valuefacets?.facet) {
-              this.collections = parsedBody.search.valuefacets.facet.map((facet: any) => {
-                const items = Array.isArray(facet.item) ? facet.item : [facet.item].filter(Boolean);
-                return {
-                  header: facet?.label,
-                  displayType: facet?.displayType,
-                  collectionTypes: items.map((item: any) => ({
-                    label: item?.label,
-                    selected: item?.selected,
-                    value: item?.value,
-                  })),
-                };
-              });
-            }
-          
+        if (response.ok) {
+          const parsedBody = JSON.parse(response.body);
+          if (parsedBody?.search?.valuefacets?.facet) {
+            this.collections = parsedBody.search.valuefacets.facet.map((facet: any) => {
+              const items = Array.isArray(facet.item) ? facet.item : [facet.item].filter(Boolean);
+              return {
+                header: facet?.label,
+                displayType: facet?.displayType,
+                collectionTypes: items.map((item: any) => ({
+                  label: item?.label,
+                  selected: item?.selected,
+                  value: item?.value,
+                })),
+              };
+            });
+          }
         }
-       
+    
       },
       error: (err) => {
         console.error('Error fetching collections:', err);
+        
       },
     });
   }
-
 
   onSelect(item: { id: number; name: string }) {
     this.selectProjectTitle = item.name;
@@ -153,11 +154,14 @@ export class SearchFindContentComponent implements OnInit {
     const finalPayload = this.searchService.getPayload();
 
     if (finalPayload) {
-      // Adjust the 'start' value for pagination
       this.startValue = (newPage - 1) * this.resultsPerPage + 1;
       finalPayload.search.start = this.startValue;
 
       this.searchService.startSearch();
+
+      this.fetchCollectionsList(); // Refresh collections on page change
+
+      this.searchService.getPayload().search.start = this.startValue;
 
       // Call the API to fetch updated results based on the new page
       this.apiService.getSearchListing(finalPayload).subscribe({
