@@ -93,6 +93,20 @@ export class ApiService {
   deleteFavorite(guid: string) {
     return this.apiMethodService({ url: `/p/users/${this.commonStateService.isAnonymous()}/favorites/${guid}?method=DELETE`, method: 'POST', });
   }
+
+  getFavouriteListGuids() {
+    const params = {
+      nocacheTimestamp: Date.now(),
+    }
+    return this.apiMethodService({
+      url: `/p/users/${this.commonStateService.isAnonymous()}/favorites/?nocacheTimestamp=1738840917963`, 
+      method: 'GET_PARMS',
+      params,
+      options: {
+        responseType: 'text'
+      }
+    })
+  }
   
 
   apiMethodService<T>({ url, method, body, params = {}, options = {} }: any): Observable<any> {

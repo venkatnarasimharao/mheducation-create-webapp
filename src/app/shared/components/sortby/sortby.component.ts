@@ -116,6 +116,7 @@ export class SortbyComponent implements OnInit {
 
   // ✅ Fetch sorted results based on the updated payload
   private fetchSortResults() {
+    this.searchService.startSearch();
     this.apiService.getSearchListing(this.payload).subscribe({
       next: (response) => {
         if (response.ok) {

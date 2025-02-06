@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { SearchService } from '../../../core/services/search/search.service';
 import { ApiService } from '../../../core/services/api/api.service';
-import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonStateService } from '../../../core/services/common-state/common-state.service';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'hec-search-results',
@@ -14,17 +14,20 @@ import { CommonModule } from '@angular/common';
 })
 export class SearchResultsComponent implements OnInit {
   searchResults: any[] = [];
+  favoriteGuids: Set<string> = new Set(); // Store favorite GUIDs for quick lookup
   loading: boolean = false;
 
   constructor(
     private searchService: SearchService,
     private apiService: ApiService,
-    private commonStateService: CommonStateService,
-    private router: Router,
-    private route: ActivatedRoute
+    private commonStateService: CommonStateService
   ) {}
 
   ngOnInit() {
+    // Fetch favorite list
+    this.fetchFavoriteList();
+
+    // Subscribe to search results
     this.searchService.searchResult$.subscribe({
       next: (state) => {
         this.loading = state.loading;
@@ -42,7 +45,7 @@ export class SearchResultsComponent implements OnInit {
             description: item.description,
             enableAddButton: item.enableAddButton,
             imageUrl: this.commonStateService.getImageUrl(`/covers/${item.isbn}.jpeg`, false),
-            isFavorite: this.isFavorite(item.guid),
+            isFavorite: this.favoriteGuids.has(item.guid), 
           }));
         } else {
           this.searchResults = [];
@@ -55,35 +58,53 @@ export class SearchResultsComponent implements OnInit {
     });
   }
 
-  isFavorite(guid: string): boolean {
-    const favorites = this.route.snapshot.queryParams['favorites']?.split(',') || [];
-    return favorites.includes(guid);
+  
+  private fetchFavoriteList() {
+    this.apiService.getFavouriteListGuids().subscribe({
+      next: (response: any) => {
+        try {
+          const favoriteData = JSON.parse(response.body);
+          console.log('favoriteData', favoriteData);
+          if (favoriteData?.favorite?.length) {
+            this.favoriteGuids = new Set(favoriteData.favorite.map((fav: any) => fav.guid));
+            console.log('favoriteGuids', this.favoriteGuids);
+          }
+        } catch (error) {
+          console.error('Error parsing favorite list:', error);
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching favorite list:', error);
+      },
+    });
   }
 
+  // ✅ Toggle favorite status and update UI immediately
   toggleFavorite(result: any) {
     if (result.isFavorite) {
-      this.apiService.deleteFavorite(result.guid).subscribe(() => {
-        result.isFavorite = false;
-        this.updateQueryParams();
+      result.isFavorite = false;
+      this.favoriteGuids.delete(result.guid);
+      this.apiService.deleteFavorite(result.guid).subscribe({
+        next: () => {
+          console.log('Removed from favorites');
+        },
+        error: (error) => {
+          console.error('Error removing from favorites:', error);
+          result.isFavorite = true; // Revert if API fails
+        }
       });
     } else {
-      this.apiService.addFavorite(result.guid).subscribe(() => {
-        result.isFavorite = true;
-        this.updateQueryParams();
+      result.isFavorite = true;
+      this.favoriteGuids.add(result.guid);
+      this.apiService.addFavorite(result.guid).subscribe({
+        next: () => {
+          console.log('Added to favorites');
+        },
+        error: (error) => {
+          console.error('Error adding to favorites:', error);
+          result.isFavorite = false; // Revert if API fails
+        }
       });
     }
-  }
-
-  private updateQueryParams() {
-    const favoriteGuids = this.searchResults
-      .filter((item) => item.isFavorite)
-      .map((item) => item.guid)
-      .join(',');
-
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: { favorites: favoriteGuids },
-      queryParamsHandling: 'merge',
-    });
   }
 }
