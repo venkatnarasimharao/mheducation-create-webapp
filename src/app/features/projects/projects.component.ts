@@ -105,6 +105,9 @@ export class ProjectsComponent implements OnInit {
 
   }
   updatePayload(payload:any,projectType:string){
+    if(projectType =="active"){
+      projectType="";
+    }
     const newPayload = {project:payload}
     newPayload.project['_archivedState'] =projectType;
     return newPayload;

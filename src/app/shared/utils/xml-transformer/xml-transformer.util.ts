@@ -131,9 +131,10 @@ export class XmlTransformerUtil {
                 }
                 const objEntries = Object.entries(obj)
                 let objEntriesIndex = 1;
+                const filteredArrays = objEntries.filter(ele => ele[0].startsWith('_'));
                 for (const [key, value] of objEntries) {
                     if (key.startsWith('_')) {
-                        if (objEntries?.length === objEntriesIndex) {
+                        if ((objEntries?.length === objEntriesIndex) || (filteredArrays?.length === objEntriesIndex)) {
                             xml += ` ${key.substring(1)}="${value}">`;
                         } else {
                             xml += ` ${key.substring(1)}="${value}"`;

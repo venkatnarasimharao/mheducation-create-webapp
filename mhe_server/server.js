@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
     res.send('Server is working');
 });
 
-app.all('/proxy/createonline/*', async (req, res) => {
+app.all('/proxy/*', async (req, res) => {
     try {
         console.log(req.body);
         let response = ``
@@ -56,6 +56,22 @@ app.all('/proxy/createonline/*', async (req, res) => {
         } else if (req.method === 'GET') {
             response = await axios.get(externalApiUrl, axiosOptions);
         }
+        else if (req.method === 'PUT') {
+            const xmlData = req.body;
+            
+            // Add Content-Type header for PUT request
+            const axiosOptionsWithContentType = {
+                ...axiosOptions,
+                headers: {
+                    ...axiosOptions.headers,
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+                }
+            };
+            
+            response = await axios.put(externalApiUrl, xmlData, axiosOptionsWithContentType);
+            console.log(response, 'Raw XML Payload:', xmlData);
+        }
+        
         const headersToForward = response.headers;
         Object.entries(headersToForward).forEach(([key, value]) => {
             if (key === 'access-control-allow-origin') {
