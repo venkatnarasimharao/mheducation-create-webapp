@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { ApiService } from '../../../core/services/api/api.service';
 import { SearchService } from '../../../core/services/search/search.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'hec-sortby',
@@ -17,15 +18,25 @@ export class SortbyComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private searchService: SearchService
+    private searchService: SearchService,
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     const textType = this.searchService.textType$.subscribe((textType)=> {
-      console.log('textType-', textType);
-      this.fetchSortOptions(textType);
+      if((Array.isArray(textType) && textType.length === 0)){
+        this.route.queryParams.subscribe((params)=> {
+          const textType = params['textType'] || ''; 
+          console.log('textType', textType);
+          this.fetchSortOptions(textType);
+        });
+      } else{
+        console.log('textType-', textType);
+        this.fetchSortOptions(textType);
+      }
+     
     });
-    
   }
   
 
@@ -105,6 +116,7 @@ export class SortbyComponent implements OnInit {
 
   // ✅ Fetch sorted results based on the updated payload
   private fetchSortResults() {
+    this.searchService.startSearch();
     this.apiService.getSearchListing(this.payload).subscribe({
       next: (response) => {
         if (response.ok) {

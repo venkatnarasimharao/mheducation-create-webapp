@@ -1,3 +1,4 @@
+
 <div class="loadingcontainer position-relative">
   <!-- Display loading message while data is being fetched -->
   @if (loading) {
@@ -16,7 +17,7 @@
     @for (result of searchResults; track result.guid) {
       <div class="card mb-3 shadow-sm">
         <div class="card-body d-flex gap-3">
-          <img src="{{result.imageUrl}}" alt="Cover Image">
+          <img src="{{ result.imageUrl }}" alt="Cover Image">
 
           <div class="flex-grow-1">
             <div class="d-flex align-items-center">
@@ -26,9 +27,12 @@
                 {{ result.title }}
               </a>
               
-              <!-- Favorite Icon -->
-               <button class="bg-transparent border-0  ms-auto"><i class="bi fs-3" [ngClass]="result.isFavorite ? 'bi-star-fill text-warning' : 'bi-star text-warning'"
-                (click)="toggleFavorite(result)"></i></button>
+              <!-- Favorite Icon (Updated Logic) -->
+              <button class="bg-transparent border-0 ms-auto" (click)="toggleFavorite(result)">
+                <i class="bi fs-3"
+                   [ngClass]="favoriteGuids.has(result.guid) ? 'bi-star-fill text-warning' : 'bi-star text-warning'">
+                </i>
+              </button>
               
             </div>
 
