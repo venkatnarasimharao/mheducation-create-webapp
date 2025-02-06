@@ -5,6 +5,7 @@ import { ApiService } from '../../../core/services/api/api.service';
 import { CommonStateService } from '../../../core/services/common-state/common-state.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'hec-search-results',
@@ -21,7 +22,8 @@ export class SearchResultsComponent implements OnInit {
   constructor(
     private searchService: SearchService,
     private apiService: ApiService,
-    private commonStateService: CommonStateService
+    private commonStateService: CommonStateService, 
+    private modalService: NgbModal
   ) {}
 
   ngOnInit() {
@@ -82,30 +84,35 @@ export class SearchResultsComponent implements OnInit {
 
   // ✅ Toggle favorite status and update UI immediately
   toggleFavorite(result: any) {
-    if (result.isFavorite) {
-      result.isFavorite = false;
-      this.favoriteGuids.delete(result.guid);
-      this.apiService.deleteFavorite(result.guid).subscribe({
-        next: () => {
-          console.log('Removed from favorites');
-        },
-        error: (error) => {
-          console.error('Error removing from favorites:', error);
-          result.isFavorite = true; // Revert if API fails
-        }
-      });
-    } else {
-      result.isFavorite = true;
-      this.favoriteGuids.add(result.guid);
-      this.apiService.addFavorite(result.guid).subscribe({
-        next: () => {
-          console.log('Added to favorites');
-        },
-        error: (error) => {
-          console.error('Error adding to favorites:', error);
-          result.isFavorite = false; // Revert if API fails
-        }
-      });
+    if(this.commonStateService.isAnonymous()){
+      const modalRef = this.modalService.open(LoginComponent, { centered: false });
+    } else{
+      if (result.isFavorite) {
+        result.isFavorite = false;
+        this.favoriteGuids.delete(result.guid);
+        this.apiService.deleteFavorite(result.guid).subscribe({
+          next: () => {
+            console.log('Removed from favorites');
+          },
+          error: (error) => {
+            console.error('Error removing from favorites:', error);
+            result.isFavorite = true; // Revert if API fails
+          }
+        });
+      } else {
+        result.isFavorite = true;
+        this.favoriteGuids.add(result.guid);
+        this.apiService.addFavorite(result.guid).subscribe({
+          next: () => {
+            console.log('Added to favorites');
+          },
+          error: (error) => {
+            console.error('Error adding to favorites:', error);
+            result.isFavorite = false; // Revert if API fails
+          }
+        });
+      }
     }
+    
   }
 }
