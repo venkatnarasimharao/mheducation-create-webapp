@@ -59,9 +59,6 @@ export class FavouritesComponent implements OnInit {
       });
     }
   }
-  show(item: any) {
-    console.log(item, "ndksjhdu");
-  }
   toggleShowDescription(item: any) {
     item.isMoreButton = !item.isMoreButton
   }

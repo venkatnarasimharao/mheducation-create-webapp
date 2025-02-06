@@ -1,1 +1,46 @@
-<p>uploads works!</p>
+<div class="p-2 fs-5">
+  <h1 class="m-2">My Uploads</h1>
+  <div class="d-flex justify-content-center align-items-center">
+    <button class="btn btn-secondary">
+      <i class="bi bi-cloud-upload"></i> Upload Content
+    </button>
+  </div>
+  <table class="table bg-transparent">
+    <thead class="bg-primary">
+      <tr class="border-0">
+        <th scope="col">Type</th>
+        <th scope="col">Title/Details</th>
+        <th scope="col">Options</th>
+      </tr>
+    </thead>
+    @if(isUploadLoading){
+    <div class="d-flex align-items-center justify-content-center loader-parent">
+      <div class="hec-loader-content"></div>
+    </div>
+    }
+    <tbody class="p-2">
+      @for (item of uploadedList; track i; let i = $index) {
+      <tr tabindex="0" class="border-bottom">
+        <td scope=" row">
+          <img
+            src="https://createqa.mheducation.com/createonline/images/upload/Uploaded-file-icon.png"
+            alt="item-img"
+            style="width: 80px; height: 100px"
+          />
+        </td>
+        <td>
+          <div class="fw-bold">{{ item.title }}</div>
+          <div>{{ item.year + " | " + item.authors }}</div>
+          <div>Available Formats:- --------</div>
+          @if(!item.isMoreButton){
+          <div [innerHtml]="item.description"></div>
+          }
+        </td>
+        <td>
+          <button class="btn btn-primary w-auto">Add to Projects</button>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>

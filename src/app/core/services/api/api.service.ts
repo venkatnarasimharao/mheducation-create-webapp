@@ -105,6 +105,13 @@ export class ApiService {
       params
     })
   }
+  getUploadedProjectList(){
+    const url =`/p/users/${this.commonStateService.isAnonymous()}/specialsearch/uploads/`
+    const params={
+      nocacheTimestamp : Date.now(),
+    }
+    return this.apiMethodService({ url, method: 'GET_PARAMS',params })
+  }
   getProjectDetails(guid:any){
     const params ={
       nocacheTimestamp : Date.now(),
@@ -178,7 +185,7 @@ export class ApiService {
     }
     return this.apiMethodService({
       url: `/p/users/${this.commonStateService.isAnonymous()}/specialsearch/favorites/`,
-      method: 'GET_PARMS',
+      method: 'GET_PARAMS',
       params,
       options: {
         responseType: 'text'
