@@ -24,8 +24,8 @@ export class SearchbarComponent {
   translate: TranslateService = inject(TranslateService);
   private apiService = inject(ApiService);
   private searchService = inject(SearchService);
-    private router = inject(Router);
-    private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   searchCategories = [
     { label: 'SearchAll', checked: true, id: 'all' },
