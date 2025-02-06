@@ -44,7 +44,6 @@ describe('AuthGuard', () => {
   });
 
   it('should allow navigation if user is not anonymous', () => {
-    spyOn(authService, 'isAnonymous').and.returnValue(false);
     const route = {} as ActivatedRouteSnapshot;
     const state = { url: '/some-path' } as RouterStateSnapshot;
     const canActivate = guard.canActivate(route, state);
@@ -52,7 +51,6 @@ describe('AuthGuard', () => {
   });
 
   it('should block navigation and open the login modal if user is anonymous', () => {
-    spyOn(authService, 'isAnonymous').and.returnValue(true);
     spyOn(modalService, 'open').and.callThrough();
     const route = {} as ActivatedRouteSnapshot;
     const state = { url: '/some-path' } as RouterStateSnapshot;

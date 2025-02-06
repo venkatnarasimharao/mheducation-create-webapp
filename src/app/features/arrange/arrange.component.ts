@@ -79,8 +79,8 @@ export class ArrangeComponent implements OnInit {
       if (projects.ok) {
         const data = JSON.parse(projects.body);
         this.projectList = data.project.map((item: any) => ({
-          id: item.guid,
-          name: item.title,
+          id: item._guid,
+          name: item._title,
         }));
         if (this.projectId) {
           const selectedProject = this.projectList.filter((e: any) => {
@@ -106,7 +106,7 @@ export class ArrangeComponent implements OnInit {
           const price = JSON.parse(response.body);
           price.assetprices.assetprice.forEach((asset: any) => {
             const assetId = asset?.assetId;
-            const priceValue = asset.prices?.price?.value;
+            const priceValue = asset._prices?._price?._value;
             if (assetId && priceValue) {
               this.pricingData[assetId] = parseFloat(priceValue).toFixed(2);
             }
@@ -156,14 +156,14 @@ export class ArrangeComponent implements OnInit {
             items: [],
           },
         ];
-        this.projectStructureEntries = result?.structure?.entry || [];
+        this.projectStructureEntries = result?.structure?._entry || [];
 
         for (const row of this.projectStructureEntries) {
-          if (row.subtype === 'frontmatter') {
+          if (row._subtype === 'frontmatter') {
             this.sections[0].items = row.entry;
-          } else if (row.subtype === 'contents') {
+          } else if (row._subtype === 'contents') {
             this.sections[1].items = row.entry;
-          } else if (row.subtype === 'backmatter') {
+          } else if (row._subtype === 'backmatter') {
             this.sections[2].items = row.entry;
           } else {
             this.sections[3].items = row.entry;
@@ -190,7 +190,7 @@ export class ArrangeComponent implements OnInit {
   private processItem(entry: any): ProjectItem | null {
     if (!entry) return null;
     const attrs = entry;
-    const guid = attrs.guid;
+    const guid = attrs._guid;
     let priceDisplay = this.pricingData || 'N/A';
 
     console.log('Processing item:', attrs.computedtitle, 'GUID:', guid);
@@ -209,14 +209,14 @@ export class ArrangeComponent implements OnInit {
 
     return {
       guid: guid,
-      name: attrs.computedtitle || attrs.title,
-      pages: parseInt(attrs.pagecount) || 0,
+      name: attrs._computedtitle || attrs._title,
+      pages: parseInt(attrs._pagecount) || 0,
       price: priceDisplay,
       checked: false,
       disableUp: false,
       disableDown: false,
-      type: attrs.type || entry.type || entry.structuraltype,
-      subType: attrs.subType || '',
+      type: attrs._type || entry._type || entry._structuraltype,
+      subType: attrs._subType || '',
     };
   }
 
