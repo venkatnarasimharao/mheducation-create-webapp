@@ -118,7 +118,7 @@ export class ApiService {
       method :"PUT",
     } 
     console.log(payload,"payload")
-    return this.apiMethodService({ url, method: 'POST', options:{params},body: payload})
+    return this.apiMethodService({ url, method: 'PUT', options:{params},body: payload})
   }
   checkActiveProject(guid:string) {
     const url = `/users/${this.commonStateService.isAnonymous()}/checkActive/${guid}`;

@@ -11,16 +11,13 @@ import { CommonStateService } from '../../core/services/common-state/common-stat
   styleUrl: './favourites.component.scss'
 })
 export class FavouritesComponent implements OnInit {
-  constructor(private apiService: ApiService
+  constructor(private apiService: ApiService,
+    private commonstateService: CommonStateService
   ) { }
   favouriteList: { type: any; title: any; guid: any; ingested: any, imageUrl: any, isFav: boolean, year: any, authors: any, description: any, isMoreButton: boolean, isFavLoader: boolean }[] = [];
   isFavLoading: boolean = false;
 
   ngOnInit(): void {
-    
-    this.apiService.addFavourite("CF42AF7D-55C3-5F16-FDDD-556ABA71E91B").subscribe(() => {
-
-    });
     this.isFavLoading = true;
     this.apiService.getFavouriteList().subscribe((res) => {
       this.isFavLoading = false;
@@ -31,7 +28,7 @@ export class FavouritesComponent implements OnInit {
         title: item.title,
         guid: item.guid,
         ingested: item.ingested,
-        imageUrl: `https://createqa.mheducation.com/covers/${item.isbn}.jpeg`,
+        imageUrl: this.commonstateService.getImageUrl(`/covers/${item.isbn}.jpeg`,false),
         isFav: true,
         year: item.year,
         authors: typeof (item.authors) == 'string' ? item.authors : "",

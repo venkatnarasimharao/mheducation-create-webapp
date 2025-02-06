@@ -68,8 +68,8 @@ export class ProjectsComponent implements OnInit {
     this.router.navigate(['/personalize'], { queryParams: { guid } });
   }
   getCoverUrl(project: any) {
-    if(project.bookCover){
-      return this.commonStateService.getImageUrl( `/createonline/covers/personalize/${project.bookCover}_Thumb.png`,false);
+    if(project._bookCover){
+      return this.commonStateService.getImageUrl( `/createonline/covers/personalize/${project._bookCover}_Thumb.png`,false);
     }
     return this.commonStateService.getImageUrl('/createonline/images/unknown-cover.png',false);
   }
@@ -91,10 +91,10 @@ export class ProjectsComponent implements OnInit {
   }
   duplicateProject(project:any){
     this.projectUpdateLoader=true;
-    this.apiService.checkActiveProject(project.guid).subscribe((res)=>{
+    this.apiService.checkActiveProject(project._guid).subscribe((res)=>{
       this.projectUpdateLoader=false;
       console.log(res);
-      this.updateDuplicateProject(project.guid);
+      this.updateDuplicateProject(project._guid);
       
     },
   (error)=>{
@@ -105,6 +105,9 @@ export class ProjectsComponent implements OnInit {
 
   }
   updatePayload(payload:any,projectType:string){
+    if(projectType =="active"){
+      projectType="";
+    }
     const newPayload = {project:payload}
     newPayload.project['_archivedState'] =projectType;
     return newPayload;
