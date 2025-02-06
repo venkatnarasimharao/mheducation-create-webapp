@@ -6,6 +6,7 @@ import { CommonStateService } from '../../../core/services/common-state/common-s
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { LoginComponent } from '../login/login.component';
 
 @Component({
   selector: 'hec-search-results',
