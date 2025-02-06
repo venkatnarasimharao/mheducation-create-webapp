@@ -7,6 +7,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { LoginComponent } from '../../shared/components/login/login.component';
 
+
 @Injectable({
   providedIn: 'root',
 })

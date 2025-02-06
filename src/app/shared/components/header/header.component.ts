@@ -22,6 +22,7 @@ export class HeaderComponent implements OnInit {
   loggedInStatus: string = "LogIn"
 
   constructor(private menuService: MenuSidebarService,
+    private AuthService: AuthService,
     private commonStateService: CommonStateService,
     private authService: AuthService,
     private modalService: NgbModal) {
@@ -37,7 +38,7 @@ export class HeaderComponent implements OnInit {
         this.loggedInStatus = "LogOut"
       }
     });
-    if (user !=="anonymous") {
+    if (this.commonStateService.isAnonymous()) {
       this.loggedInStatus = "LogOut"
     }
   }

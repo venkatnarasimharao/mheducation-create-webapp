@@ -2,9 +2,8 @@ import { CommonStateService } from './../common-state/common-state.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { BOOK_COVER_IMAGES, USER_SEARCH_CONFIG } from '../../../shared/constants/search-payload.config';
+import { BOOK_COVER_IMAGES } from '../../../shared/constants/search-payload.config';
 import { environment } from '../../../../environments/environment';
-import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,28 +11,23 @@ import { CookieService } from 'ngx-cookie-service';
 export class ApiService {
   constructor(
     private http: HttpClient,
-    private cookieService: CookieService,
     private commonStateService: CommonStateService
   ) { }
+  
 
+  getSearchListing(finalPayload: any) {
+    const finalPay = JSON.parse(JSON.stringify(finalPayload));
+    const userId: string = this.commonStateService.isAnonymous();
+    let user = userId || "anonymous";
+    const headers = new HttpHeaders({
+      'X-Response-Type': 'arraybuffer',
+    });
 
-  getSearchListing() {
-    const finalPay = USER_SEARCH_CONFIG
-    let languages: any = sessionStorage.getItem('languages');
-    if (languages) {
-      languages = JSON.parse(languages);
-      finalPay['search']['facets']['facet'][4]['item'] = languages.map((item: any) => ({
-        _label: item.displayValue._text,
-        _value: item.name._text,
-        _selected: "false" // item.enabled._text === "true" ? "true" : 
-      }))
-    }
-    finalPay.search.textTypes.textType = 'all' // title | all | ["title","authors", "isbn", "description"];
     return this.apiMethodService({
-      url: `/p/users/anonymous/search`,
+      url: `/p/users/${user}/search`,
       method: 'POST',
       body: finalPay,
-      options: { responseType: 'text' }
+      options: { responseType: 'text', headers }
     })
   }
   userLogin(payload: { username: string, password: string }): Observable<any> {
@@ -77,9 +71,7 @@ export class ApiService {
     }
     return this.apiMethodService({ url: `/p/users/${this.commonStateService.isAnonymous()}/favorites/`, method: 'POST', body: payload })
   }
-  deleteFavorite(guid: string) {
-    return this.apiMethodService({ url: `/p/users/${this.commonStateService.isAnonymous()}/favorites/${guid}?method=DELETE`, method: 'POST', });
-  }
+
   getProjectToc(guid: string){
     console.log(guid);
     const headers = new HttpHeaders({
@@ -138,6 +130,24 @@ export class ApiService {
     return this.apiMethodService({ url: `/locale/${languageCode}/props.json`, method: 'GET' });
   }
 
+  getImageUrl(endPointUrl: string): string{
+    return environment.apiUrl + endPointUrl;
+  }
+
+  addFavorite(guid: string) {
+    const payload = {
+      "favorite": {
+        "_guid": guid
+      }
+    }
+    return this.apiMethodService({ url: `/p/users/${this.commonStateService.isAnonymous()}/favorites/`, method: 'POST', body: payload })
+  }
+
+  deleteFavorite(guid: string) {
+    return this.apiMethodService({ url: `/p/users/${this.commonStateService.isAnonymous()}/favorites/${guid}?method=DELETE`, method: 'POST', });
+  }
+  
+
   getBookDetails(assetId: string) {
     const url = `/p/assets/${assetId}`;
     const params = {
@@ -157,7 +167,6 @@ export class ApiService {
   }
   getBookPageView(payload: any) {
     const userId = this.commonStateService.isAnonymous();
-    let user = userId || "anonymous";
     const url = `/users/${userId}/preview/${payload.guid}/${payload.pageNumber}`;
     const headers = new HttpHeaders({
       'X-Response-Type': 'arraybuffer'
@@ -187,9 +196,8 @@ export class ApiService {
   }
   getSearchInsideList(payload: any) {
     const userId = this.commonStateService.isAnonymous();
-    let user = userId || "anonymous";
     return this.apiMethodService({
-      url: `/p/users/${user}/searchinside`,
+      url: `/p/users/${(userId || "anonymous")}/searchinside`,
       method: 'POST',
       body: payload,
       options: {
@@ -199,7 +207,8 @@ export class ApiService {
   }
 
   apiMethodService<T>({ url, method, body, params = {}, options = {} }: any): Observable<any> {
-    url = environment.apiUrl + url;
+    const pathName = window.location.pathname?.includes('createonline') ? window.location.pathname : '/createonline'
+    url = environment.apiUrl + pathName + url;
     if (!options['responseType'] && method !== 'GET_IMAGE') {
       options['responseType'] = 'text';
     }
@@ -226,4 +235,5 @@ export class ApiService {
         return this.http.get(url, options);
     }
   }
+  
 }

@@ -9,6 +9,7 @@ export const httpInterceptor: HttpInterceptorFn = (request, next) => {
   let JSESSIONID_CRT = cookieService.get('JSESSIONID_CRT');
   let transformedReq = request;
   if (JSESSIONID_CRT) {
+    // TODO jcookie -> Cookie
     transformedReq = transformedReq.clone({
       headers: transformedReq.headers.set(
         'jcookie', `JSESSIONID_CRT=${JSESSIONID_CRT}`

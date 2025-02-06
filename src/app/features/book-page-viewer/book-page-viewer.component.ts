@@ -14,7 +14,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './book-page-viewer.component.scss'
 })
 export class BookPageViewerComponent implements OnInit, OnChanges {
-  isAnonymous: boolean = true;
+  isAnonymous: any;
   imageUrl: any;
   pageNumber: number = 1;
   pageCount: number = 1;
@@ -36,7 +36,7 @@ export class BookPageViewerComponent implements OnInit, OnChanges {
     this.fetchBookPageView();
     this.authService.loginStatus$.subscribe((status) => {
       if (status === 'success') {
-        this.isAnonymous = false;
+        this.isAnonymous = this.commonStateService.isAnonymous();
         this.fetchBookPageView();
       }
     });
@@ -105,14 +105,14 @@ export class BookPageViewerComponent implements OnInit, OnChanges {
             this.imageUrl = blobUrl;
           } else {
             console.error('Invalid image type:', response.body?.type);
-            this.imageUrl = this.commonStateService.getImageUrl("/createonline/images/bad_preview.jpg",false);
+            this.imageUrl = this.commonStateService.getImageUrl('/images/bad_preview.jpg');
           }
         }
       },
       error: (error: any) => {
         this.pageViewLoading = false;
         this.isPreviousPage = true;
-        this.imageUrl = this.commonStateService.getImageUrl("/createonline/images/bad_preview.jpg",false);
+        this.imageUrl = this.commonStateService.getImageUrl("/images/bad_preview.jpg");
         console.error('Error fetching book data:', error);
       },
     });

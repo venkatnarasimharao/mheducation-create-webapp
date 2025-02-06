@@ -1,14 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { NgbDropdownToggleNoCaretDirective } from '../../shared/directives/dropdown-toggle-css.directive';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
+import { FilterAccordionComponent } from '../../shared/components/filter-accordion/filter-accordion.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { SearchResultsComponent } from '../../shared/components/search-results/search-results.component';
 import { combineLatest, map } from 'rxjs';
 import { ImageGalleryService } from '../../core/services/image-gallery/image-gallery.service';
-import { TranslateModule } from '@ngx-translate/core';
-import { ImageCardComponent } from '../../shared/components/image-card/image-card.component';
 import { SearchCollectionInterface } from '../../shared/models/search.model';
+import { ImageCardComponent } from '../../shared/components/image-card/image-card.component';
+import { SearchbarComponent } from '../../shared/components/searchbar/searchbar.component';
+import { SearchService } from '../../core/services/search/search.service';
+import { SortbyComponent } from '../../shared/components/sortby/sortby.component';
+import { ApiService } from '../../core/services/api/api.service';
 
 @Component({
   selector: 'hec-search-find-content',
@@ -19,54 +26,119 @@ import { SearchCollectionInterface } from '../../shared/models/search.model';
     CommonModule,
     NgbDropdownToggleNoCaretDirective,
     RouterModule,
+    PaginationComponent,
+    FilterAccordionComponent,
     TranslateModule,
-    ImageCardComponent
+    SearchResultsComponent,
+    ImageCardComponent,
+    SearchbarComponent,
+    SortbyComponent,
   ],
   templateUrl: './search-find-content.component.html',
   styleUrl: './search-find-content.component.scss',
 })
 export class SearchFindContentComponent implements OnInit {
-  //dropdownTitle
+  translate: TranslateService = inject(TranslateService);
   selectProjectTitle: string = 'Test123';
-  selectFormatTitle: string = 'Please Select';
+  selectFormatTitle: string = 'PleaseSelect';
   selectArrangeTitle: string = 'Arrange';
   collectionDetails: SearchCollectionInterface | null = null;
-  //dropdown items
+  totalResults: number = 0;
+  Math = Math;
+  collections: any[] = [];
+
   selectProjectItems: any[] = [
-    { id: 1, name: 'Project 1' },
-    { id: 2, name: 'Project 2' },
-    { id: 3, name: 'Project 3' },
+    { id: 1, name: 'Project1' },
+    { id: 2, name: 'Project2' },
+    { id: 3, name: 'Project3' },
   ];
 
   selectFormatItems: any[] = [
-    { id: 1, name: 'Format 1' },
-    { id: 2, name: 'Format 2' },
-    { id: 3, name: 'Format 3' },
+    { id: 1, name: 'Format1' },
+    { id: 2, name: 'Format2' },
+    { id: 3, name: 'Format3' },
   ];
 
-  //dropdown heading
-  selectProjectHeading: string = 'Select Project';
-  selectFormatHeading: string = 'Select Format';
+  selectProjectHeading: string = 'SelectProject';
+  selectFormatHeading: string = 'SelectFormat';
   arrangeHeading: string = '86 pgs / $12.46 est';
 
-  constructor(private route: ActivatedRoute, private readonly imageService: ImageGalleryService,
-  ) { }
+  currentPage: number = 1;
+  totalPagesCount: number = 1;
+  pagePerItem: number = 5;
+  resultsPerPage: number = 20;
+
+  startValue: number = 1; 
+  endValue: number = 20;
+  loading: boolean = false;
+  sfcloading: boolean = true;
+  searchedTerm: string = '';
+
+  constructor(
+    private route: ActivatedRoute,
+    private readonly imageService: ImageGalleryService,
+    private searchService: SearchService, 
+    private apiService: ApiService
+  ) {}
 
   ngOnInit(): void {
+    const payload = this.searchService.getPayload();
+
+    this.searchService.searchResult$.subscribe((state) => {
+      this.loading = state.loading;
+      if (state.result) {
+        const estimate = state.result?.estimate;
+        if (estimate) {
+          this.totalPagesCount = Math.ceil(Number(estimate) / this.resultsPerPage);
+          this.totalResults = state.result?.estimate || 0;
+        }
+      }
+    });
+
     combineLatest([this.route.params, this.route.queryParams])
-      .pipe(
-        map((results) => ({ params: results[0], query: results[1] })),
-      )
+      .pipe(map((results) => ({ params: results[0], query: results[1] })))
       .subscribe((results: any) => {
         const queryparam = results.query;
-
 
         if (queryparam.collectionCode) {
           this.collectionDetails = this.imageService.getImageByCode(queryparam.collectionCode);
         }
       });
+
+    // Fetch collections list here instead of SearchService
+    this.fetchCollectionsList();
   }
 
+  fetchCollectionsList(): void {
+   
+
+    this.apiService.getCollectionsList().subscribe({
+      next: (response) => {
+        if (response.ok) {
+          const parsedBody = JSON.parse(response.body);
+          if (parsedBody?.search?.valuefacets?.facet) {
+            this.collections = parsedBody.search.valuefacets.facet.map((facet: any) => {
+              const items = Array.isArray(facet.item) ? facet.item : [facet.item].filter(Boolean);
+              return {
+                header: facet?.label,
+                displayType: facet?.displayType,
+                collectionTypes: items.map((item: any) => ({
+                  label: item?.label,
+                  selected: item?.selected,
+                  value: item?.value,
+                })),
+              };
+            });
+          }
+        }
+    
+      },
+      error: (err) => {
+        console.error('Error fetching collections:', err);
+        
+      },
+    });
+  }
 
   onSelect(item: { id: number; name: string }) {
     this.selectProjectTitle = item.name;
@@ -74,5 +146,34 @@ export class SearchFindContentComponent implements OnInit {
 
   onSelected(item: { id: number; name: string }) {
     this.selectFormatTitle = item.name;
+  }
+
+  onPageChange(newPage: number): void {
+    this.currentPage = newPage;
+
+    const finalPayload = this.searchService.getPayload();
+
+    if (finalPayload) {
+      this.startValue = (newPage - 1) * this.resultsPerPage + 1;
+      finalPayload.search.start = this.startValue;
+
+      this.searchService.startSearch();
+
+      this.fetchCollectionsList(); // Refresh collections on page change
+
+      this.searchService.getPayload().search.start = this.startValue;
+
+      // Call the API to fetch updated results based on the new page
+      this.apiService.getSearchListing(finalPayload).subscribe({
+        next: (response) => {
+          if (response.ok) {
+            this.searchService.updateSearchResult(response.body);
+          }
+        },
+        error: (err) => {
+          console.error('API Error:', err);
+        },
+      });
+    }
   }
 }

@@ -3,9 +3,10 @@ export const USER_SEARCH_CONFIG = {
         "start": "1",
         "query": "",
         "textTypes": {
-            "textType": "all"
+            "textType": ""
         },
-        "textNamespace": "",
+        "findable": "false",
+        "textNamespace": "http://mhhe.com/primis/meta/resolved",
         "textConstraints": {
             "textConstraint": [
                 "-globalEdition:true",

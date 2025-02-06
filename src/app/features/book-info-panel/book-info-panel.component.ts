@@ -18,7 +18,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './book-info-panel.component.scss'
 })
 export class BookInfoPanelComponent implements OnInit {
-  isAnonymous: boolean = true;
+  isAnonymous: any;
   currentTab: string = 'contents';
   bookTitle: string = "";
   bookImage: string = "";
@@ -67,7 +67,7 @@ export class BookInfoPanelComponent implements OnInit {
     });
     this.authService.loginStatus$.subscribe((status) => {
       if (status === 'success') {
-        this.isAnonymous = false;
+        this.isAnonymous = this.commonStateService.isAnonymous();
       }
     });
   }
@@ -106,7 +106,7 @@ export class BookInfoPanelComponent implements OnInit {
   setBookCardData() {
     this.bookTitle = this.bookData?.title;
     this.bookSummary = (this.bookData?.year ? (" © " + this.bookData?.year) : "") + (this.bookData?.authors ? " | " + this.bookData.authors : "") + (this.bookData?.source ? " | " + this.bookData?.source : "");
-    this.bookImage = this.commonStateService.getImageUrl(`/covers/${this.bookData.isbn}.jpeg`,false);
+    this.bookImage = this.commonStateService.getImageUrl(`/covers/${this.bookData.isbn}.jpeg`);
   }
   setCurrentChapter(part: any, chapter: any) {
     this.currentChapter = this.tocList[part][chapter];
@@ -164,10 +164,9 @@ export class BookInfoPanelComponent implements OnInit {
   handleSign() {
     const modalRef = this.modalService.open(LoginComponent, { centered: false });
     modalRef.result.then(() => {
-      this.isAnonymous = false;
-      // TODO: set the book as favorite or not
+      this.isAnonymous = this.commonStateService.isAnonymous();
     }, () => {
-      this.isAnonymous = true;
+      this.isAnonymous = '';
     });
   }
   addBook() {

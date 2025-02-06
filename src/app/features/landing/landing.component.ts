@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule} from '@ngx-translate/core';
 import { ImageGalleryService } from '../../core/services/image-gallery/image-gallery.service';
 import { ImageCardComponent } from '../../shared/components/image-card/image-card.component';
 import {Collection} from '../../shared/models/search.model';
 import { SearchbarComponent } from '../../shared/components/searchbar/searchbar.component';
+
 
 @Component({
   selector: 'hec-landing',
@@ -27,11 +28,7 @@ export class LandingComponent {
 
   ngOnInit(): void {
     this.loadCollections();
-  }
-
-  handleSearch(event: { categories: string[]; term: string }) {
-    console.log('Search Data:', event);
-  }
+  }  
 
   private loadCollections(): void {
     this.imageService.getCollections().subscribe({

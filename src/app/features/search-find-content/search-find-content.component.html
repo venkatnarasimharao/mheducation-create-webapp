@@ -3,17 +3,21 @@
     <div class="col-12 border-0 border-bottom pb-3 my-2">
       <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-2">
         <div class="d-flex flex-column align-items-start">
-          <span class="fw-bold mb-1">{{ selectProjectHeading }}</span>
+          <span class="fw-bold mb-1">{{ selectProjectHeading | translate}}</span>
           <div ngbDropdown class="d-inline-block" aria-labelledby="select-project-heading">
-            <button type="button" ngbDropdownToggle noCaret class="btn btn-outline-dark text-dark bg-transparent w-100"
-              aria-label="Select a project">
-              {{ selectProjectTitle }}
+            <button type="button" ngbDropdownToggle noCaret class="btn btn-outline-dark text-dark bg-transparent w-100"  aria-label="Select a project">
+              {{ selectProjectTitle | translate}}
               <i class="bi bi-chevron-down ms-7"></i>
             </button>
             <div ngbDropdownMenu class="w-100" aria-labelledby="select-project-heading">
               @for(item of selectProjectItems; track item.name){
-              <button type="button" class="dropdown-item" (click)="onSelect(item)">
-                {{ item.name }}
+                <button
+                type="button"
+                class="dropdown-item"
+                (click)="onSelect(item)"
+                
+              >
+                {{ item.name | translate}}
               </button>
               }
 
@@ -23,17 +27,20 @@
 
         <div class="d-flex gap-1 mt-2 mt-md-0 flex-wrap justify-content-center">
           <div class="d-flex flex-column align-items-start me-3">
-            <span class="fw-bold mb-1">{{ selectFormatHeading }}</span>
+            <span class="fw-bold mb-1">{{ selectFormatHeading | translate}}</span>
             <div ngbDropdown class="d-inline-block" aria-labelledby="select-format-heading">
-              <button type="button" ngbDropdownToggle noCaret
-                class="btn btn-outline-dark text-dark bg-transparent w-100" aria-label="Select a format">
-                {{ selectFormatTitle }}
+              <button type="button" ngbDropdownToggle noCaret class="btn btn-outline-dark text-dark bg-transparent w-100" aria-label="Select a format">
+                {{ selectFormatTitle | translate}}
                 <i class="bi bi-chevron-down ms-7"></i>
               </button>
               <div ngbDropdownMenu class="w-100" aria-labelledby="select-format-heading">
                 @for(item of selectFormatItems; track item.name){
-                <button type="button" class="dropdown-item" (click)="onSelected(item)">
-                  {{ item.name }}
+                  <button
+                  type="button"
+                  class="dropdown-item"
+                  (click)="onSelected(item)"
+                >
+                  {{ item.name | translate}}
                 </button>
                 }
               </div>
@@ -42,10 +49,9 @@
 
           <!-- Arrange Button -->
           <div class="d-flex flex-column align-items-start">
-            <span class="fw-bold mb-1">{{ selectArrangeTitle }}</span>
-            <button type="button" class="btn fw-bold custom-dark-blue" [routerLink]="['/arrange']"
-              aria-label="Arrange items">
-              Arrange
+            <span class="fw-bold mb-1">{{ selectArrangeTitle | translate}}</span>
+            <button type="button" class="btn fw-bold custom-dark-blue" [routerLink]="['/arrange']" aria-label="Arrange items">
+              {{'Arrange' | translate}}
               <i class="bi bi-chevron-right ms-5"></i>
             </button>
           </div>
@@ -57,6 +63,63 @@
     <div class="col-12">
       <hec-breadcrumb></hec-breadcrumb>
     </div>
+
+
+    <!-- filter accordion  -->
+       <!-- Filter Accordion and Search Results Section -->
+    <div class="col-12 mt-5">
+      <div class="row">
+        <!-- Filter Accordion -->
+        <div class="col-md-3 position-relative">
+            <hec-filter-accordion [collectionfilterData]="collections">
+            </hec-filter-accordion>  
+        </div>
+     
+         
+        
+        
+        <!-- Search Results -->
+        <div class="col-md-8">
+          <hec-searchbar [searchbarTitle]="'Search'" [placeholder]="'Search...'"></hec-searchbar>
+        
+          <!-- Use a flex container to align sortby and pagination info in parallel -->
+          <div class="d-flex justify-content-between align-items-center">
+            <!-- Pagination Info -->
+            <ng-template #paginationInfo>
+                <p class="mb-0" [ngStyle]="{ visibility: (!loading && totalResults > 0) ? 'visible' : 'hidden' }">
+                  Showing {{ ((currentPage - 1) * resultsPerPage + 1) }}-{{ Math.min(currentPage * resultsPerPage, totalResults) }} of {{ totalResults }}
+                </p>
+            </ng-template>
+
+            <!-- Render the pagination info template -->
+            <ng-container *ngTemplateOutlet="paginationInfo"></ng-container>
+            <!-- Sortby Component -->
+            <hec-sortby></hec-sortby>
+          </div>
+          
+            <hec-search-results></hec-search-results>
+          
+        
+          @if (!loading  && totalResults> 0) {
+            <div class="d-lg-flex justify-content-between align-items-center mt-2">
+              <!-- Pagination Info (for larger screens) -->
+              <ng-container *ngTemplateOutlet="paginationInfo"></ng-container>
+        
+              <!-- Pagination Component -->
+              <hec-pagination
+                [currentPage]="currentPage"
+                [totalPages]="totalPagesCount"
+                [maxSize]="pagePerItem"
+                (pageChange)="onPageChange($event)"
+              ></hec-pagination>
+            </div>
+          }
+        </div>
+        
+      </div>
+    </div>
+    
+    
     <div class="col-12 col-md-4 col-sm-6">
       @if(collectionDetails){
       <h4 class="fw-bold">Showing Results for {{ collectionDetails.name }} Collection</h4>
