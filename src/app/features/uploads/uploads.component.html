@@ -1,5 +1,92 @@
 <div class="p-2 fs-5">
   <h1 class="m-2">My Uploads</h1>
+  <div class="form-container d-flex border m-3 p-4 col-8">
+    <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+      <!-- File Upload -->
+      <div class="fw-bold">
+        1. <span class="required">*</span>Find the file on your computer.
+      </div>
+      <input type="file" (change)="onFileSelected($event)" required />
+      <div *ngIf="hasError('file', 'required')" class="error">
+        File is required.
+      </div>
+      <br class="m-2" />
+      <div class="fw-bold">
+        2. <span class="required">*</span>Provide information about your file.
+      </div>
+      <!-- Author Name -->
+      <label><span class="text-red">*</span>Author's Name</label>
+      <div class="name-fields d-flex">
+        <div class="" style="margin-right: 10px">
+          <input
+            type="text"
+            placeholder="First Name"
+            formControlName="firstName"
+          />
+          <div *ngIf="hasError('firstName', 'required')" class="error">
+            First Name is required.
+          </div>
+          <div *ngIf="hasError('firstName', 'minlength')" class="error">
+            First Name must be at least 2 characters.
+          </div>
+        </div>
+
+        <div>
+          <input
+            type="text"
+            placeholder="Last Name"
+            formControlName="lastName"
+          />
+          <div *ngIf="hasError('lastName', 'required')" class="error">
+            Last Name is required.
+          </div>
+          <div *ngIf="hasError('lastName', 'minlength')" class="error">
+            Last Name must be at least 2 characters.
+          </div>
+        </div>
+      </div>
+      <br />
+
+      <!-- Display Title -->
+      <label
+        ><span>*</span>Display Title (as it appears in the table of
+        Contents)</label
+      ><br />
+      <input type="text" formControlName="displayTitle" />
+      <div *ngIf="hasError('displayTitle', 'required')" class="error">
+        Display Title is required.
+      </div>
+      <br />
+
+      <!-- Terms and Conditions -->
+      <div class="fw-bold">
+        3. <span class="required">*</span> Review the Terms and Conditions.
+      </div>
+      <input type="checkbox" formControlName="terms" />
+      <label>
+        * By checking this box, I verify that I have the rights to the content I
+        am uploading, and I agree to comply with
+        <strong>McGraw-Hill Education policies</strong>.
+      </label>
+      <div *ngIf="hasError('terms', 'requiredTrue')" class="error">
+        You must agree to the terms.
+      </div>
+      <br /><br />
+
+      <!-- Buttons -->
+      <button type="submit" [disabled]="uploadForm.invalid">Upload</button>
+      <button type="reset" (click)="uploadForm.reset()">Cancel</button>
+    </form>
+
+    <!-- Supported File Types -->
+    <div class="file-types">
+      <h4>Supported File Types</h4>
+      <ul>
+        <li *ngFor="let type of supportedFileTypes">{{ type }}</li>
+      </ul>
+    </div>
+  </div>
+
   <div class="d-flex justify-content-center align-items-center">
     <button class="btn btn-secondary">
       <i class="bi bi-cloud-upload"></i> Upload Content

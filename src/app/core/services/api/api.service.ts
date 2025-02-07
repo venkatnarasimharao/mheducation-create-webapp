@@ -110,7 +110,7 @@ export class ApiService {
     const params={
       nocacheTimestamp : Date.now(),
     }
-    return this.apiMethodService({ url, method: 'GET_PARAMS',params })
+    return this.apiMethodService({ url, method: 'GET_PARMS',params })
   }
   getProjectDetails(guid:any){
     const params ={
