@@ -172,6 +172,7 @@
                                     [attr.data-item-index]="$index"
                                     (cdkDragStarted)="onDragStarted($event, section, item)">
                                     <td class="text-break">
+                                        <!-- <button (click)="show(item)">Aman</button> -->
                                         <input type="checkbox" class="form-check-input me-3" [(ngModel)]="item.checked"
                                             (change)="checkIfAnySelected()" [attr.aria-label]="'Select ' + item.name" />
                                         <span class="me-3"><i class="bi bi-plus-square"></i></span>
@@ -183,14 +184,14 @@
                                         </span>
                                     </td>
                                     <td>
-                                        <a href="#" class="text-decoration-none text-primary">{{ item.computedtitle ||
-                                            item.title }}</a>
+                                        <a href="#" class="text-decoration-none text-primary">{{ item._computedtitle ||
+                                            item._title }}</a>
                                         <div class="d-sm-none small text-muted mt-1">
-                                            {{ item.format }} • {{ item.pages }} pages
+                                             pages
                                         </div>
                                     </td>
-                                    <td class="d-none d-sm-table-cell">{{ item.pagecount }}</td>
-                                    <td>{{ pricingData[item.guid] }}</td>
+                                    <td class="d-none d-sm-table-cell">{{ item._pagecount }}</td>
+                                    <td>{{ pricingData[item._assetId] ? '$' + pricingData[item._assetId] : '--' }}</td>
 
                                     <ng-template cdkDragPreview>
                                         <div class="drag-preview">
