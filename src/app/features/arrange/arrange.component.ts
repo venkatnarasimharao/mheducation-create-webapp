@@ -104,22 +104,40 @@ export class ArrangeComponent implements OnInit {
     this.pricingData = {};
 
     this.apiService.getProjectPricing(this.projectId).subscribe({
-      next: (response) => {
-        console.log(response, 'pricing data in loadprice');
-        if (response.ok) {
-          const price = JSON.parse(response.body);
-          price.assetprices.assetprice.forEach((asset: any) => {
-            const assetId = asset?.assetId;
-            const priceValue = asset.prices?.price?._value;
-            if (assetId && priceValue) {
-              this.pricingData[assetId] = parseFloat(priceValue).toFixed(2);
+        next: (response) => {
+            console.log(response, 'Raw pricing data in loadProjectPrice');
+
+            if (response.ok) {
+                const price = JSON.parse(response.body);
+                console.log(price, 'Parsed price data');
+
+                if (!Array.isArray(price.assetprices?.assetprice)) {
+                    // console.error('assetprice is not an array:', price.assetprices?.assetprice);
+                    return;
+                }
+
+                price.assetprices.assetprice.forEach((asset: any, index: number) => {
+                    // console.log(asset, `Processing asset at index ${index}`);
+
+                    const assetId = asset?._assetId;
+                    const priceValue = asset?.prices?.price?._value;
+
+                    if (assetId && priceValue !== undefined) {
+                        this.pricingData[assetId] = parseFloat(priceValue).toFixed(2);
+                    } else {
+                        console.warn(`Skipping asset at index ${index} due to missing data`, asset);
+                    }
+                });
+
+                // console.log('Processed pricing data:', this.pricingData);
             }
-          });
-          console.log(price, 'Processed pricing data:', this.pricingData);
+        },
+        error: (err) => {
+            console.error('API call failed:', err);
         }
-      },
     });
-  }
+}
+
 
   getProjectArrangeList(): void {
     this.arrangeSpinner = true;
@@ -176,183 +194,80 @@ export class ArrangeComponent implements OnInit {
       }
     });
   }
+
   createRearrangedProjectOrder(): any {
-    const generateMetaData = () => {
-      return {
-        account: {
-          address: {
-            city: '',
-            country: 'US',
-            department: 'null',
-            line1: '',
-            line2: '',
-            school: 'HE non listed',
-            state: '',
-            zip: '',
-          },
-          addressType: 'other',
-          compType: 'print',
-          decisionDate: '30 days or less',
-          email: 'karthikins1@mheqa.com',
-          enrollment: '20 students or less',
-          enrollmentType: 'yearly',
-          instructorFirstName: "karthik's",
-          instructorLastName: 'Test / Ins 1',
-          phone: '',
-          previousText: '',
-          repFirstName: '',
-          repLastName: '',
-          repNumber: '',
-          shippingAddress: {
-            city: 'arizona',
-            country: 'US',
-            department: '',
-            line1: '',
-            line2: '',
-            school: 'q',
-            state: 'AZ',
-            zip: '03708',
-          },
-        },
-        bookCover: 'BLUE_ABSTRACT',
-        bookFormat: '8by11',
-        bookType: 'bw',
-        courseNames: {
-          course1: 'edited',
-          course2: { name: '' },
-          course3: { name: '' },
-        },
-        courseNumbers: {
-          course1: { number: '1' },
-          course2: { number: '2' },
-        },
-        coverCreditLine: 'muha04/Getty Images',
-        department: 'null',
-        discipline: '',
-        instructors: {
-          instructor1: { firstName: "karthik's", lastName: 'Test / Ins 1' },
-          instructor2: { firstName: 'a', lastName: 'q' },
-          instructor3: { firstName: '1', lastName: '2' },
-          title: 'Professor',
-        },
-        schools: {
-          school1: { name: 'HE non listed' },
-          school2: { name: '' },
-          school3: { name: '' },
-        },
-        toc: {
-          level1: { style: '' },
-          level2: { style: '' },
-          level3: { style: '' },
-          level4: { style: '' },
-          level5: { style: '' },
-          suppressNumbers: 'false',
-        },
-      };
-    };
-  
+    // Create a deep copy of the initial project structure
+    const updatedStructure = JSON.parse(JSON.stringify(this.initialProjectStructure));
+
+    // Rebuild the structure entries based on current sections
+  // Carefully reconstruct the structure to match API expectations
+  updatedStructure.structure.entry = this.sections.map(section => {
+    const sectionSubtype = this.getSectionSubtype(section.id);
     return {
-      project: {
-        // Static values from original structure
-        addRunningHead: "false",
-        addToCredits: "false",
-        archivedState: "",
-        bindingSpec: "Perfect",
-        build: "37c722a44d",
-        copiedFromGuid: "e6826657-e2a0-019d-8c4d-eddadbd96ac3",
-        country: "US",
-        createCopyrightPage: "true",
-        createCreditPage: "true",
-        createDynamicIndex: "true",
-        createIndex: "true",
-        createTitlePage: "true",
-        createToc: "true",
-        currency: "USD",
-        dateCreated: "Mon, 09 Dec 2024 03:08:56 GMT-05:00",
-        eprice: "$0.00",
-        guid: this.initialProjectStructure.uid || 'undefined',
-        installationId: "",
-        isProjectFromOneCompleteBook: "false",
-        ldapId: "",
-        ldapName: "",
-        ldapRmsId: "",
-        meta: generateMetaData(),
-        pagecount: "20",
-        paperSpec: "Regular",
-        printindices: "false",
-        printprice: "$0.00",
-        printpriceColor: "$0.00",
-        projectCourseDetails: {
-          projectCourseName: "history2",
-          projectCourseNumber: {},
-          projectInstructorName: "karthik's Test / Ins 1",
-          projectSchoolInfo: {
-            country: 'US',
-            department: 453,
-            departmentName: "HISTORY",
-            state: 'NY',
-            schoolName: 'HE non listed',
-            schoolNumber: 'HE non listed',
-            schoolPartyId: "",
-            zipcode: "",
-          },
-        },
-        projectrevision: "3",
-        shrinkWrapped: "false",
-        siteId: "1",
-        specialInstructions: {},
-        sponsorCode: "000164",
-        sponsorCodeDeptId: "",
-        sponsorCodeId: "1bcc06d5-17fc-43db-90b0-71e2071f54f3",
-        status: "DRAFT",
-        TOCInfo: { enabled: "true" },
-        type: "Project",
-        userGroup: "ALL",
-        version: "10",
-        volumeSplitWarningHasBeenDisplayed: "false",
-        structure: {
-          entry: this.sections.map((section) => {
-            section.items = Array.isArray(section.items) ? section.items : [section.items];
-            return {
-              type: 'Container',
-              subtype: this.getSectionSubtype(section.id),
-              entry: section.items.map((item: ProjectItem) => ({
-                guid: item.guid || 'undefined',
-                computedtitle: item.name || 'undefined',
-                price: item.price || 'undefined',
-                type: item.type || 'undefined',
-                subtype: item.subType || this.getSectionSubtype(section.id),
-              })),
-            };
-          }),
-        },
-        title: 'createhistory duplicated',
-        teachersEditionFormat: "",
-        // Any other fields that should maintain the order can be added here...
+      _type: "Container",
+      _subtype: sectionSubtype,
+      entry: section.items.map((item :any) => ({
+        ...item, // Preserve original item properties
+        _subtype: sectionSubtype // Ensure consistent subtype
+      })
+    )};
+  });
+
+  return {
+    project: {
+      ...updatedStructure,
+      _status: updatedStructure._status || 'DRAFT',
+      // _projectrevision: (parseInt(updatedStructure._projectrevision) + 1).toString(),
+      // _dateModified: new Date().toUTCString()
+    }
+  };
+}
+ 
+sanitizePayload(payload: any): any {
+  const sanitize = (obj: any): any => {
+    if (obj === null || obj === undefined) return '';
+    
+    if (typeof obj === 'object') {
+      if (Array.isArray(obj)) {
+        return obj.map(sanitize);
+      }
+      
+      const sanitizedObj: any = {};
+      for (const [key, value] of Object.entries(obj)) {
+        sanitizedObj[key] = sanitize(value);
+      }
+      
+      // If object is empty, return empty string
+      return Object.keys(sanitizedObj).length === 0 ? '' : sanitizedObj;
+    }
+    
+    return obj;
+  };
+
+  return sanitize(payload);
+}
+
+saveProjectData(): void {
+  this.reArrangeProjectOrder = this.createRearrangedProjectOrder();
+
+  const sanitizedPayload = this.sanitizePayload(this.reArrangeProjectOrder);
+  console.log('Payload to be sent:', JSON.stringify(this.reArrangeProjectOrder, null, 2));
+  this.apiService
+    .saveProjectData(this.projectId, this.reArrangeProjectOrder)
+    .subscribe({
+      next: (response) => {
+        console.log('Project updated successfully', response);
+        this.initialProjectStructure = JSON.parse(
+          JSON.stringify(sanitizedPayload.project)
+        );
       },
-    };
-  }
-  
-
-  saveProjectData(): void {
-    this.reArrangeProjectOrder = this.createRearrangedProjectOrder();
-
-    console.log('rearrange order', this.reArrangeProjectOrder);
-    this.apiService
-      .saveProjectData(this.projectId, this.reArrangeProjectOrder)
-      .subscribe({
-        next: (response) => {
-          console.log('Project updated successfully', response);
-          this.initialProjectStructure = JSON.parse(
-            JSON.stringify(this.reArrangeProjectOrder.project)
-          );
-        },
-        error: (error) => {
-          console.error('Error saving project:', error);
-        },
-      });
-  }
-
+      error: (error) => {
+        console.error('Error saving project:', error);
+        console.error('Error details:', error.message);
+        console.error('Error response:', error.error);
+      },
+    });
+}
   private getSectionSubtype(sectionId: string): string {
     const subtypeMap: { [key: string]: string } = {
       introMaterial: 'frontmatter',

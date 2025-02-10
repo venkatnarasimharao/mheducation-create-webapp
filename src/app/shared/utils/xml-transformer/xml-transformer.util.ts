@@ -136,6 +136,13 @@ export class XmlTransformerUtil {
                     if (key.startsWith('_')) {
                         if ((objEntries?.length === objEntriesIndex) || (filteredArrays?.length === objEntriesIndex)) {
                             xml += ` ${key.substring(1)}="${value}">`;
+                        } else if (typeof value === 'string') {
+                            const escaped = value.replace(/&/g, '&amp;')
+                            .replace(/</g, '&lt;')
+                            .replace(/>/g, '&gt;')
+                            .replace(/'/g, '&apos;')
+                            .replace(/"/g, '&quot;');
+                            xml += ` ${key.substring(1)}="${escaped}"`;
                         } else {
                             xml += ` ${key.substring(1)}="${value}"`;
                         }

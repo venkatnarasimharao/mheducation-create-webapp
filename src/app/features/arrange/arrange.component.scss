@@ -174,3 +174,12 @@ ul {
     font-size: 12px;
   }
 }
+
+.dropdown-item {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  display: block;
+}
+

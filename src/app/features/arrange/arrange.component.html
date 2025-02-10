@@ -11,10 +11,12 @@
                             <label for="select-project" class="fw-bold mb-1">Select Project</label>
                             <div ngbDropdown class="d-inline-block">
                                 <button type="button" ngbDropdownToggle noCaret id="select-project"
-                                    class="btn btn-outline-dark text-dark bg-transparent w-100" [disabled]="isLoading"
+                                    class="btn btn-outline-dark text-dark bg-transparent w-100 text-truncate"
+                                    [disabled]="isLoading" [title]="selectedProject?.name || 'Select Project'"
                                     aria-haspopup="true">
                                     {{ isLoading ? 'Loading...' : (selectedProject?.name || 'Select Project') }}
                                 </button>
+
                                 <div ngbDropdownMenu class="w-100" role="menu" aria-labelledby="select-project">
                                     @if (error) {
                                     <div class="dropdown-item text-danger">{{ error }}</div>
@@ -187,11 +189,11 @@
                                         <a href="#" class="text-decoration-none text-primary">{{ item._computedtitle ||
                                             item._title }}</a>
                                         <div class="d-sm-none small text-muted mt-1">
-                                             pages
+                                            pages
                                         </div>
                                     </td>
                                     <td class="d-none d-sm-table-cell">{{ item._pagecount }}</td>
-                                    <td>{{ pricingData[item._assetId] ? '$' + pricingData[item._assetId] : '--' }}</td>
+                                    <td>{{ '$' + (pricingData[item._assetId] || '0.00') }}</td>
 
                                     <ng-template cdkDragPreview>
                                         <div class="drag-preview">
