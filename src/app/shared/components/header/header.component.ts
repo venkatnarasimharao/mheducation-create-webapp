@@ -30,7 +30,7 @@ export class HeaderComponent implements OnInit {
     this.AuthService.authStatus.subscribe((event: any) => {
       this.loggedInStatus = event;
     });
-    if (!this.commonStateService.isAnonymous()) {
+    if (this.commonStateService.isAnonymous()) {
       this.loggedInStatus = "LogOut"
     }
   }
