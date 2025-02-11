@@ -12,10 +12,16 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 })
 export class UploadsComponent implements OnInit {
   uploadForm: FormGroup;
-  supportedFileTypes = [
-    'PDF', 'EPS', 'GIF', 'HTM', 'HTML', 'JPG', 'JPEG', 'XLS', 'XLSX', 'XLT', 
-    'PPT', 'PPTX', 'PPS', 'RTF', 'DOC', 'DOCX', 'TXT', 'TEXT', 'PNG', 'PS', 'TIF'
-  ];
+  initLoader:boolean = false;
+  isUploadList:boolean=false;
+  isFormShown:boolean=false;
+  uploading:boolean=false;
+  uploadedList:any=[];
+  ngOnInit(): void {
+    this.initLoader = true;
+    this.fetchUploadList();
+  }
+ 
 
   constructor(private fb: FormBuilder,private apiService:ApiService) {
     this.uploadForm = this.fb.group({
@@ -26,44 +32,85 @@ export class UploadsComponent implements OnInit {
       terms: [false, Validators.requiredTrue], // Must be checked
     });
   }
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.uploadForm.patchValue({ file });
+  supportedFileTypes = [
+    { name: 'Adobe PDF', extension: 'PDF' },
+    { name: 'Encapsulated PostScript', extension: 'EPS' },
+    { name: 'Graphics Interchange Format', extension: 'GIF' },
+    { name: 'Hypertext Markup Language', extension: 'HTM, HTML' },
+    { name: 'Joint Photographic Experts Group', extension: 'JPG, JPEG' },
+    { name: 'Microsoft Excel', extension: 'XLS, XLSX, XLT' },
+    { name: 'Microsoft PowerPoint for Windows', extension: 'PPT, PPTX, PPS' },
+    { name: 'Microsoft Rich Text Format', extension: 'RTF' },
+    { name: 'Microsoft Word', extension: 'DOC, DOCX' },
+    { name: 'Microsoft WordPad', extension: 'TXT, TEXT' },
+    { name: 'Portable Network Graphics', extension: 'PNG' },
+    { name: 'Postscript', extension: 'PS' },
+    { name: 'Tagged Image File', extension: 'TIF' }
+  ];
+  onFileSelected(event: Event) {
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) {
+      const file = target.files[0];
+      console.log("Selected File:", file);
+  
+      this.uploadForm.patchValue({ file }); // Ensure correct assignment
     }
   }
-
+  
   onSubmit() {
+    this.uploading = true;
     if (this.uploadForm.valid) {
       console.log('Form Submitted:', this.uploadForm.value);
     } else {
       console.log('Form is invalid');
     }
+    const formValue = this.uploadForm.value;
+      if (!formValue.file || !(formValue.file instanceof File)) {
+      console.error("Error: File is missing or not a valid File object!", formValue.file);
+      return;
   }
 
-  // Helper function to check field errors
+    const formData = new FormData();
+    formData.append('document', formValue.file, formValue.file.name);
+     this.apiService.userUpload(formData,this.uploadForm.value).subscribe((data) => {
+      
+      this.fetchUploadList();
+      console.log("Upload successful");
+    }
+  , (error) => {
+    this.uploading = false;
+    console.error('Error uploading file:', error);
+    this.initLoader = false;
+  });
+  }
   hasError(field: string, error: string) {
     return this.uploadForm.get(field)?.hasError(error) && this.uploadForm.get(field)?.touched;
   }
-  isUploadLoading:boolean=false;
-  uploadedList:any=[];
-  ngOnInit(): void {
-    this.fetchUploadList();
+ 
+  uploadNew(){
+    this.isFormShown=true;
   }
   fetchUploadList(){
-    this.isUploadLoading = true;
     this.apiService.getUploadedProjectList().subscribe((res)=>{
-      this.isUploadLoading = false;
+      this.initLoader = false;
+      this.uploading = false;
+      this.isFormShown = false;
       const parsedUploadedList = JSON.parse(res.body).result;
       if (!Array.isArray(parsedUploadedList)) {
         this.uploadedList = [parsedUploadedList];
       }else{
         this.uploadedList = parsedUploadedList;
       }
+      if(this.uploadedList.length >=1){
+        this.isUploadList = true;
+      }
       console.log(this.uploadedList);
     },
   (error)=>{
-    this.isUploadLoading = false;
+    this.isUploadList = false;
+    this.initLoader =false
+    this.uploading = false;
+   
     console.error('Error fetching uploaded project list:', error);
   });
   }

@@ -1,21 +1,43 @@
-<div class="p-2 fs-5">
+<div class="p-0 fs-5">
   <h1 class="m-2">My Uploads</h1>
-  <div class="form-container d-flex border m-3 p-4 col-8">
+  @if(initLoader){
+  <div class="hec-loader-content"></div>
+  } @else{ @if(isFormShown){
+  <div class="form-container d-flex border m-3 p-4 col-11">
     <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
       <!-- File Upload -->
       <div class="fw-bold">
-        1. <span class="required">*</span>Find the file on your computer.
+        1. <span class="text-danger">*</span>Find the file on your computer.
       </div>
-      <input type="file" (change)="onFileSelected($event)" required />
-      <div *ngIf="hasError('file', 'required')" class="error">
+      <input
+        type="text"
+        class="col-6 m-2"
+        disabled
+        placeholder="{{ uploadForm.value.file.name }}"
+      />
+      <input
+        type="file"
+        id="fileInput"
+        class="hidden"
+        style="display: none"
+        (change)="onFileSelected($event)"
+      />
+      <label
+        for="fileInput"
+        class="border border-blue-800 text-blue-800 px-4 py-1 rounded-md cursor-pointer hover:bg-blue-100"
+      >
+        <strong class="text-primary">Browse</strong>
+      </label>
+      <div *ngIf="hasError('file', 'required')" class="error text-danger">
         File is required.
       </div>
       <br class="m-2" />
       <div class="fw-bold">
-        2. <span class="required">*</span>Provide information about your file.
+        2. <span class="text-danger">*</span>Provide information about your
+        file.
       </div>
       <!-- Author Name -->
-      <label><span class="text-red">*</span>Author's Name</label>
+      <label><span class="text-danger">*</span>Author's Name</label>
       <div class="name-fields d-flex">
         <div class="" style="margin-right: 10px">
           <input
@@ -23,7 +45,10 @@
             placeholder="First Name"
             formControlName="firstName"
           />
-          <div *ngIf="hasError('firstName', 'required')" class="error">
+          <div
+            *ngIf="hasError('firstName', 'required')"
+            class="error text-danger"
+          >
             First Name is required.
           </div>
           <div *ngIf="hasError('firstName', 'minlength')" class="error">
@@ -37,7 +62,10 @@
             placeholder="Last Name"
             formControlName="lastName"
           />
-          <div *ngIf="hasError('lastName', 'required')" class="error">
+          <div
+            *ngIf="hasError('lastName', 'required')"
+            class="error text-danger"
+          >
             Last Name is required.
           </div>
           <div *ngIf="hasError('lastName', 'minlength')" class="error">
@@ -49,49 +77,71 @@
 
       <!-- Display Title -->
       <label
-        ><span>*</span>Display Title (as it appears in the table of
-        Contents)</label
+        ><span class="text-danger">*</span>Display Title (as it appears in the
+        table of Contents)</label
       ><br />
-      <input type="text" formControlName="displayTitle" />
-      <div *ngIf="hasError('displayTitle', 'required')" class="error">
+      <input type="text" formControlName="displayTitle" class="col-8" />
+      <div
+        *ngIf="hasError('displayTitle', 'required')"
+        class="error text-danger"
+      >
         Display Title is required.
       </div>
       <br />
 
       <!-- Terms and Conditions -->
-      <div class="fw-bold">
-        3. <span class="required">*</span> Review the Terms and Conditions.
-      </div>
-      <input type="checkbox" formControlName="terms" />
+      <div class="fw-bold">3.Review the Terms and Conditions.</div>
+
       <label>
-        * By checking this box, I verify that I have the rights to the content I
-        am uploading, and I agree to comply with
-        <strong>McGraw-Hill Education policies</strong>.
+        <input type="checkbox" formControlName="terms" class="" />
+        <span class="text-danger">*</span> By checking this box, I verify that I
+        have the rights to the content I am uploading, and I agree to comply
+        with
+        <strong class="text-primary">McGraw-Hill Education policies</strong>.
       </label>
-      <div *ngIf="hasError('terms', 'requiredTrue')" class="error">
+      <div *ngIf="hasError('terms', 'requiredTrue')" class="error text-danger">
         You must agree to the terms.
       </div>
       <br /><br />
-
+      <div><span class="text-danger">*</span>Required fields</div>
       <!-- Buttons -->
-      <button type="submit" [disabled]="uploadForm.invalid">Upload</button>
-      <button type="reset" (click)="uploadForm.reset()">Cancel</button>
+      <button
+        type="submit"
+        [disabled]="uploadForm.invalid"
+        class="btn btn-primary"
+      >
+        @if(uploading){
+        <div class="hec-loader-btn"></div>
+        } Upload
+      </button>
+      <button type="reset" (click)="uploadForm.reset()" class="btn btn-primary">
+        Cancel
+      </button>
     </form>
 
     <!-- Supported File Types -->
-    <div class="file-types">
-      <h4>Supported File Types</h4>
+    <div class="file-types col-6 p-2">
+      <h4 class="text-center fw-bold">Supported File Types</h4>
       <ul>
-        <li *ngFor="let type of supportedFileTypes">{{ type }}</li>
+        <li
+          *ngFor="let type of supportedFileTypes"
+          class="d-flex justify-content-between"
+        >
+          <div class="" style="width: 250px">{{ type.name }}</div>
+          <div class="text-start" style="width: 150px">
+            {{ type.extension }}
+          </div>
+        </li>
       </ul>
     </div>
   </div>
-
+  } @if(!isFormShown){
   <div class="d-flex justify-content-center align-items-center">
-    <button class="btn btn-secondary">
+    <button class="btn btn-secondary" (click)="uploadNew()">
       <i class="bi bi-cloud-upload"></i> Upload Content
     </button>
   </div>
+  } @if(isUploadList){
   <table class="table bg-transparent">
     <thead class="bg-primary">
       <tr class="border-0">
@@ -100,11 +150,11 @@
         <th scope="col">Options</th>
       </tr>
     </thead>
-    @if(isUploadLoading){
-    <div class="d-flex align-items-center justify-content-center loader-parent">
+
+    <!-- <div class="d-flex align-items-center justify-content-center loader-parent">
       <div class="hec-loader-content"></div>
-    </div>
-    }
+    </div> -->
+
     <tbody class="p-2">
       @for (item of uploadedList; track i; let i = $index) {
       <tr tabindex="0" class="border-bottom">
@@ -130,4 +180,5 @@
       }
     </tbody>
   </table>
+  } }
 </div>

@@ -6,17 +6,19 @@ import { inject } from '@angular/core';
 
 export const httpInterceptor: HttpInterceptorFn = (request, next) => {
   const cookieService = inject(CookieService);
-  let JSESSIONID_CRT = cookieService.get('JSESSIONID_CRT');
+  let JSESSIONID = cookieService.get('jsessionid');
+  console.log(JSESSIONID);
   let transformedReq = request;
-  if (JSESSIONID_CRT) {
+  if (JSESSIONID) {
     transformedReq = transformedReq.clone({
       headers: transformedReq.headers.set(
-        'jcookie', `JSESSIONID_CRT=${JSESSIONID_CRT}`
+        'jcookie', `JSESSIONID=${JSESSIONID}`
       ),
     });
   }
+  console.log(transformedReq.body);
 
-  if (transformedReq.body && typeof transformedReq.body === 'object') {
+  if (transformedReq.body && typeof transformedReq.body === 'object' && !(transformedReq.body instanceof FormData)) {
     const xmlBody = XmlTransformerUtil.jsonToXml(transformedReq.body);
     transformedReq = transformedReq.clone({
       body: xmlBody,

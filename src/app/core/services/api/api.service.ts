@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { BOOK_COVER_IMAGES, USER_SEARCH_CONFIG } from '../../../shared/constants/search-payload.config';
 import { environment } from '../../../../environments/environment';
 import { CookieService } from 'ngx-cookie-service';
+import { formatDate } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -80,6 +81,25 @@ export class ApiService {
   deleteFavorite(guid: string) {
     return this.apiMethodService({ url: `/p/users/${this.commonStateService.isAnonymous()}/favorites/${guid}?method=DELETE`, method: 'POST', });
   }
+  userUpload(formData: FormData,uploadedForm:any) {
+    const url = `/users/1000507376/fileupload?isOwner=true&filename=${uploadedForm.file.name}&firstName=${uploadedForm.firstName}&lastName=${uploadedForm.lastName}&displayTitle=${uploadedForm.displayTitle}`;
+    console.log("api");
+    formData.forEach((value, key) => {
+      console.log(`FormData Key: ${key}, Value:`, value);
+    });
+    const headers = new HttpHeaders({
+        'X-Response-Type': 'form-data'
+    
+    });
+  
+    return this.apiMethodService({
+      url,
+      method: 'POST',  
+      body: formData,
+      options:{headers}
+    });
+  }
+  
   getProjectToc(guid: string){
     console.log(guid);
     const headers = new HttpHeaders({
@@ -227,6 +247,9 @@ export class ApiService {
         return this.http.put(url, body, { params: params, ...options });
       case 'POST':
         return this.http.post(url, body, options);
+      case 'POST_PARAMS':
+        return this.http.post(url, body, { params: params,...options });
+      case 'PATCH':
       case 'DELETE':
         return this.http.delete(url, options);
       default:

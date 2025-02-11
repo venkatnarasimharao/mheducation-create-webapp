@@ -48,10 +48,12 @@ app.all('/proxy/*', async (req, res) => {
         if (req.headers['x-response-type']) {
             axiosOptions.responseType = req.headers['x-response-type'];
         }
-
+       
         if (req.method === 'POST') {
             const xmlData = req.body;
+            
             response = await axios.post(externalApiUrl, xmlData, axiosOptions);
+            
             console.log(response, 'Raw XML Payload:', xmlData);
         } else if (req.method === 'GET') {
             response = await axios.get(externalApiUrl, axiosOptions);
@@ -82,7 +84,7 @@ app.all('/proxy/*', async (req, res) => {
         });
         res.send(response.data);
     } catch (error) {
-        console.log('Error while hitting the external API:', error.response);
+        console.log('Error while hitting the external API:', error);
         res.status(error.status || 500).json({ error: error.message, message: extractErrorMessage(error?.response?.data) });
     }
 });
