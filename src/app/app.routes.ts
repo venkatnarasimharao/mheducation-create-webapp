@@ -77,5 +77,13 @@ export const routes: Routes = [
       import('./features/landing/landing.component').then(
         (m) => m.LandingComponent
       ),
+  },
+  {
+    path: 'arrange-toc',
+    loadComponent: () => 
+      import('./shared/components/arrange-toc/arrange-toc.component').then(
+        (m) => m.ArrangeTocComponent  
+      ),
+      canActivate: [AuthGuard]
   }
 ];

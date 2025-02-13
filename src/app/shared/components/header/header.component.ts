@@ -30,7 +30,10 @@ export class HeaderComponent implements OnInit {
     this.AuthService.authStatus.subscribe((event: any) => {
       this.loggedInStatus = event;
     });
-    if (!this.commonStateService.isAnonymous()) {
+    const userId = this.commonStateService.isAnonymous();
+    let user = userId || "anonymous";
+ 
+    if (user !=="anonymous") {
       this.loggedInStatus = "LogOut"
     }
   }

@@ -1,0 +1,63 @@
+<div class="container mt-4">
+    <div class="d-flex justify-content-between">
+        <div class="d-flex flex-column">
+            <div class="d-flex gap-1"><h3>Test 456</h3> <a href="" class="text-decoration-none">Edit Project Details</a></div>
+            <p>Discipline Title: Higher Mathematics</p>
+        </div>
+        <button class="btn btn-outline-primary h-50">Create Book Cover > </button>
+    </div>
+
+    <div class="row">
+        <!-- Left: Preview -->
+        <div class="col-md-8">
+            <h5>Preview</h5>
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">Contents</h4>
+                </div>
+                <div class="overflow-auto ms-2" style="max-height: 350px;">
+                    <table>
+                        <tbody class="mb-1">
+                            <ng-container *ngFor="let item of ebookDelivery?.nonReaderCompatibleAssets?.asset; let i = index">
+                              
+                              
+                              <tr *ngIf="i < 2" class="small text-muted">
+                                <td></td>
+                                <td>{{ item.title }}</td>
+                              </tr>
+                          
+                              
+                              <tr *ngIf="item.type === 'Part'" class="bg-dark text-white">
+                                <td>Part {{ getPartNumber(i) }}: </td>
+                                <td>{{ item.title }}</td>
+                              </tr>
+                          
+                              
+                              <tr *ngIf="item.type === 'PartOpener'">
+                                <td></td>
+                                <td>{{ item.title }}</td>
+                              </tr>
+                          
+                              
+                              <tr *ngIf="item.type === 'Chapter' && i >= 2 && i < ebookDelivery.nonReaderCompatibleAssets.asset.length - 2">
+                                <td>Chapter {{ getChapterNumber(i) }}: </td>
+                                <td>{{ item.title }}</td>
+                              </tr>
+                          
+                              <tr *ngIf="i >= ebookDelivery.nonReaderCompatibleAssets.asset.length - 2" class="small text-muted">
+                                <td></td>
+                                <td>{{ item.title }}</td>
+                              </tr>
+                          
+                            </ng-container>
+                          </tbody>
+                          
+                          
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4"> <hec-layout-toc></hec-layout-toc></div>
+      
+    </div>
+</div>

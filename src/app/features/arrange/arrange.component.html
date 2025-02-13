@@ -1,1 +1,24 @@
-<p>arrange works!</p>
+<h3>Please Select Project:</h3>
+<button class="btn btn-primary" (click)="openModal()">Select Project</button>
+
+<button (click)="onClick()">Format Toc</button>
+
+<!-- Modal -->
+<div *ngIf="showModal" class="modal-overlay">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h5 class="modal-title">Select a Project</h5>
+      <button class="btn-close" (click)="closeModal()">X</button>
+    </div>
+    <div class="modal-body">
+      <ul class="list-group">
+        <li class="list-group-item" *ngFor="let project of projects">
+          {{ project?.title }}
+        </li>
+      </ul>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="closeModal()">Close</button>
+    </div>
+  </div>
+</div>

@@ -108,6 +108,25 @@ export class ApiService {
     })
   }
   
+  getArrangeTocEbookDelivery(){
+    return this.apiMethodService({
+      url: `/p/eBookDelivery/b03a9ddb-ef51-8613-7491-7571d41f1b98?appName=create`,
+      method: 'GET',
+    });
+  }
+
+  getProjectList() {
+    const userId = this.commonStateService.isAnonymous();
+    let user = userId || "anonymous";
+    const params = {
+      nocacheTimestamp: Date.now()
+    }
+    return this.apiMethodService({
+      url: `/p/users/${user}/projects`,
+      method: 'GET_PARMS',
+      params
+    })
+  }
 
   apiMethodService<T>({ url, method, body, params = {}, options = {} }: any): Observable<any> {
     const pathName = window.location.pathname?.includes('createonline') ? window.location.pathname : '/createonline'

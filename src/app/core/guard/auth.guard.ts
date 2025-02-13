@@ -19,7 +19,10 @@ export class AuthGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): boolean {
-    if (!this.commonStateService.isAnonymous()) {
+    const userId = this.commonStateService.isAnonymous();
+    let user = userId || "anonymous";
+ 
+    if (user !=="anonymous") {
       return true;
     }
     else {

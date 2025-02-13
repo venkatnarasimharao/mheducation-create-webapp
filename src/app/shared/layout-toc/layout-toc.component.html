@@ -1,0 +1,112 @@
+
+    <h5>Customize Layout</h5>
+    <div class="accordion" id="customizeLayout">
+        <div ngbAccordion #acc="ngbAccordion">
+
+            <!-- Fonts Accordion -->
+            <div ngbAccordionItem id="fonts">
+                <h2 ngbAccordionHeader>
+                    <button class="accordion-button w-100" ngbAccordionButton>
+                        Fonts
+                    </button>
+                </h2>
+                <div ngbAccordionCollapse>
+                    <div class="accordion-body">
+                        <div class="mb-3">
+                            <label class="form-label">Part</label>
+                            <div ngbDropdown class="d-inline-block w-100">
+                                <button class="btn btn-light dropdown-toggle w-100 text-start" ngbDropdownToggle>
+                                    {{ selectedFont.part }}
+                                </button>
+                                <ul class="dropdown-menu w-100">
+                                    <li *ngFor="let font of fonts">
+                                        <button class="dropdown-item" (click)="selectFont('part', font)">{{ font }}</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Chapter</label>
+                            <div ngbDropdown class="d-inline-block w-100">
+                                <button class="btn btn-light dropdown-toggle w-100 text-start" ngbDropdownToggle>
+                                    {{ selectedFont.chapter }}
+                                </button>
+                                <ul class="dropdown-menu w-100">
+                                    <li *ngFor="let font of fonts">
+                                        <button class="dropdown-item" (click)="selectFont('chapter', font)">{{ font }}</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Lesson</label>
+                            <div ngbDropdown class="d-inline-block w-100">
+                                <button class="btn btn-light dropdown-toggle w-100 text-start" ngbDropdownToggle>
+                                    {{ selectedFont.lesson }}
+                                </button>
+                                <ul class="dropdown-menu w-100">
+                                    <li *ngFor="let font of fonts">
+                                        <button class="dropdown-item" (click)="selectFont('lesson', font)">{{ font }}</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Colors Accordion -->
+            <div ngbAccordionItem id="colors">
+                <h2 ngbAccordionHeader>
+                    <button class="accordion-button w-100" ngbAccordionButton>
+                        Colors
+                    </button>
+                </h2>
+                <div ngbAccordionCollapse>
+                    <div class="accordion-body">
+                        <p>Select color options...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Labels Accordion -->
+            <div ngbAccordionItem id="labels">
+                <h2 ngbAccordionHeader>
+                    <button class="accordion-button w-100" ngbAccordionButton>
+                        Labels
+                    </button>
+                </h2>
+                <div ngbAccordionCollapse>
+                    <div class="accordion-body">
+                        <p>Label customization...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page Numbers Accordion -->
+            <div ngbAccordionItem id="pageNumbers">
+                <h2 ngbAccordionHeader>
+                    <button class="accordion-button w-100" ngbAccordionButton>
+                        Page Numbers
+                    </button>
+                </h2>
+                <div ngbAccordionCollapse>
+                    <div class="accordion-body">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="pageStyle" [(ngModel)]="pageNumberStyle" value="staggered">
+                            <label class="form-check-label">Staggered</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="pageStyle" [(ngModel)]="pageNumberStyle" value="dots">
+                            <label class="form-check-label">Dots</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <button class="btn btn-primary mt-3 w-100">More Layout Options</button>
+    </div>
+
