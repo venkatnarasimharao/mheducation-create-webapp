@@ -35,7 +35,6 @@ export class SharedstateService {
     });
   }
 
-
   getLanguagesSignal() {
     return this.languages;
   }

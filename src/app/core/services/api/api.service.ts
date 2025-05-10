@@ -1,8 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { BOOK_COVER_IMAGES, USER_SEARCH_CONFIG } from '../../../shared/constants/search-payload.config';
+import { BOOK_COVER_IMAGES } from '../../../shared/constants/search-payload.config';
 import { environment } from '../../../../environments/environment';
+import { CookieService } from 'ngx-cookie-service';
+import { CommonStateService } from '../common-state/common-state.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,25 +13,24 @@ export class ApiService {
 
   constructor(
     private http: HttpClient,
+    private cookieService: CookieService,
+    private commonStateService: CommonStateService
   ) { }
+  
 
-  getSearchListing() {
-    const finalPay = USER_SEARCH_CONFIG
-    let languages: any = sessionStorage.getItem('languages');
-    if (languages) {
-      languages = JSON.parse(languages);
-      finalPay['search']['facets']['facet'][4]['item'] = languages.map((item: any) => ({
-        _label: item.displayValue._text,
-        _value: item.name._text,
-        _selected: "false" // item.enabled._text === "true" ? "true" : 
-      }))
-    }
-    finalPay.search.textTypes.textType = 'all' // title | all | ["title","authors", "isbn", "description"];
+  getSearchListing(finalPayload: any) {
+    const finalPay = JSON.parse(JSON.stringify(finalPayload));
+    const userId: string = this.commonStateService.isAnonymous();
+    let user = userId || "anonymous";
+    const headers = new HttpHeaders({
+      'X-Response-Type': 'arraybuffer',
+    });
+
     return this.apiMethodService({
-      url: `/p/users/anonymous/search`,
+      url: `/p/users/${user}/search`,
       method: 'POST',
       body: finalPay,
-      options: { responseType: 'text' }
+      options: { responseType: 'text', headers }
     })
   }
 
@@ -76,6 +77,38 @@ export class ApiService {
     return this.apiMethodService({ url: `/locale/${languageCode}/props.json`, method: 'GET' });
   }
 
+  getImageUrl(endPointUrl: string): string{
+    return environment.apiUrl + endPointUrl;
+  }
+
+  addFavorite(guid: string) {
+    const payload = {
+      "favorite": {
+        "_guid": guid
+      }
+    }
+    return this.apiMethodService({ url: `/p/users/${this.commonStateService.isAnonymous()}/favorites/`, method: 'POST', body: payload })
+  }
+
+  deleteFavorite(guid: string) {
+    return this.apiMethodService({ url: `/p/users/${this.commonStateService.isAnonymous()}/favorites/${guid}?method=DELETE`, method: 'POST', });
+  }
+
+  getFavouriteListGuids() {
+    const params = {
+      nocacheTimestamp: Date.now(),
+    }
+    return this.apiMethodService({
+      url: `/p/users/${this.commonStateService.isAnonymous()}/favorites/?nocacheTimestamp=1738840917963`, 
+      method: 'GET_PARMS',
+      params,
+      options: {
+        responseType: 'text'
+      }
+    })
+  }
+  
+
   apiMethodService<T>({ url, method, body, params = {}, options = {} }: any): Observable<any> {
     const pathName = window.location.pathname?.includes('createonline') ? window.location.pathname : '/createonline'
     url = environment.apiUrl + pathName + url;
@@ -105,4 +138,5 @@ export class ApiService {
         return this.http.get(url, options);
     }
   }
+  
 }

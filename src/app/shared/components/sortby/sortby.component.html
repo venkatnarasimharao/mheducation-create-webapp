@@ -1,0 +1,21 @@
+<div ngbDropdown class="d-inline-block mb-1 mt-1">
+  <button
+    type="button"
+    ngbDropdownToggle
+    class="btn btn-outline-dark text-dark bg-transparent"
+    aria-label="Sort by"
+  >
+    {{ selectedSortOption || 'Sort By' }}
+  </button>
+  <div ngbDropdownMenu aria-labelledby="dropdown-basic">
+    @for (option of sortOptions; track option.value) {
+      <button
+        ngbDropdownItem
+        (click)="onSortChange(option)"
+        class="dropdown-item"
+      >
+        {{ option.label }}
+      </button>
+    }
+  </div>
+</div>

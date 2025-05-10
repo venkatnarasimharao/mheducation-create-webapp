@@ -9,6 +9,7 @@ import { httpInterceptor } from './core/interceptors/http.interceptor';
 import { ApiService } from './core/services/api/api.service';
 import { SharedstateService } from './core/services/shared-state/sharedstate.service';
 import { AuthService } from './core/services/auth/auth.service';
+import { SearchService } from './core/services/search/search.service';
 import { CommonStateService } from './core/services/common-state/common-state.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -34,6 +35,7 @@ export const appConfig: ApplicationConfig = {
     ]),
     provideRouter(routes),
     ApiService,
+    SearchService,
     SharedstateService,
     AuthService,
     CommonStateService
